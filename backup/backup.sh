@@ -41,7 +41,7 @@ while getopts hcfo: flag; do
     f)
       BACKUP_FULL="true";;
     o)
-      BACKUP_DIR="${OPTARG}";;
+      BACKUP_DIR="${OPTARG}/backup_$NOW";;
     h | *)
       print_help
       exit 0;;
@@ -54,7 +54,6 @@ printf "\nScript settings:
   -> backup target dir: ${red}${BACKUP_DIR}${no_color}
   -> use compression: ${red}${BACKUP_COMPRESSION}${no_color}
   -> full backup: ${red}${BACKUP_FULL}${no_color}\n"
-
 
 
 # Backup /etc files
@@ -80,27 +79,37 @@ i=$(($i + 1))
 
 mkdir "${BACKUP_DIR%/}/home"
 if [ "$BACKUP_FULL" = "true" ]; then
-  if [ "$BACKUP_COMPRESSION" = "true"]; then
+  # Home directories
+  HOME_DIRS=(
+    $HOME/desktop
+    $HOME/dev
+    $HOME/documents
+    $HOME/downloads
+    $HOME/movies
+    $HOME/music
+    $HOME/pictures
+  )
+  if [ "$BACKUP_COMPRESSION" = "true" ]; then
     rsync -azhLKP "$HOME" "${BACKUP_DIR%/}/home"
   else
     rsync -ahLKP "$HOME" "${BACKUP_DIR%/}/home"
   fi
 else
   # Dotfiles
-  DOT_FILES=($(ls -a . | grep -E '^\.'))
+  DOT_FILES=($(ls -a "$HOME" | grep -E '^\.' | grep -ivE '^\.\.$' | grep -ivE '^\.$' | grep -iv '.trash' | grep -iv '.ds_store'))
   if [ "$BACKUP_COMPRESSION" = "true" ]; then
     rsync -azhLKP ${DOT_FILES[*]} "${BACKUP_DIR%/}/home/dotfiles"
   else
     rsync -ahLKP ${DOT_FILES[*]} "${BACKUP_DIR%/}/home/dotfiles"
   fi
 
-  # Others
-  OTHERS=(
+  # Other directories
+  OTHER_DIRS=(
     $HOME/dev
   )
   if [ "$BACKUP_COMPRESSION" = "true" ]; then
-    rsync -azhLKP ${OTHERS[*]} "${BACKUP_DIR%/}/home/dev"
+    rsync -azhLKP ${OTHER_DIRS[*]} "${BACKUP_DIR%/}/home/dev"
   else
-    rsync -azhLKP ${OTHERS[*]} "${BACKUP_DIR%/}/home/dev"
+    rsync -azhLKP ${OTHER_DIRS[*]} "${BACKUP_DIR%/}/home/dev"
   fi
 fi
