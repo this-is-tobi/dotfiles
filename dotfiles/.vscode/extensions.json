@@ -1,0 +1,57 @@
+{
+  "recommendations": [
+    // themes & icons
+    "GitHub.github-vscode-theme",
+    "pkief.material-icon-theme",
+
+    // general
+    "ms-vscode-remote.remote-containers",
+    "ms-vsliveshare.vsliveshare",
+    "oderwat.indent-rainbow",
+    "pflannery.vscode-versionlens",
+    "SonarSource.sonarlint-vscode",
+    "wix.vscode-import-cost",
+    "wmaurer.change-case",
+
+    // git
+    "eamodio.gitlens",
+    "GitHub.vscode-pull-request-github",
+    "mhutchie.git-graph",
+    "vivaxy.vscode-conventional-commits",
+
+    // ansible
+    "redhat.ansible",
+
+    // eslint
+    "dbaeumer.vscode-eslint",
+
+    // vue
+    "hollowtree.vue-snippets",
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin",
+
+    // go
+    "golang.go",
+
+    // kubernetes
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+
+    // markdown
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced",
+
+    // css
+    "csstools.postcss",
+    "stylelint.vscode-stylelint",
+    "voorjaar.windicss-intellisense",
+
+    // csv
+    "mechatroner.rainbow-csv",
+
+    // yaml
+    "redhat.vscode-yaml",
+
+    // pdf
+    "tomoki1207.pdf"
+  ]
+}

@@ -1,0 +1,41 @@
+[alias]
+	ap = add -p
+	br = branch
+	bv = "br -vv"
+	ci = commit
+	co = checkout
+	sw = switch
+	cm = commit -m
+	df = diff
+	ds = diff --staged
+	h = log --format='%C(yellow)%h%Creset %C(red)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --graph
+	last = !git --no-pager log -1 -p --stat HEAD
+	lg = log --oneline --decorate --graph
+	oops = commit --amend
+	oopn = "oops --no-edit"
+	sre = "!f() { git log -S$1 --pickaxe-regex ; }; f"
+	st = status
+	unstage = reset HEAD
+	us = unstage
+	root = rev-parse --show-toplevel
+[push]
+	default = simple
+[status]
+	showUntrackedFiles = all
+[diff]
+	wordRegex = .
+	tool = meld
+[branch]
+	autosetuprebase = always
+	rebase = preserve
+[credential]
+	helper = cache --timeout=3600
+[color]
+	ui = true
+[rerere]
+	enabled = true
+[user]
+	email = thibault_colin@hotmail.fr
+	name = this-is-tobi
+[init]
+	defaultBranch = main
