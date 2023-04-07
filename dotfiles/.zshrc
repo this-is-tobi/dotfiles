@@ -50,6 +50,10 @@ alias k="kubectl"
 alias kns="kubens"
 alias kctx="kubectx"
 
+# Use homebrew packages instead of default system packages
+export PATH="/usr/local/bin:$PATH"
+
+
 # tldr++
 TLDR_OS=osx # linux
 
