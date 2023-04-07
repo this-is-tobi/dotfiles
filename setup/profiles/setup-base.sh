@@ -23,6 +23,7 @@ FORMULAE=(
   jq
   nmap
   ripgrep
+  rsync
   isacikgoz/taps/tldr
   tor
   tree

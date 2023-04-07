@@ -42,6 +42,7 @@ It can install severals profiles in addition to the [basic](#base) by providing 
   - [nmap](https://nmap.org/) *- port scanning utility*
   - [oc](https://www.openshift.com/) *- openshift cli*
   - [ripgrep](https://github.com/BurntSushi/ripgrep) *- regex pattern search cli (usefull for bat-extras)*
+  - [rsync](https://rsync.samba.org/) *- file transfer tool*
   - [tldr++](https://github.com/isacikgoz/tldr) *- cheatsheet cli*
   - [tor](https://www.torproject.org/) *- anonymizing overlay network for TCP*
   - [tree](https://mama.indstate.edu/users/ice/tree/) *- filesystem display as tree*
