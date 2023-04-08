@@ -64,12 +64,35 @@ ETC_FILES=(
   /etc/hosts
   /etc/resolv.conf
 )
-
 mkdir -p "${BACKUP_DIR%/}/etc"
 if [ "$BACKUP_COMPRESSION" = "true" ]; then
-  rsync -azhLKP ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
+  rsync -ahW --compress --info=progress2 ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
 else
-  rsync -ahLKP ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
+  rsync -ahW --no-compress --info=progress2 ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
+fi
+
+
+# Backup dotfiles
+printf "\n${red}${i}.${no_color} Backup dotfiles\n\n"
+i=$(($i + 1))
+
+DOT_FILES=(
+  $HOME/.aws
+  $HOME/.config
+  $HOME/.docker/config.json
+  $HOME/.docker/features.json
+  $HOME/.gitconfig
+  $HOME/.kube/config
+  $HOME/.kube/config.d
+  $HOME/.npmrc
+  $HOME/.ssh
+  $HOME/.zshrc
+)
+mkdir -p "${BACKUP_DIR%/}/dotfiles"
+if [ "$BACKUP_COMPRESSION" = "true" ]; then
+  rsync -ahW --compress --info=progress2 ${DOT_FILES[*]} "${BACKUP_DIR%/}/dotfiles"
+else
+  rsync -ahW --no-compress --info=progress2 ${DOT_FILES[*]} "${BACKUP_DIR%/}/dotfiles"
 fi
 
 
@@ -77,39 +100,38 @@ fi
 printf "\n${red}${i}.${no_color} Backup home directory\n\n"
 i=$(($i + 1))
 
+HOME_DIRS=(
+  $HOME/dev
+)
 mkdir "${BACKUP_DIR%/}/home"
 if [ "$BACKUP_FULL" = "true" ]; then
-  # Home directories
-  HOME_DIRS=(
-    $HOME/desktop
-    $HOME/dev
-    $HOME/documents
-    $HOME/downloads
-    $HOME/movies
-    $HOME/music
-    $HOME/pictures
-  )
-  if [ "$BACKUP_COMPRESSION" = "true" ]; then
-    rsync -azhLKP "$HOME" "${BACKUP_DIR%/}/home"
-  else
-    rsync -ahLKP "$HOME" "${BACKUP_DIR%/}/home"
-  fi
+HOME_DIRS+=(
+  $HOME/desktop
+  $HOME/documents
+  $HOME/downloads
+  $HOME/movies
+  $HOME/music
+  $HOME/pictures
+)
+if [ "$BACKUP_COMPRESSION" = "true" ]; then
+  rsync -ahW --compress --info=progress2 ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
 else
-  # Dotfiles
-  DOT_FILES=($(ls -a "$HOME" | grep -E '^\.' | grep -ivE '^\.\.$' | grep -ivE '^\.$' | grep -iv '.trash' | grep -iv '.ds_store'))
-  if [ "$BACKUP_COMPRESSION" = "true" ]; then
-    rsync -azhLKP ${DOT_FILES[*]} "${BACKUP_DIR%/}/home/dotfiles"
-  else
-    rsync -ahLKP ${DOT_FILES[*]} "${BACKUP_DIR%/}/home/dotfiles"
-  fi
+  rsync -ahW --no-compress --info=progress2 ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
+fi
 
-  # Other directories
-  OTHER_DIRS=(
-    $HOME/dev
+
+# Backup brave
+if [ -d $HOME/Library/Application\ Support/BraveSoftware ]; then
+  printf "\n${red}${i}.${no_color} Backup brave files\n\n"
+  i=$(($i + 1))
+
+  BRAVE_FILES=(
+    $HOME/Library/Application\ Support/BraveSoftware/Brave-Browser/Default
   )
+  mkdir -p "${BACKUP_DIR%/}/brave"
   if [ "$BACKUP_COMPRESSION" = "true" ]; then
-    rsync -azhLKP ${OTHER_DIRS[*]} "${BACKUP_DIR%/}/home/dev"
+    rsync -ahW --compress --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
   else
-    rsync -azhLKP ${OTHER_DIRS[*]} "${BACKUP_DIR%/}/home/dev"
+    rsync -ahW --no-compress --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
   fi
 fi

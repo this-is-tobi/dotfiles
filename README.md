@@ -12,14 +12,14 @@ The `dotfiles/` folder provides the following dotfiles templates :
 
 ## Backup
 
-The script [backup.sh](./backup/backup.sh) is intended to backup common files to another directory (local or remote). 
+The script [backup-osx.sh](./backup/backup-osx.sh) is intended to backup common files to another directory (local or remote). 
 
 > For more infos use `-h` flag with the script to print help.
 
 ## Setup
 
-The script [setup.sh](./setup/setup.sh) aims to install common packages.
-It can install severals profiles in addition to the [basic](#base) by providing `-p <profile_name>` *(example: `./setup.sh -p devops`)*. The following additional profiles are available :
+The script [setup-osx.sh](./setup/setup-osx.sh) is intended to install common packages on osx.
+It can install severals profiles in addition to the [basic](#base) by providing `-p <profile_name>` *(example: `./setup-osx.sh -p devops`)*. The following additional profiles are available :
 - [extras](#extras) *- extras personnal packages*
 - [devops](#devops) *- devops oriented packages*
 - [js](#javascript) *- js developer oriented packages*
@@ -28,7 +28,9 @@ It can install severals profiles in addition to the [basic](#base) by providing 
 
 *Packages can come from different sources such as homebrew, npm or shell installation.*
 
-### Base
+### OSX
+
+#### Base
 
 - Homebrew *- formulae* :
   - [bat](https://github.com/sharkdp/bat) *- cat command enhanced*
@@ -59,7 +61,7 @@ It can install severals profiles in addition to the [basic](#base) by providing 
 - Shell :
   - [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/) *- zsh configuration manager*
 
-### Extras
+#### Extras
 
 - Homebrew *- cask* :
   - [audacity](https://www.audacityteam.org/) *- audio manipulation app*
@@ -69,7 +71,7 @@ It can install severals profiles in addition to the [basic](#base) by providing 
   - [transmission](https://transmissionbt.com/) *- torrent client*
   - [vlc](https://videolan.org/) *- video player*
 
-### Devops
+#### Devops
 
 - Homebrew *- formulae* :
   - [act](https://github.com/nektos/act) *- local github actions*
@@ -88,7 +90,7 @@ It can install severals profiles in addition to the [basic](#base) by providing 
 - Shell :
   - [scalingo](https://doc.scalingo.com/) *- scalingo cli*
 
-### Javascript
+#### Javascript
 
 - Homebrew *- formulae* :
   - [node](https://nodejs.org/) *- javascript runtime environment*

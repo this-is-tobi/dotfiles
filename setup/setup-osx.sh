@@ -109,7 +109,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 printf "\n${red}${i}.${no_color} Install base profile\n\n"
 i=$(($i + 1))
 
-sh ./profiles/setup-base.sh
+sh ./profiles/osx/setup-base.sh
 
 
 # Install extras profile
@@ -117,7 +117,7 @@ if [[ "$INSTALL_EXTRAS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install extras profile\n\n"
   i=$(($i + 1))
 
-  sh ./profiles/extras.sh
+  sh ./profiles/osx/setup-extras.sh
 fi
 
 
@@ -126,7 +126,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install extras profile\n\n"
   i=$(($i + 1))
 
-  sh ./profiles/devops.sh
+  sh ./profiles/osx/setup-devops.sh
 fi
 
 
@@ -135,7 +135,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install extras profile\n\n"
   i=$(($i + 1))
 
-  sh ./profiles/js.sh
+  sh ./profiles/osx/setup-js.sh
 fi
 
 
