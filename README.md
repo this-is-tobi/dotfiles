@@ -38,11 +38,11 @@ It can install severals profiles in addition to the [basic](#base) by providing 
   - [exa](https://the.exa.website) *- ls command enhanced*
   - [ffmpeg](https://ffmpeg.org/) *- audio video manipulation tool*
   - [gh](https://cli.github.com/) *- github cli*
+  - [glab](https://gitlab.com/gitlab-org/cli) *- gitlab cli*
   - [go](https://go.dev/) *- programming language*
   - [gnupg](https://gnupg.org/) *- encryption tool*
   - [jq](https://stedolan.github.io/jq/) *- json processor tool*
   - [nmap](https://nmap.org/) *- port scanning utility*
-  - [oc](https://www.openshift.com/) *- openshift cli*
   - [ripgrep](https://github.com/BurntSushi/ripgrep) *- regex pattern search cli (usefull for bat-extras)*
   - [rsync](https://rsync.samba.org/) *- file transfer tool*
   - [tldr++](https://github.com/isacikgoz/tldr) *- cheatsheet cli*

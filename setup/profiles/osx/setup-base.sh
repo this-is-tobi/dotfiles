@@ -18,6 +18,7 @@ FORMULAE=(
   exa
   ffmpeg
   gh
+  glab
   go
   gnupg
   jq

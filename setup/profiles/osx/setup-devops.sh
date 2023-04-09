@@ -22,7 +22,6 @@ FORMULAE=(
   krew
   kubectx
   kubernetes-cli
-  openshift-cli
   terraform
   trivy
   vault
