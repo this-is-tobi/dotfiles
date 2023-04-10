@@ -14,7 +14,6 @@ brew update
 printf "\n\n${red}[devops] =>${no_color} Install homebrew packages (cli)\n\n"
 FORMULAE=(
   act
-  argocd
   ansible
   helm
   k9s

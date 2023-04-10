@@ -7,12 +7,13 @@ no_color='\033[0m'
 
 # Add wakemeops debian repo
 if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
   curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
 fi
 
 
 # Updating apt cache
-printf "\n\n${red}[devops] =>${no_color} Update apt\n\n"
+printf "\n\n${red}[devops] =>${no_color} Update apt cache\n\n"
 sudo apt update
 
 
@@ -39,7 +40,10 @@ sudo apt install -y \
 # Install tldr++
 if [ ! -x "$(command -v tldr)" ]; then
   printf "\n\n${red}[base] =>${no_color} Install tldr++\n\n"
-  go install github.com/isacikgoz/tldr/cmd/tldr@latest
+  curl -L -o /tmp/tldr.tar.gz $(curl -s "https://api.github.com/repos/isacikgoz/tldr/releases/latest" \
+      | jq -r --arg a $(dpkg --print-architecture) '.assets[] | select(.name | match("tldr_.*_linux_" + $a + "\\.tar\\.gz")) | .browser_download_url') \
+    && tar -C /tmp -xzf /tmp/tldr.tar.gz \
+    && sudo mv /tmp/tldr /usr/local/bin
 fi
 
 

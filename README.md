@@ -75,7 +75,6 @@ __Terminal :__
 | Package                                                          | Description                                                 | OSX installation | Debian installation |
 | ---------------------------------------------------------------- | ----------------------------------------------------------- | ---------------- | ------------------- |
 | [act](https://github.com/nektos/act)                             | local github actions                                        | homebrew         | apt                 |
-| [argocd](https://argoproj.github.io/cd)                          | argocd cli                                                  | homebrew         | apt                 |
 | [ansible](https://docs.ansible.com/)                             | automation tool                                             | homebrew         | shell               |
 | [helm](https://helm.sh/)                                         | kubernetes package manager                                  | homebrew         | apt                 |
 | [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                              | homebrew         | apt                 |

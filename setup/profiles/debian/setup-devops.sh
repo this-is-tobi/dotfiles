@@ -7,12 +7,13 @@ no_color='\033[0m'
 
 # Add wakemeops debian repo
 if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
   curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
 fi
 
 
 # Updating apt cache
-printf "\n\n${red}[devops] =>${no_color} Update apt\n\n"
+printf "\n\n${red}[devops] =>${no_color} Update apt cache\n\n"
 sudo apt update
 
 
@@ -20,7 +21,6 @@ sudo apt update
 printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   act \
-  argocd \
   helm \
   k9s \
   kind \
@@ -36,7 +36,8 @@ sudo apt install -y \
 
 # Install ansible
 if [ ! -x "$(command -v ansible)" ]; then
-  echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main" > /etc/apt/sources.list.d/ansible.list
+  printf "\n\n${red}[devops] =>${no_color} Install ansible\n\n"
+  sudo echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/ansible.list > /dev/null
   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
   sudo apt update && sudo apt install -y ansible
 fi
@@ -51,7 +52,6 @@ vault -autocomplete-install
 if [ ! -x "$(command -v scalingo)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install scalingo cli\n\n"
   curl -O https://cli-dl.scalingo.com/install && bash install
-
   # Install scalingo autocompletion
   printf "\n\n${red}[devops] =>${no_color} Install scalingo cli autocompletion\n\n"
   mkdir -p ~/.zsh/completion
