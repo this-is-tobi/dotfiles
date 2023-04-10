@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Colorize terminal
+red='\e[0;31m'
+no_color='\033[0m'
+
+
+# Add wakemeops debian repo
+if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
+  curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
+fi
+
+
+# Updating apt cache
+printf "\n\n${red}[devops] =>${no_color} Update apt\n\n"
+sudo apt update
+
+
+# Install utils packages
+printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
+sudo apt install -y \
+  bat \
+  exa \
+  ffmpeg \
+  github-cli \
+  glab \
+  golang-go \
+  gnupg \
+  jq \
+  nmap \
+  ripgrep \
+  rsync \
+  tree \
+  vim \
+  wget \
+  yq
+
+
+# Install tldr++
+if [ ! -x "$(command -v tldr)" ]; then
+  printf "\n\n${red}[base] =>${no_color} Install tldr++\n\n"
+  go install github.com/isacikgoz/tldr/cmd/tldr@latest
+fi
+
+
+# Create symlink for bat : https://github.com/sharkdp/bat#on-ubuntu-using-apt
+if [ ! -L ~/.local/bin/bat ]; then
+  printf "\n\n${red}[base] =>${no_color} Create symlink for bat\n\n"
+  mkdir -p ~/.local/bin
+  ln -s /usr/bin/batcat ~/.local/bin/bat
+fi
+
+
+# Install bat-extras for additional bat commands
+if [ ! -f /usr/local/bin/batman ]; then
+  printf "\n\n${red}[base] =>${no_color} Install bat-extras\n\n"
+  curl -L -o /tmp/bat-extras.zip $(curl -s "https://api.github.com/repos/eth-p/bat-extras/releases/latest" \
+      | jq -r '.assets[] | select(.name | match("bat-extras-.*\\.zip")) | .browser_download_url') \
+    && unzip /tmp/bat-extras.zip \
+    && rm /tmp/bat-extras.zip \
+    && /tmp/bat-extras/build.sh --install
+fi
+
+
+# Install docker
+if [ ! -x "$(command -v docker)" ]; then
+  printf "\n\n${red}[base] =>${no_color} Install docker\n\n"
+  sudo apt install -y ca-certificates curl gnupg
+  sudo mkdir -m 0755 -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+  sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  sudo groupadd docker && sudo usermod -aG docker $USER
+fi
