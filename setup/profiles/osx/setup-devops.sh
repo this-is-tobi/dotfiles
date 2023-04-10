@@ -22,6 +22,8 @@ FORMULAE=(
   krew
   kubectx
   kubernetes-cli
+  minio-mc
+  scw
   terraform
   trivy
   vault

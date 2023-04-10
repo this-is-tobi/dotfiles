@@ -26,7 +26,6 @@ FORMULAE=(
   ripgrep
   rsync
   isacikgoz/taps/tldr
-  tor
   tree
   vim
   yq

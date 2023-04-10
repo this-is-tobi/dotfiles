@@ -3,6 +3,7 @@
 # Colorize terminal
 red='\e[0;31m'
 no_color='\033[0m'
+
 # Console step increment
 i=1
 
@@ -35,14 +36,15 @@ print_help() {
 while getopts hp: flag; do
   case "${flag}" in
     p)
-      [[ "$OPTARG" = "extras" ]] && INSTALL_EXTRAS="true"
-      [[ "$OPTARG" = "devops" ]] && INSTALL_DEVOPS="true"
-      [[ "$OPTARG" = "js" ]] && INSTALL_JS="true";;
+      [[ "$OPTARG" =~ "extras" ]] && INSTALL_EXTRAS="true"
+      [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
+      [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
     h | *)
       print_help
       exit 0;;
   esac
 done
+
 
 # utils
 install_clt() {
