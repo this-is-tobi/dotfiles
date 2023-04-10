@@ -51,7 +51,7 @@ vault -autocomplete-install
 # Install scalingo
 if [ ! -x "$(command -v scalingo)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install scalingo cli\n\n"
-  curl -O https://cli-dl.scalingo.com/install && bash install
+  curl -o /tmp/install_scalingo.sh https://cli-dl.scalingo.com/install && bash /tmp/install_scalingo.sh
   # Install scalingo autocompletion
   printf "\n\n${red}[devops] =>${no_color} Install scalingo cli autocompletion\n\n"
   mkdir -p ~/.zsh/completion

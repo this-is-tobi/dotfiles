@@ -8,7 +8,8 @@ no_color='\033[0m'
 i=1
 
 # Get project directories
-PROJECT_DIR="$(git rev-parse --show-toplevel)"
+# PROJECT_DIR="$(git rev-parse --show-toplevel)"
+SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Default
 INSTALL_DEVOPS="false"
@@ -87,7 +88,7 @@ fi
 printf "\n${red}${i}.${no_color} Install base profile\n\n"
 i=$(($i + 1))
 
-sh "$PROJECT_DIR/setup/profiles/debian/setup-base.sh"
+sh "$SCRIPT_PATH/profiles/debian/setup-base.sh"
 
 
 # Install devops profile
@@ -95,7 +96,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install devops profile\n\n"
   i=$(($i + 1))
 
-  sh "$PROJECT_DIR/setup/profiles/debian/setup-devops.sh"
+  sh "$SCRIPT_PATH/profiles/debian/setup-devops.sh"
 fi
 
 
@@ -104,7 +105,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
   i=$(($i + 1))
 
-  sh "$PROJECT_DIR/setup/profiles/debian/setup-js.sh"
+  sh "$SCRIPT_PATH/profiles/debian/setup-js.sh"
 fi
 
 
@@ -113,6 +114,6 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
   i=$(($i + 1))
 
-  cp "$PROJECT_DIR/dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=*/TLDR_OS=linux/g' "$HOME/.zshrc"
-  cp "$PROJECT_DIR/dotfiles/.gitconfig" "$HOME/.gitconfig"
+  cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=*/TLDR_OS=linux/g' "$HOME/.zshrc"
+  cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
 fi

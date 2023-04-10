@@ -58,11 +58,8 @@ fi
 # Install bat-extras for additional bat commands
 if [ ! -f /usr/local/bin/batman ]; then
   printf "\n\n${red}[base] =>${no_color} Install bat-extras\n\n"
-  curl -L -o /tmp/bat-extras.zip $(curl -s "https://api.github.com/repos/eth-p/bat-extras/releases/latest" \
-      | jq -r '.assets[] | select(.name | match("bat-extras-.*\\.zip")) | .browser_download_url') \
-    && unzip /tmp/bat-extras.zip \
-    && rm /tmp/bat-extras.zip \
-    && /tmp/bat-extras/build.sh --install
+  git clone -b "$(curl -s https://api.github.com/repos/eth-p/bat-extras/releases/latest | jq -r '.tag_name')" --depth 1 https://github.com/eth-p/bat-extras /tmp/bat-extras \
+    && sudo /tmp/bat-extras/build.sh --install
 fi
 
 
