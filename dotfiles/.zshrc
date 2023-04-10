@@ -36,7 +36,6 @@ plugins=(
   sudo
   systemadmin
   terraform
-  tmux
   vault
   volta
 )
