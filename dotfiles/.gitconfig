@@ -34,10 +34,10 @@
 	ui = true
 [rerere]
 	enabled = true
-[user]
-	email = thibault_colin@hotmail.fr
-	name = this-is-tobi
 [init]
 	defaultBranch = main
 [pull]
 	rebase = true
+[user]
+	email = thibault_colin@hotmail.fr
+	name = this-is-tobi
