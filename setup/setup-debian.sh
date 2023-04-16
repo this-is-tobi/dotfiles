@@ -12,6 +12,7 @@ i=1
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Default
+INSTALL_BASE="false"
 INSTALL_DEVOPS="false"
 INSTALL_JS="false"
 COPY_DOTFILES="false"
@@ -23,9 +24,10 @@ Following flags are available:
   -d    Copy dotfiles.
 
   -p    Install additional packages according to the given profile, available profiles are :
+          -> 'base'
           -> 'devops'
           -> 'js'
-        Default is no additional profile, this flag can be used multiple times.
+        Default is no profile, this flag can be used with a CSV list (ex: -p "base,js").
 
   -h    Print script help.\n\n"
 
@@ -39,7 +41,7 @@ while getopts hdp: flag; do
     d)
       COPY_DOTFILES="true";;
     p)
-      [[ "$OPTARG" =~ "extras" ]] && INSTALL_EXTRAS="true"
+      [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
       [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
     h | *)
@@ -60,13 +62,13 @@ printf "\nScript settings:
 if [ ! -x "$(command -v zsh)" ]; then
   printf "\n${red}${i}.${no_color} Install zsh\n\n"
   sudo apt update && sudo apt install -y zsh
+fi
 
-  # Make zsh the default shell
+# Make zsh the default shell
+if [[ ! "$SHELL" =~ "zsh" ]]; then
   printf "\n${red}${i}.${no_color} Make zsh the default shell\n\n"
   sudo chsh -s $(which zsh) "$USER"
 fi
-
-
 
 # Install oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -74,21 +76,17 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   i=$(($i + 1))
 
   wget -O /tmp/install-oh-my-zsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-  sed -i 's/exec zsh -l/#exec zsh -l/' /tmp/install-oh-my-zsh.sh
-  sh /tmp/install-oh-my-zsh.sh
-fi
-
-# Add wakemeops debian repo
-if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb | grep wakemeops)" ]; then
-  curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
+  sh /tmp/install-oh-my-zsh.sh --skip-chsh --unattended
 fi
 
 
 # Install base profile
-printf "\n${red}${i}.${no_color} Install base profile\n\n"
-i=$(($i + 1))
+if [[ "$INSTALL_BASE" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install base profile\n\n"
+  i=$(($i + 1))
 
-sh "$SCRIPT_PATH/profiles/debian/setup-base.sh"
+  sh "$SCRIPT_PATH/profiles/debian/setup-base.sh"
+fi
 
 
 # Install devops profile

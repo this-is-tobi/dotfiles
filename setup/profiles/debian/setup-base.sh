@@ -6,14 +6,14 @@ no_color='\033[0m'
 
 
 # Add wakemeops debian repo
-if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
+if [ -z "$(find /etc/apt/ -name '*.list' | xargs cat | grep '^[[:space:]]*deb' | grep 'wakemeops')" ]; then
   printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
   curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
 fi
 
 
 # Updating apt cache
-printf "\n\n${red}[devops] =>${no_color} Update apt cache\n\n"
+printf "\n\n${red}[base] =>${no_color} Update apt cache\n\n"
 sudo apt update
 
 
@@ -73,5 +73,16 @@ if [ ! -x "$(command -v docker)" ]; then
     "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   sudo chmod a+r /etc/apt/keyrings/docker.gpg
   sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-  sudo groupadd docker && sudo usermod -aG docker $USER
+fi
+
+# Add group docker if missing
+if [ ! -z $(grep -q -E "^docker:" /etc/group)]; then
+  printf "\n\n${red}[base] =>${no_color} Add docker group\n\n"
+  sudo groupadd docker
+fi
+
+# Add user in docker group is missing
+if [ -z "$(groups $USER | grep 'docker')" ]; then
+  printf "\n\n${red}[base] =>${no_color} Add user to docker group\n\n"
+  sudo usermod -aG docker $USER
 fi
