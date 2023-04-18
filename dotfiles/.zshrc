@@ -46,8 +46,9 @@ alias h='history'
 alias hs='history | grep'
 alias hsi='history | grep -i'
 alias k="kubectl"
-alias kns="kubens"
-alias kctx="kubectx"
+alias kn="kubens"
+alias kx="kubectx"
+alias exa="exa -lag --git"
 
 # Use homebrew packages instead of default system packages
 export PATH="/usr/local/bin:$PATH"
