@@ -8,8 +8,7 @@ no_color='\033[0m'
 i=1
 
 # Get project directories
-PROJECT_DIR="$(git rev-parse --show-toplevel)"
-# SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Default
 INSTALL_DEVOPS="false"
@@ -120,7 +119,7 @@ fi
 printf "\n${red}${i}.${no_color} Install base profile\n\n"
 i=$(($i + 1))
 
-sh "$PROJECT_DIR/setup/profiles/osx/setup-base.sh"
+sh "$SCRIPT_PATH/profiles/osx/setup-base.sh"
 
 
 # Install extras profile
@@ -128,7 +127,7 @@ if [[ "$INSTALL_EXTRAS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install extras profile\n\n"
   i=$(($i + 1))
 
-  sh "$PROJECT_DIR/setup/profiles/osx/setup-extras.sh"
+  sh "$SCRIPT_PATH/profiles/osx/setup-extras.sh"
 fi
 
 
@@ -137,7 +136,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install devops profile\n\n"
   i=$(($i + 1))
 
-  sh "$PROJECT_DIR/setup/profiles/osx/setup-devops.sh"
+  sh "$SCRIPT_PATH/profiles/osx/setup-devops.sh"
 fi
 
 
@@ -146,7 +145,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
   i=$(($i + 1))
 
-  sh "$PROJECT_DIR/setup/profiles/osx/setup-js.sh"
+  sh "$SCRIPT_PATH/profiles/osx/setup-js.sh"
 fi
 
 
@@ -155,13 +154,13 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
   i=$(($i + 1))
 
-  cp "$PROJECT_DIR/dotfiles/.zshrc" "$HOME/.zshrc"
-  cp "$PROJECT_DIR/dotfiles/.gitconfig" "$HOME/.gitconfig"
-  cp "$PROJECT_DIR/dotfiles/.vscode/settings.json" "$HOME/Library/Application\ Support/Code/User/settings.json"
+  cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc"
+  cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
+  cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/Library/Application\ Support/Code/User/settings.json"
 
 
   # Install .vscode extensions
-  VSCODE_EXTENSIONS=($(cat "$PROJECT_DIR/dotfiles/.vscode/extensions.json" \
+  VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
     | grep -v '//' \
     | grep -E '\S' \
     | jq -r '.recommendations[]'))
