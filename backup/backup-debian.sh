@@ -102,39 +102,13 @@ i=$(($i + 1))
 
 mkdir "${BACKUP_DIR%/}/home"
 if [ "$BACKUP_FULL" = "true" ]; then
-  HOME_DIRS+=(
-    $HOME/desktop
-    $HOME/documents
-    $HOME/downloads
-    $HOME/movies
-    $HOME/music
-    $HOME/pictures
-  )
+  HOME_DIR="/home"
 else 
-  HOME_DIRS=(
-    $HOME/dev
-  )
+  HOME_DIR="$HOME"
 fi
 
 if [ "$BACKUP_COMPRESSION" = "true" ]; then
-  rsync -ahW --compress --info=progress2 ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
+  rsync -ahW --compress --info=progress2 "$HOME_DIR" "${BACKUP_DIR%/}/home"
 else
-  rsync -ahW --no-compress --info=progress2 ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
-fi
-
-
-# Backup brave
-if [ -d $HOME/Library/Application\ Support/BraveSoftware ]; then
-  printf "\n${red}${i}.${no_color} Backup brave files\n\n"
-  i=$(($i + 1))
-
-  BRAVE_FILES=(
-    $HOME/Library/Application\ Support/BraveSoftware/Brave-Browser/Default
-  )
-  mkdir -p "${BACKUP_DIR%/}/brave"
-  if [ "$BACKUP_COMPRESSION" = "true" ]; then
-    rsync -ahW --compress --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
-  else
-    rsync -ahW --no-compress --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
-  fi
+  rsync -ahW --no-compress --info=progress2 "$HOME_DIR" "${BACKUP_DIR%/}/home"
 fi

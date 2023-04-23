@@ -12,7 +12,9 @@ The `dotfiles/` folder provides the following dotfiles templates :
 
 ## Backup
 
-The script [backup-osx.sh](./backup/backup-osx.sh) is intended to backup common files to another directory (local or remote). 
+These scripts are intended to backup common files to another directory (local or remote) :
+- [backup-osx.sh](./backup/backup-osx.sh)
+- [backup-debian.sh](./backup/backup-osx.sh)
 
 > For more infos use `-h` flag with the script to print help.
 
