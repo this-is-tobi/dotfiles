@@ -13,6 +13,9 @@
     "wix.vscode-import-cost",
     "wmaurer.change-case",
 
+    // github actions
+    "github.vscode-github-actions",
+
     // git
     "eamodio.gitlens",
     "GitHub.vscode-pull-request-github",
