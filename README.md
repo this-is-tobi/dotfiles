@@ -104,3 +104,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [soulseek](https://slsknet.org/)                              | file sharing app          | desktop | homebrew *- cask* | -                   |
 | [transmission](https://transmissionbt.com/)                   | torrent client            | desktop | homebrew *- cask* | -                   |
 | [vlc](https://videolan.org/)                                  | video player              | desktop | homebrew *- cask* | -                   |
+
+## Further utilities
+
+- Check out [Arkade](https://github.com/alexellis/arkade) for more devops tools.
