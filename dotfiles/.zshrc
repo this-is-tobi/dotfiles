@@ -64,7 +64,7 @@ VOLTA_HOME=$HOME/.volta
 export PATH="$VOLTA_HOME/bin:$PATH"
 
 # kubectl completion
-source <(kubectl completion zsh)
+# source <(kubectl completion zsh)
 
 # terrafom completion
 autoload -U +X bashcompinit && bashcompinit
@@ -74,7 +74,7 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 
 # scalingo completion
-source ~/.zsh/completion/scalingo_complete.zsh
+# source ~/.zsh/completion/scalingo_complete.zsh
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"

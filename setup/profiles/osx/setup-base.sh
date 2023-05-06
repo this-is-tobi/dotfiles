@@ -28,6 +28,7 @@ FORMULAE=(
   isacikgoz/taps/tldr
   tree
   vim
+  wget
   yq
 )
 for package in ${FORMULAE[@]}; do

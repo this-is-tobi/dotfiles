@@ -11,6 +11,7 @@ i=1
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Default
+INSTALL_BASE="false"
 INSTALL_DEVOPS="false"
 INSTALL_EXTRAS="false"
 INSTALL_JS="false"
@@ -23,6 +24,7 @@ Following flags are available:
   -d    Copy dotfiles.
 
   -p    Install additional packages according to the given profile, available profiles are :
+          -> 'base'
           -> 'devops'
           -> 'js'
           -> 'extras' (for personnal use)
@@ -40,6 +42,7 @@ while getopts hdp: flag; do
     d)
       COPY_DOTFILES="true";;
     p)
+      [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
       [[ "$OPTARG" =~ "extras" ]] && INSTALL_EXTRAS="true"
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
       [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
@@ -52,7 +55,7 @@ done
 
 # utils
 install_clt() {
-  printf "\n${red}Optional.${no_color} Installs Command Line Tools for Xcode from softwareupdate...\n\n"
+  printf "\n\n${red}Optional.${no_color} Installs Command Line Tools for Xcode from softwareupdate...\n\n"
   # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
   touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
   PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
@@ -61,7 +64,7 @@ install_clt() {
 }
 
 install_homebrew() {
-  printf "\n${red}Optional.${no_color} Installs homebrew...\n\n"
+  printf "\n\n${red}Optional.${no_color} Installs homebrew...\n\n"
   export NONINTERACTIVE=1 
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   printf "\nhomebrew version installed :\n$(homebrew --version)\n\n"
@@ -83,14 +86,14 @@ fi
 
 if [ -z "$(brew --version)" ]; then
   while true; do
-    read -p "\nYou need homebrew to run this script. Do you wish to install homebrew?\n" yn
+    read -p "You need homebrew to run this script. Do you wish to install homebrew?" yn
     case $yn in
       [Yy]*)
         install_homebrew;;
       [Nn]*)
         exit;;
       *)
-        echo "\nPlease answer yes or no.\n";;
+        printf "\nPlease answer y or n.\n";;
     esac
   done
 fi
@@ -98,7 +101,7 @@ fi
 
 # Settings
 printf "\nScript settings:
-  -> install ${red}[base]${no_color} profile: ${red}true${no_color}
+  -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
   -> install ${red}[extras]${no_color} profile: ${red}$INSTALL_EXTRAS${no_color}
   -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
   -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}\n"
@@ -116,10 +119,12 @@ fi
 
 
 # Install base profile
-printf "\n${red}${i}.${no_color} Install base profile\n\n"
-i=$(($i + 1))
+if [[ "$INSTALL_BASE" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install base profile\n\n"
+  i=$(($i + 1))
 
-sh "$SCRIPT_PATH/profiles/osx/setup-base.sh"
+  sh "$SCRIPT_PATH/profiles/osx/setup-base.sh"
+fi
 
 
 # Install extras profile
@@ -164,7 +169,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
     | grep -v '//' \
     | grep -E '\S' \
     | jq -r '.recommendations[]'))
-  for extension in $VSCODE_EXTensionENSIONS[@]; do
+  for extension in ${VSCODE_EXTENSIONS[@]}; do
     echo "$extension" | xargs -L 1 code --install-extension
   done
 fi

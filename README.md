@@ -57,6 +57,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [tldr++](https://github.com/isacikgoz/tldr)                           | cheatsheet cli                                    | cli     | homebrew          | go                  |
 | [tree](https://mama.indstate.edu/users/ice/tree/)                     | filesystem display as tree                        | cli     | homebrew          | apt                 |
 | [vim](https://www.vim.org/)                                           | cli ide                                           | cli     | homebrew          | apt                 |
+| [wget](https://www.gnu.org/software/wget/)                            | internet file retriever                           | cli     | homebrew          | apt                 |
 | [yq](https://github.com/mikefarah/yq)                                 | yaml processor tool                               | cli     | homebrew          | apt                 |
 | [brave](https://brave.com/fr/)                                        | privacy compliant web browser                     | desktop | homebrew *- cask* | -                   |
 | [docker](https://www.docker.com/products/docker-desktop/)             | docker desktop                                    | desktop | homebrew *- cask* | -                   |
