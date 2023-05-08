@@ -57,25 +57,18 @@ export PATH="/usr/local/bin:$PATH"
 
 
 # tldr++
-TLDR_OS=osx # linux
+# TLDR_OS=osx # linux
 
 # volta
-VOLTA_HOME=$HOME/.volta
-export PATH="$VOLTA_HOME/bin:$PATH"
+# VOLTA_HOME=$HOME/.volta
+# export PATH="$VOLTA_HOME/bin:$PATH"
 
 # kubectl completion
 # source <(kubectl completion zsh)
 
 # terrafom completion
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/local/bin/terraform terraform
-
-# python & ansible things
-export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+# autoload -U +X bashcompinit && bashcompinit
+# complete -o nospace -C /usr/local/bin/terraform terraform
 
 # scalingo completion
 # source ~/.zsh/completion/scalingo_complete.zsh
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
