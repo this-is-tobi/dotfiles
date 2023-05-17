@@ -71,6 +71,7 @@ It can install severals profiles in addition to the core install by providing `-
 | ---------------------------------------------------------------- | ----------------------------------------------------------- | ---- | ---------------- | ------------------- |
 | [act](https://github.com/nektos/act)                             | local github actions                                        | cli  | homebrew         | apt                 |
 | [ansible](https://docs.ansible.com/)                             | automation tool                                             | cli  | homebrew         | shell               |
+| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argocd cli                                                  | cli  | homebrew         | apt                 |
 | [helm](https://helm.sh/)                                         | kubernetes package manager                                  | cli  | homebrew         | apt                 |
 | [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                              | cli  | homebrew         | apt                 |
 | [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                | cli  | homebrew         | apt                 |

@@ -15,6 +15,7 @@ printf "\n\n${red}[devops] =>${no_color} Install homebrew packages (cli)\n\n"
 FORMULAE=(
   act
   ansible
+  argocd
   helm
   k9s
   kind

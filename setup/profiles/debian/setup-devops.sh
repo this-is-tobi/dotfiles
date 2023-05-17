@@ -21,6 +21,7 @@ sudo apt update
 printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   act \
+  argocd \
   helm \
   k9s \
   kind \
