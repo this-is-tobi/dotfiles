@@ -1,5 +1,9 @@
 # Dotfiles :wrench:
 
+This project aims to provide dotfiles templates and common scripts for backup & setup.
+
+## Dotfiles
+
 The `dotfiles/` folder provides the following dotfiles templates :
 
 ```txt
