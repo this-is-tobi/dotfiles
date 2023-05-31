@@ -1,4 +1,5 @@
 [alias]
+	aa = add -A
 	ap = add -p
 	br = branch
 	bv = "br -vv"

@@ -28,6 +28,7 @@ sudo apt install -y \
   golang-go \
   gnupg \
   jq \
+  lazydocker \
   nmap \
   ripgrep \
   rsync \

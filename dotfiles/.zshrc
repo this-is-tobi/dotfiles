@@ -51,6 +51,7 @@ alias kl="kubectl logs"
 alias kns="kubens"
 alias kctx="kubectx"
 alias exa="exa -lag --git"
+alias ldoc="lazydocker"
 alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
 
 # Use homebrew packages instead of default system packages

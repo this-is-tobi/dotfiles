@@ -22,6 +22,7 @@ FORMULAE=(
   go
   gnupg
   jq
+  lazydocker
   nmap
   ripgrep
   rsync
