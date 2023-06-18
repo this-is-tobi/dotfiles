@@ -111,6 +111,6 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
   i=$(($i + 1))
 
-  cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=*/TLDR_OS=linux/g' "$HOME/.zshrc"
+  cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=.*/TLDR_OS=linux/g' "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
 fi

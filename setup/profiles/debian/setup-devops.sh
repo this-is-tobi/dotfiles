@@ -21,7 +21,6 @@ sudo apt update
 printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   act \
-  argocd \
   helm \
   k9s \
   kind \
@@ -37,10 +36,23 @@ sudo apt install -y \
 
 # Install ansible
 if [ ! -x "$(command -v ansible)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install ansible\n\n"
   sudo echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/ansible.list > /dev/null
   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
   sudo apt update && sudo apt install -y ansible
+fi
+
+
+# Install argocd
+if [ ! -x "$(command -v argocd)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install argocd\n\n"
+  if [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=arm64
+  else
+    ARCH=amd64
+  fi
+  curl -sSL -o "/tmp/argocd-linux-$ARCH" "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-$ARCH"
+  sudo install -m 555 "/tmp/argocd-linux-$ARCH" /usr/local/bin/argocd
+  rm "/tmp/argocd-linux-$ARCH"
 fi
 
 
