@@ -55,6 +55,9 @@
     "redhat.vscode-yaml",
 
     // pdf
-    "tomoki1207.pdf"
+    "tomoki1207.pdf",
+
+    // prisma ORM
+    "prisma.prisma"
   ]
 }
