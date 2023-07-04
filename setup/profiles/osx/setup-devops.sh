@@ -23,6 +23,7 @@ FORMULAE=(
   kubectx
   kubernetes-cli
   minio-mc
+  openshift-cli
   scw
   terraform
   trivy
