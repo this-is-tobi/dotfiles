@@ -84,6 +84,7 @@ DOT_FILES=(
   $HOME/.gitconfig
   $HOME/.kube/config
   $HOME/.kube/config.d
+  $HOME/.mc
   $HOME/.npmrc
   $HOME/.ssh
   $HOME/.zshrc
