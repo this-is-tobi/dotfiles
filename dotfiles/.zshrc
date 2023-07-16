@@ -51,27 +51,31 @@ alias kl="kubectl logs"
 alias kns="kubens"
 alias kctx="kubectx"
 alias exa="exa -lag --git"
-alias ldoc="lazydocker"
-alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
+alias ldocker="lazydocker"
 alias dsp="docker system prune -a -f"
+alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
 
 # Use homebrew packages instead of default system packages
 export PATH="/usr/local/bin:$PATH"
+export PATH="$HOME/.docker/bin:$PATH"
 
 
-# tldr++
+# # tldr++
 # TLDR_OS=osx # linux
 
-# volta
+# # volta
 # VOLTA_HOME=$HOME/.volta
 # export PATH="$VOLTA_HOME/bin:$PATH"
 
-# kubectl completion
+# # kubectl completion
 # source <(kubectl completion zsh)
 
-# terrafom completion
+# # terrafom completion
 # autoload -U +X bashcompinit && bashcompinit
 # complete -o nospace -C /usr/local/bin/terraform terraform
 
-# scalingo completion
+# # scalingo completion
 # source ~/.zsh/completion/scalingo_complete.zsh
+
+# # minio completion
+# complete -o nospace -C /usr/local/bin/mc mc
