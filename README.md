@@ -14,6 +14,8 @@ The `dotfiles/` folder provides the following dotfiles templates :
 └── .zshrc
 ```
 
+> *Some lines are commented inside `.zshrc`, uncomment them following profile needs.*
+
 ## Backup
 
 These scripts are intended to backup common files to another directory (local or remote) :
@@ -34,11 +36,11 @@ It can install severals profiles in addition to the core install by providing `-
 - [extras](#extras) *- extras personnal packages (only available for osx)*
 - [js](#javascript) *- js developer oriented packages*
 
-> For more infos use `-h` flag with the script to print help.
+> *For more infos use `-h` flag with the script to print help.*
 
-> Packages can come from different sources such as homebrew, apt, npm, etc...
+> *Packages can come from different sources such as homebrew, apt, npm, etc...*
 
-> Apt come with [WakeMeOps](https://docs.wakemeops.com/) repository.
+> *Apt come with [WakeMeOps](https://docs.wakemeops.com/) repository.*
 
 ### Base
 
