@@ -93,6 +93,16 @@ It can install severals profiles in addition to the core install by providing `-
 | [trivy](https://aquasecurity.github.io/trivy/)                   | vulnerability scanner for container images and file systems | cli  | homebrew         | apt                 |
 | [vault](https://vaultproject.io/)                                | vault cli                                                   | cli  | homebrew         | apt                 |
 
+#### Krew plugins (kubectl)
+
+| Plugin                                                        | Description                           |
+| ------------------------------------------------------------- | ------------------------------------- |
+| [cert-manager](https://cert-manager.io/docs/reference/cmctl/) | cert-manager cli                      |
+| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | cloud native postgres cli             |
+| [ktop](https://github.com/vladimirvivien/ktop)                | top-like tool for Kubernetes clusters |
+| [kubescape](https://github.com/kubescape/kubescape/)          | kubernetes security scan              |
+| [kyverno](https://github.com/kyverno/kyverno)                 | kubernetes policy management          |
+
 ### Javascript
 
 | Package                                     | Description                                     | Type    | OSX installation  | Debian installation |

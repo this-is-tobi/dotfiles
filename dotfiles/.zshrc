@@ -70,6 +70,9 @@ export PATH="$HOME/.docker/bin:$PATH"
 # # kubectl completion
 # source <(kubectl completion zsh)
 
+# # krew plugin for kubectl
+# export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
 # # terrafom completion
 # autoload -U +X bashcompinit && bashcompinit
 # complete -o nospace -C /usr/local/bin/terraform terraform

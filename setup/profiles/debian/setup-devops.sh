@@ -34,6 +34,20 @@ sudo apt install -y \
   vault
 
 
+# Install krew plugins
+printf "\n\n${red}[devops] =>${no_color} Install krew plugins\n\n"
+KREW_PLUGINS=(
+  cert-manager
+  cnpg
+  ktop
+  kubescape
+  kyverno
+)
+for plugin in ${KREW_PLUGINS[@]}; do
+  kubectl krew install $plugin
+done
+
+
 # Install ansible
 if [ ! -x "$(command -v ansible)" ]; then
   sudo echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/ansible.list > /dev/null

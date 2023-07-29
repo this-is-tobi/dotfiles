@@ -34,6 +34,20 @@ for package in ${FORMULAE[@]}; do
 done
 
 
+# Install krew plugins
+printf "\n\n${red}[devops] =>${no_color} Install krew plugins\n\n"
+KREW_PLUGINS=(
+  cert-manager
+  cnpg
+  ktop
+  kubescape
+  kyverno
+)
+for plugin in ${KREW_PLUGINS[@]}; do
+  kubectl krew install $plugin
+done
+
+
 # Install vault autocompletion
 printf "\n\n${red}[devops] =>${no_color} Install vault cli autocompletion\n\n"
 vault -autocomplete-install
