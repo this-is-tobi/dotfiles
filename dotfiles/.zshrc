@@ -59,6 +59,10 @@ alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinsta
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.docker/bin:$PATH"
 
+# golang
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 
 # # tldr++
 # TLDR_OS=osx # linux
