@@ -19,7 +19,6 @@ FORMULAE=(
   ffmpeg
   gh
   glab
-  go
   gnupg
   jq
   lazydocker

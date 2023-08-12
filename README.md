@@ -34,6 +34,7 @@ It can install severals profiles in addition to the core install by providing `-
 - [base](#base) *- base packages*
 - [devops](#devops) *- devops oriented packages*
 - [extras](#extras) *- extras personnal packages (only available for osx)*
+- [go](#go) *- go developer oriented packages*
 - [js](#javascript) *- js developer oriented packages*
 
 > *For more infos use `-h` flag with the script to print help.*
@@ -113,6 +114,13 @@ It can install severals profiles in addition to the core install by providing `-
 | [@antfu/ni](https://github.com/antfu/ni)    | javascript package manager wrapper              | cli     | npm               | npm                 |
 | [firefox](https://www.mozilla.org/firefox/) | privacy compliant web browser                   | desktop | homebrew *- cask* | -                   |
 | [insomnia](https://insomnia.rest/)          | http and graphql client                         | desktop | homebrew *- cask* | -                   |
+
+### Go
+
+| Package                                     | Description          | Type | OSX installation | Debian installation |
+| ------------------------------------------- | -------------------- | ---- | ---------------- | ------------------- |
+| [go](https://go.dev/)                       | programming language | cli  | homebrew         | apt                 |
+| [cobra-cli](https://github.com/spf13/cobra) | cli build tool       | cli  | go               | go                  |
 
 ### Extras
 

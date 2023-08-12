@@ -25,7 +25,6 @@ sudo apt install -y \
   ffmpeg \
   github-cli \
   glab \
-  golang-go \
   gnupg \
   jq \
   lazydocker \

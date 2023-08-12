@@ -13,6 +13,7 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # Default
 INSTALL_BASE="false"
 INSTALL_DEVOPS="false"
+INSTALL_GO="false"
 INSTALL_JS="false"
 COPY_DOTFILES="false"
 
@@ -25,6 +26,7 @@ Following flags are available:
   -p    Install additional packages according to the given profile, available profiles are :
           -> 'base'
           -> 'devops'
+          -> 'go'
           -> 'js'
         Default is no profile, this flag can be used with a CSV list (ex: -p "base,js").
 
@@ -42,6 +44,7 @@ while getopts hdp: flag; do
     p)
       [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
+      [[ "$OPTARG" =~ "go" ]] && INSTALL_GO="true"
       [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
     h | *)
       print_help
@@ -54,6 +57,7 @@ done
 printf "\nScript settings:
   -> install ${red}[base]${no_color} profile: ${red}true${no_color}
   -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
+  -> install ${red}[go]${no_color} profile: ${red}$INSTALL_GO${no_color}
   -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}\n"
 
 
@@ -94,6 +98,15 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   i=$(($i + 1))
 
   sh "$SCRIPT_PATH/profiles/debian/setup-devops.sh"
+fi
+
+
+# Install go profile
+if [[ "$INSTALL_GO" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install go profile\n\n"
+  i=$(($i + 1))
+
+  sh "$SCRIPT_PATH/profiles/debian/setup-go.sh"
 fi
 
 
