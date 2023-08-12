@@ -39,6 +39,12 @@ plugins=(
   vault
   volta
 )
+
+# Plugins variables
+export FZF_PREVIEW_ADVANCED=true
+export FZF_PREVIEW_WINDOW='right:60%:nohidden'
+export LESSOPEN='| lessfilter-fzf %s'
+
 source $ZSH/oh-my-zsh.sh
 
 # Aliases

@@ -21,8 +21,11 @@ sudo apt update
 printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   bat \
+  chafa \
   exa \
+  libimage-exiftool-perl \
   ffmpeg \
+  fzf \
   github-cli \
   glab \
   gnupg \
@@ -86,3 +89,7 @@ if [ -z "$(groups $USER | grep 'docker')" ]; then
   printf "\n\n${red}[base] =>${no_color} Add user to docker group\n\n"
   sudo usermod -aG docker $USER
 fi
+
+
+# Install fzf-zsh-plugin
+git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin

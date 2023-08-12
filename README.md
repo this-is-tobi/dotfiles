@@ -49,12 +49,14 @@ It can install severals profiles in addition to the core install by providing `-
 | --------------------------------------------------------------------- | ------------------------------------------------- | ------- | ----------------- | ------------------- |
 | [bat](https://github.com/sharkdp/bat)                                 | cat command enhanced                              | cli     | homebrew          | apt                 |
 | [bat-extras](https://github.com/eth-p/bat-extras)                     | bat combo with other commands                     | cli     | homebrew          | shell               |
+| [chafa](https://hpjansson.org/chafa/)                                 | image viewer in terminal                          | cli     | homebrew          | apt                 |
 | [docker](https://www.docker.com/)                                     | docker engine                                     | cli     | -                 | shell               |
 | [exa](https://the.exa.website)                                        | ls command enhanced                               | cli     | homebrew          | apt                 |
+| [exiftool](https://exiftool.org/)                                     | metadata writer and reader tool                   | cli     | homebrew          | apt                 |
 | [ffmpeg](https://ffmpeg.org/)                                         | audio video manipulation tool                     | cli     | homebrew          | apt                 |
+| [fzf](https://github.com/junegunn/fzf)                                | command-line fuzzy finder                         | cli     | homebrew          | apt                 |
 | [gh](https://cli.github.com/)                                         | github cli                                        | cli     | homebrew          | apt                 |
 | [glab](https://gitlab.com/gitlab-org/cli)                             | gitlab cli                                        | cli     | homebrew          | apt                 |
-| [go](https://go.dev/)                                                 | programming language                              | cli     | homebrew          | apt                 |
 | [gnupg](https://gnupg.org/)                                           | encryption tool                                   | cli     | homebrew          | apt                 |
 | [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/)                      | zsh configuration manager                         | cli     | shell             | shell               |
 | [jq](https://stedolan.github.io/jq/)                                  | json processor tool                               | cli     | homebrew          | apt                 |
