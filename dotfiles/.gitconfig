@@ -3,6 +3,7 @@
 	ap = add -p
 	br = branch
 	bv = "br -vv"
+	bp = "branch --merged >/tmp/merged-branches && vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 	ci = commit
 	co = checkout
 	sw = switch
