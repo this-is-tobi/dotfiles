@@ -61,6 +61,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/)                      | zsh configuration manager                         | cli     | shell             | shell               |
 | [jq](https://stedolan.github.io/jq/)                                  | json processor tool                               | cli     | homebrew          | apt                 |
 | [lazydocker](https://github.com/jesseduffield/lazydocker)             | lazier way to manage everything docker            | cli     | homebrew          | apt                 |
+| [lazygit](https://github.com/jesseduffield/lazygit)                   | lazier way to manage everything git               | cli     | homebrew          | shell               |
 | [nmap](https://nmap.org/)                                             | port scanning utility                             | cli     | homebrew          | apt                 |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)                      | regex pattern search cli (usefull for bat-extras) | cli     | homebrew          | apt                 |
 | [rsync](https://rsync.samba.org/)                                     | file transfer tool                                | cli     | homebrew          | apt                 |

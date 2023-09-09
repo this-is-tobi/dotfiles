@@ -90,3 +90,16 @@ if [ -z "$(groups $USER | grep 'docker')" ]; then
   sudo usermod -aG docker $USER
 fi
 
+# Install lazygit
+if [ ! -x "$(command -v lazygit)" ]; then
+  printf "\n\n${red}[js] =>${no_color} Install lazygit\n\n"
+  if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+    ARCH=x86_64
+  elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=arm64
+  fi
+  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
+  tar xf lazygit.tar.gz lazygit
+  sudo install lazygit /usr/local/bin
+fi
