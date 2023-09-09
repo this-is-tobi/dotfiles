@@ -2,8 +2,8 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # History
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=1000
+SAVEHIST=1000
 HISTFILE=~/.zsh_history
 HIST_STAMPS="yyyy-mm-dd"
 
@@ -42,19 +42,26 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# Plugins variables
+
 # Aliases
-alias h='history'
-alias hs='history | grep'
-alias hsi='history | grep -i'
-alias k="kubectl"
-alias kd="kubectl describe"
-alias kl="kubectl logs"
-alias kns="kubens"
-alias kctx="kubectx"
-alias exa="exa -lag --git"
-alias ldocker="lazydocker"
-alias dsp="docker system prune -a -f"
 alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
+alias dsp="docker system prune -a -f"
+alias exa="exa -lag --git"
+alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohidden'"
+alias h="history"
+alias hs="history | grep"
+alias hsi="history | grep -i"
+alias img="chafa"
+alias k="kubectl"
+alias kc="kubectx"
+alias kd="kubectl describe"
+alias ke="kubectl exec"
+alias kg="kubectl get"
+alias kl="kubectl logs"
+alias kn="kubens"
+alias ldocker="lazydocker"
+alias lgit="lazygit"
 
 # Use homebrew packages instead of default system packages
 export PATH="/usr/local/bin:$PATH"
