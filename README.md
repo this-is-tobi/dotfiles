@@ -90,7 +90,6 @@ It can install severals profiles in addition to the core install by providing `-
 | [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                              | cli  | homebrew         | apt                 |
 | [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)         | cli  | homebrew         | apt                 |
 | [oc](https://www.openshift.com/)                                 | openshift cli                                               | cli  | homebrew         | -                   |
-| [scalingo](https://doc.scalingo.com/)                            | scalingo cli                                                | cli  | shell            | shell               |
 | [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                | cli  | homebrew         | apt                 |
 | [terraform](https://www.terraform.io/)                           | infrastructure automation tool                              | cli  | homebrew         | apt                 |
 | [trivy](https://aquasecurity.github.io/trivy/)                   | vulnerability scanner for container images and file systems | cli  | homebrew         | apt                 |
