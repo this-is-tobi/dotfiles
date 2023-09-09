@@ -51,7 +51,3 @@ CASK=(
 for package in ${CASK[@]}; do
   brew install --cask $package
 done
-
-
-# Install fzf-zsh-plugin
-git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin

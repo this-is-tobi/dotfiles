@@ -40,11 +40,6 @@ plugins=(
   volta
 )
 
-# Plugins variables
-export FZF_PREVIEW_ADVANCED=true
-export FZF_PREVIEW_WINDOW='right:60%:nohidden'
-export LESSOPEN='| lessfilter-fzf %s'
-
 source $ZSH/oh-my-zsh.sh
 
 # Aliases
@@ -70,25 +65,22 @@ export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 
-# # tldr++
-# TLDR_OS=osx # linux
+# tldr++
+TLDR_OS=osx # linux
 
-# # volta
-# VOLTA_HOME=$HOME/.volta
-# export PATH="$VOLTA_HOME/bin:$PATH"
+# volta
+VOLTA_HOME=$HOME/.volta
+export PATH="$VOLTA_HOME/bin:$PATH"
 
-# # kubectl completion
-# source <(kubectl completion zsh)
+# krew plugin for kubectl
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-# # krew plugin for kubectl
-# export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+# kubectl completion
+source <(kubectl completion zsh)
 
-# # terrafom completion
-# autoload -U +X bashcompinit && bashcompinit
-# complete -o nospace -C /usr/local/bin/terraform terraform
+# terrafom completion
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/local/bin/terraform terraform
 
-# # scalingo completion
-# source ~/.zsh/completion/scalingo_complete.zsh
-
-# # minio completion
-# complete -o nospace -C /usr/local/bin/mc mc
+# minio completion
+complete -o nospace -C /usr/local/bin/mc mc
