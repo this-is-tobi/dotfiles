@@ -36,16 +36,12 @@ sudo apt install -y \
 
 # Install krew plugins
 printf "\n\n${red}[devops] =>${no_color} Install krew plugins\n\n"
-KREW_PLUGINS=(
-  cert-manager
-  cnpg
-  ktop
-  kubescape
+krew install \
+  cert-manager \
+  cnpg \
+  ktop \
+  kubescape \
   kyverno
-)
-for plugin in ${KREW_PLUGINS[@]}; do
-  kubectl krew install $plugin
-done
 
 
 # Install ansible

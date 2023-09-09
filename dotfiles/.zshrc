@@ -7,6 +7,11 @@ SAVEHIST=1000
 HISTFILE=~/.zsh_history
 HIST_STAMPS="yyyy-mm-dd"
 
+# Locales
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
 
@@ -41,8 +46,6 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-
-# Plugins variables
 
 # Aliases
 alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"

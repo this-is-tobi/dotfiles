@@ -7,7 +7,7 @@ no_color='\033[0m'
 
 # Add wakemeops debian repo
 if [ -z "$(find /etc/apt/ -name '*.list' | xargs cat | grep '^[[:space:]]*deb' | grep 'wakemeops')" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
+  printf "\n\n${red}[base] =>${no_color} Add wakemeops apt repository\n\n"
   curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
 fi
 
@@ -31,6 +31,9 @@ sudo apt install -y \
   gnupg \
   jq \
   lazydocker \
+  man \
+  man-db \
+  manpages-dev \
   nmap \
   ripgrep \
   rsync \
@@ -92,14 +95,15 @@ fi
 
 # Install lazygit
 if [ ! -x "$(command -v lazygit)" ]; then
-  printf "\n\n${red}[js] =>${no_color} Install lazygit\n\n"
+  printf "\n\n${red}[base] =>${no_color} Install lazygit\n\n"
   if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
     ARCH=x86_64
   elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     ARCH=arm64
   fi
+  mkdir /tmp/lazygit
   LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
-  tar xf lazygit.tar.gz lazygit
-  sudo install lazygit /usr/local/bin
+  curl -Lo /tmp/lazygit/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
+  tar xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
+  sudo install /tmp/lazygit/lazygit /usr/local/bin
 fi
