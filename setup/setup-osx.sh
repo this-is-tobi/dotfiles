@@ -174,6 +174,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
+  cp -R "$SCRIPT_PATH/../dotfiles/nvim" "$HOME/.config"
   cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/Library/Application\ Support/Code/User/settings.json"
 
 

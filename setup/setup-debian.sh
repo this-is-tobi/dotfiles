@@ -126,4 +126,5 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=.*/TLDR_OS=linux/g' "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
+  cp -R "$SCRIPT_PATH/../dotfiles/nvim" "$HOME/.config"
 fi

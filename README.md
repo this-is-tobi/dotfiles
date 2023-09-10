@@ -7,10 +7,15 @@ This project aims to provide dotfiles templates and common scripts for backup & 
 The `dotfiles/` folder provides the following dotfiles templates :
 
 ```txt
-├── .gitconfig
+./dotfiles
 ├── .vscode
 │   ├── extensions.json
 │   └── settings.json
+├── nvim
+│   └── lua
+│       ├── config
+│       └── plugins
+├── .gitconfig
 └── .zshrc
 ```
 
@@ -63,9 +68,10 @@ It can install severals profiles in addition to the core install by providing `-
 | [lazydocker](https://github.com/jesseduffield/lazydocker)             | lazier way to manage everything docker            | cli     | homebrew          | apt                 |
 | [lazygit](https://github.com/jesseduffield/lazygit)                   | lazier way to manage everything git               | cli     | homebrew          | shell               |
 | [nmap](https://nmap.org/)                                             | port scanning utility                             | cli     | homebrew          | apt                 |
+| [nvim](https://neovim.io/)                                            | interactive cli ide (enhanced vim)                | cli     | homebrew          | shell               |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)                      | regex pattern search cli (usefull for bat-extras) | cli     | homebrew          | apt                 |
 | [rsync](https://rsync.samba.org/)                                     | file transfer tool                                | cli     | homebrew          | apt                 |
-| [tldr++](https://github.com/isacikgoz/tldr)                           | cheatsheet cli                                    | cli     | homebrew          | go                  |
+| [tldr++](https://github.com/isacikgoz/tldr)                           | cheatsheet interactive cli                        | cli     | homebrew          | go                  |
 | [tree](https://mama.indstate.edu/users/ice/tree/)                     | filesystem display as tree                        | cli     | homebrew          | apt                 |
 | [vim](https://www.vim.org/)                                           | cli ide                                           | cli     | homebrew          | apt                 |
 | [wget](https://www.gnu.org/software/wget/)                            | internet file retriever                           | cli     | homebrew          | apt                 |

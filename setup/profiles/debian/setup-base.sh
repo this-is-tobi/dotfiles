@@ -107,3 +107,18 @@ if [ ! -x "$(command -v lazygit)" ]; then
   tar xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
   sudo install /tmp/lazygit/lazygit /usr/local/bin
 fi
+
+# Install nvim
+if [ ! -x "$(command -v nvim)" ]; then
+  printf "\n\n${red}[base] =>${no_color} Install neovim\n\n"
+  curl -sLo /tmp/nvim/nvim-linux64.tar.gz "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+  tar xf /tmp/nvim/nvim-linux64.tar.gz -C /tmp/nvim 
+  sudo mv /tmp/nvim/nvim-linux64/bin/* /usr/local/bin 
+  sudo mv /tmp/nvim/nvim-linux64/man/man1/* /usr/local/man/man1 
+  sudo mv /tmp/nvim/nvim-linux64/share/* /usr/local/share 
+  sudo mv /tmp/nvim/nvim-linux64/lib/* /usr/local/lib
+
+  wget -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
+  wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
+  fc-cache -fv
+fi

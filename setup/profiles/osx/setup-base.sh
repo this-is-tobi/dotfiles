@@ -27,6 +27,7 @@ FORMULAE=(
   lazydocker
   lazygit
   nmap
+  nvim
   ripgrep
   rsync
   isacikgoz/taps/tldr
@@ -52,3 +53,10 @@ CASK=(
 for package in ${CASK[@]}; do
   brew install --cask $package
 done
+
+
+# Install neovim fonts
+printf "\n\n${red}[base] =>${no_color} Install neovim fonts\n\n"
+wget -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
+wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
+fc-cache -fv
