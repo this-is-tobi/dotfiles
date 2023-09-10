@@ -127,7 +127,7 @@ It can install severals profiles in addition to the core install by providing `-
 
 | Package                                     | Description          | Type | OSX installation | Debian installation |
 | ------------------------------------------- | -------------------- | ---- | ---------------- | ------------------- |
-| [go](https://go.dev/)                       | programming language | cli  | homebrew         | apt                 |
+| [go](https://go.dev/)                       | programming language | cli  | homebrew         | shell               |
 | [cobra-cli](https://github.com/spf13/cobra) | cli build tool       | cli  | go               | go                  |
 
 ### Extras

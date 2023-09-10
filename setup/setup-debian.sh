@@ -55,16 +55,24 @@ done
 
 # Settings
 printf "\nScript settings:
-  -> install ${red}[base]${no_color} profile: ${red}true${no_color}
+  -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
   -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
   -> install ${red}[go]${no_color} profile: ${red}$INSTALL_GO${no_color}
   -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}\n"
 
 
+# Install common
+printf "\n${red}${i}.${no_color} Install commons\n\n"
+sudo apt update && sudo apt install -y \
+  curl \
+  jq \
+  sed \
+  wget
+
 # Install zsh
 if [ ! -x "$(command -v zsh)" ]; then
   printf "\n${red}${i}.${no_color} Install zsh\n\n"
-  sudo apt update && sudo apt install -y zsh
+  sudo apt install -y zsh
 fi
 
 # Make zsh the default shell
@@ -126,5 +134,5 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=.*/TLDR_OS=linux/g' "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
-  cp -R "$SCRIPT_PATH/../dotfiles/nvim" "$HOME/.config"
+  mkdir -p "$HOME/.config" && cp -R "$SCRIPT_PATH/../dotfiles/nvim" "$HOME/.config"
 fi

@@ -111,6 +111,7 @@ fi
 # Install nvim
 if [ ! -x "$(command -v nvim)" ]; then
   printf "\n\n${red}[base] =>${no_color} Install neovim\n\n"
+  mkdir /tmp/nvim
   curl -sLo /tmp/nvim/nvim-linux64.tar.gz "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
   tar xf /tmp/nvim/nvim-linux64.tar.gz -C /tmp/nvim 
   sudo mv /tmp/nvim/nvim-linux64/bin/* /usr/local/bin 

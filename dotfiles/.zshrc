@@ -2,15 +2,18 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # History
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.zsh_history
-HIST_STAMPS="yyyy-mm-dd"
+export HISTSIZE=10000
+export SAVEHIST=10000
+export HISTFILE="$HOME/.zsh_history"
+export HIST_STAMPS="yyyy-mm-dd"
 
 # Locales
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
+
+# Config directory
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
@@ -63,8 +66,8 @@ alias ke="kubectl exec"
 alias kg="kubectl get"
 alias kl="kubectl logs"
 alias kn="kubens"
-alias ldocker="lazydocker"
-alias lgit="lazygit"
+alias lad="lazydocker"
+alias lag="lazygit"
 
 # Use homebrew packages instead of default system packages
 export PATH="/usr/local/bin:$PATH"
