@@ -17,12 +17,8 @@ brew install --formulae go
 
 # Install go packages
 printf "\n\n${red}[go] =>${no_color} Install go packages\n\n"
-GO_PACKAGES=(
+go install \
   github.com/spf13/cobra-cli@latest
-)
-for package in ${GO_PACKAGES[@]}; do
-  go install $package
-done
 
 
 # Install completion

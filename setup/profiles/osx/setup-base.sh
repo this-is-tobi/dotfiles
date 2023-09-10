@@ -12,47 +12,39 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[base] =>${no_color} Install homebrew packages (cli)\n\n"
-FORMULAE=(
-  bat
-  bat-extras
-  chafa
-  exa
-  exiftool
-  ffmpeg
-  fzf
-  gh
-  glab
-  gnupg
-  jq
-  lazydocker
-  lazygit
-  nmap
-  nvim
-  ripgrep
-  rsync
-  isacikgoz/taps/tldr
-  tree
-  vim
-  wget
+brew install --formulae \
+  bat \
+  bat-extras \
+  chafa \
+  exa \
+  exiftool \
+  ffmpeg \
+  fzf \
+  gh \
+  glab \
+  gnupg \
+  jq \
+  lazydocker \
+  lazygit \
+  nmap \
+  nvim \
+  ripgrep \
+  rsync \
+  isacikgoz/taps/tldr \
+  tree \
+  vim \
+  wget \
   yq
-)
-for package in ${FORMULAE[@]}; do
-  brew install --formulae $package
-done
 
 
 # Install homebrew graphic app packages
 printf "\n\n${red}[base] =>${no_color} Install homebrew packages (graphic)\n\n"
-CASK=(
-  brave-browser
-  docker
-  mattermost
-  openvpn-connect
+brew install --cask \
+  brave-browser \
+  docker \
+  mattermost \
+  openvpn-connect \
   visual-studio-code
-)
-for package in ${CASK[@]}; do
-  brew install --cask $package
-done
 
 
 # Install neovim fonts

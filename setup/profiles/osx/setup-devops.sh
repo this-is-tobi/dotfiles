@@ -12,26 +12,23 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[devops] =>${no_color} Install homebrew packages (cli)\n\n"
-FORMULAE=(
-  act
-  ansible
-  argocd
-  helm
-  k9s
-  kind
-  krew
-  kubectx
-  kubernetes-cli
-  minio-mc
-  openshift-cli
-  scw
-  terraform
-  trivy
+brew install --formulae \
+  act \
+  ansible \
+  argocd \
+  helm \
+  k9s \
+  kind \
+  krew \
+  kubectx \
+  kubernetes-cli \
+  minio-mc \
+  openshift-cli \
+  scw \
+  terraform \
+  trivy \
   vault
-)
-for package in ${FORMULAE[@]}; do
-  brew install --formulae $package
-done
+
 
 
 # Install krew plugins

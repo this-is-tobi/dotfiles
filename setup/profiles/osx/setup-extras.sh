@@ -12,14 +12,11 @@ brew update
 
 # Install homebrew graphic app packages
 printf "\n\n${red}[extras] =>${no_color} Install homebrew packages (graphic)\n\n"
-CASK=(
-  audacity
-  discord
-  raspberry-pi-imager
-  soulseek
-  transmission
+brew install --cask \
+  audacity \
+  discord \
+  raspberry-pi-imager \
+  soulseek \
+  transmission \
   vlc
-)
-for package in ${CASK[@]}; do
-  brew install --cask $package
-done
+
