@@ -175,8 +175,8 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   mkdir -p "$HOME/.config"
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
-  cp -R "$SCRIPT_PATH/../dotfiles/nvim" "$HOME/.config"
-  cp -R "$SCRIPT_PATH/../dotfiles/lazygit" "$HOME/.config"
+  cp -R "$SCRIPT_PATH/../dotfiles/.config/nvim" "$HOME/.config"
+  cp -R "$SCRIPT_PATH/../dotfiles/.config/lazygit" "$HOME/.config"
   cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/Library/Application\ Support/Code/User/settings.json"
 
 
