@@ -11,15 +11,19 @@ The `dotfiles/` folder provides the following dotfiles templates :
 ├── .vscode
 │   ├── extensions.json
 │   └── settings.json
-├── nvim
-│   └── lua
-│       ├── config
-│       └── plugins
+├── .config
+│   ├── lazygit
+│   │   └── config.yml
+│   └── nvim
+│       └── lua
+│           ├── config
+│           ├── plugins
+│           └── init.lua
 ├── .gitconfig
 └── .zshrc
 ```
 
-> *Some lines are commented inside `.zshrc`, uncomment them following profile needs.*
+> *Some lines may be commented inside `.zshrc`, uncomment them following profile needs.*
 
 ## Backup
 
