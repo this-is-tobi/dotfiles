@@ -104,6 +104,6 @@
   "vscode-kubernetes.log-viewer.timestamp": false,
   "vscode-kubernetes.log-viewer.since": -1,
   "vscode-kubernetes.log-viewer.tail": -1,
-  "vscode-kubernetes.log-viewer.destination": "Terminal",
+  "vscode-kubernetes.log-viewer.destination": "Webview",
   "vscode-kubernetes.log-viewer.wrap": true
 }
