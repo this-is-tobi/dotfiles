@@ -16,7 +16,7 @@ export LANGUAGE=en_US.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # Preferred editor for local and remote sessions
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Theme (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
 ZSH_THEME="gnzh"
@@ -61,8 +61,10 @@ alias hsi="history | grep -i"
 alias img="chafa"
 alias k="kubectl"
 alias kc="kubectx"
-alias kd="kubectl describe"
+alias kd="kubectl delete"
+alias kdesc="kubectl describe"
 alias ke="kubectl exec"
+alias kexp="kubectl explain"
 alias kg="kubectl get"
 alias kl="kubectl logs"
 alias kn="kubens"
@@ -97,3 +99,6 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 
 # minio completion
 complete -o nospace -C /usr/local/bin/mc mc
+
+# Scaleway CLI autocomplete initialization.
+eval "$(scw autocomplete script shell=zsh)"
