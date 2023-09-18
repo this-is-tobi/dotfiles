@@ -6,7 +6,7 @@ This project aims to provide dotfiles templates and common scripts for backup & 
 
 The `dotfiles/` folder provides the following dotfiles templates :
 
-```txt
+```sh
 ./dotfiles
 ├── .vscode
 │   ├── extensions.json
