@@ -3,7 +3,7 @@
 git:
   parseEmoji: true
 customCommands:
-  - key: "<c-a>"
+  - key: "<c-v>"
     context: "global"
     description: "Create new conventional commit"
     prompts:
@@ -62,7 +62,7 @@ customCommands:
         body: "Are you sure you want to commit?"
     command: "git commit --message '{{.Form.Type}}{{.Form.Scope}}{{.Form.Breaking}}: {{.Form.Message}}'"
     loadingText: "Creating conventional commit..."
-  - key: "<c-z>"
+  - key: "<c-b>"
     context: "global"
     description: "Create new pull request"
     prompts:
@@ -86,7 +86,7 @@ customCommands:
         body: "Are you sure you want to create PR?"
     command: "gh pr create --fill --base '{{.Form.BaseBranch}}' --assignee '{{.Form.Assignee}}' --project '{{.Form.Project}}'"
     loadingText: "Creating pull request on GitHub..."
-  - key: "<c-e>"
+  - key: "<c-n>"
     context: "global"
     description: "Anti-dating commit"
     prompts:
