@@ -18,7 +18,6 @@
   "editor.minimap.enabled": false,
   "search.exclude": {
     "**/.git": true,
-    "**/.github": true,
     "**/.nuxt": true,
     "**/.pnpm": true,
     "**/.vscode": true,
@@ -63,9 +62,6 @@
   "files.associations": {
     "*.css": "postcss"
   },
-
-  // liveshare
-  "liveshare.authenticationProvider": "GitHub",
 
   // languages
   "[javascript]": {
