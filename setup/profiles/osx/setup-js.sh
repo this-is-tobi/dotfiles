@@ -12,7 +12,7 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[js] =>${no_color} Install homebrew packages (cli)\n\n"
-brew install --formulae \
+brew install --formula \
   node \
   pnpm \
   volta

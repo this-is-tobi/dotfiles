@@ -12,7 +12,7 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[go] =>${no_color} Install go\n\n"
-brew install --formulae go
+brew install --formula go
 
 
 # Install go packages

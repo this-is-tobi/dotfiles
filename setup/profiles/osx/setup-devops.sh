@@ -12,7 +12,7 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[devops] =>${no_color} Install homebrew packages (cli)\n\n"
-brew install --formulae \
+brew install --formula \
   act \
   ansible \
   argocd \

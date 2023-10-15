@@ -12,7 +12,7 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[base] =>${no_color} Install homebrew packages (cli)\n\n"
-brew install --formulae \
+brew install --formula \
   bat \
   bat-extras \
   chafa \
