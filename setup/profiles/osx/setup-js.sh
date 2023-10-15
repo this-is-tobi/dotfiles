@@ -12,7 +12,9 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[js] =>${no_color} Install homebrew packages (cli)\n\n"
+brew tap oven-sh/bun
 brew install --formula \
+  bun \
   node \
   pnpm \
   volta

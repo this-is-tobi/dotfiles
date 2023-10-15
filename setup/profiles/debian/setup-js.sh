@@ -17,4 +17,5 @@ sudo apt update && sudo apt install -y nodejs
 printf "\n\n${red}[js] =>${no_color} Install npm packages\n\n"
 sudo npm install --global \
   @antfu/ni \
+  bun \
   pnpm

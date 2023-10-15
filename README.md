@@ -120,6 +120,7 @@ It can install severals profiles in addition to the core install by providing `-
 
 | Package                                     | Description                                     | Type    | OSX installation  | Debian installation |
 | ------------------------------------------- | ----------------------------------------------- | ------- | ----------------- | ------------------- |
+| [bun](https://bun.sh/)                      | javascript runtime environment                  | cli     | homebrew          | npm                 |
 | [node](https://nodejs.org/)                 | javascript runtime environment                  | cli     | homebrew          | volta               |
 | [pnpm](https://pnpm.io/fr/)                 | javascript disk space efficient package manager | cli     | homebrew          | npm                 |
 | [volta](https://volta.sh/)                  | javascript tool manager                         | cli     | homebrew          | shell               |
