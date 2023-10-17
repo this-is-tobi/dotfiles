@@ -59,6 +59,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [bat](https://github.com/sharkdp/bat)                                 | cat command enhanced                              | cli     | homebrew          | apt                 |
 | [bat-extras](https://github.com/eth-p/bat-extras)                     | bat combo with other commands                     | cli     | homebrew          | shell               |
 | [chafa](https://hpjansson.org/chafa/)                                 | image viewer in terminal                          | cli     | homebrew          | apt                 |
+| [coreutils](https://www.gnu.org/software/coreutils/)                  | basic file, shell and text manipulation utilities | cli     | homebrew          | apt                 |
 | [docker](https://www.docker.com/)                                     | docker engine                                     | cli     | -                 | shell               |
 | [exa](https://the.exa.website)                                        | ls command enhanced                               | cli     | homebrew          | apt                 |
 | [exiftool](https://exiftool.org/)                                     | metadata writer and reader tool                   | cli     | homebrew          | apt                 |

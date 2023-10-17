@@ -22,6 +22,7 @@ printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   bat \
   chafa \
+  coreutils \
   exa \
   libimage-exiftool-perl \
   ffmpeg \
