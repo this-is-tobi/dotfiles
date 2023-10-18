@@ -56,6 +56,7 @@ It can install severals profiles in addition to the core install by providing `-
 
 | Package                                                               | Description                                       | Type    | OSX installation  | Debian installation |
 | --------------------------------------------------------------------- | ------------------------------------------------- | ------- | ----------------- | ------------------- |
+| [age](https://github.com/FiloSottile/age)                             | simple, modern and secure encryption tool         | cli     | homebrew          | apt                 |
 | [bat](https://github.com/sharkdp/bat)                                 | cat command enhanced                              | cli     | homebrew          | apt                 |
 | [bat-extras](https://github.com/eth-p/bat-extras)                     | bat combo with other commands                     | cli     | homebrew          | shell               |
 | [chafa](https://hpjansson.org/chafa/)                                 | image viewer in terminal                          | cli     | homebrew          | apt                 |

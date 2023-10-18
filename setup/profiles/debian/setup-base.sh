@@ -20,6 +20,7 @@ sudo apt update
 # Install utils packages
 printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
+  age \
   bat \
   chafa \
   coreutils \
