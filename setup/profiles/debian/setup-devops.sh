@@ -29,6 +29,7 @@ sudo apt install -y \
   kubectl \
   minio-client \
   scw \
+  sops \
   terraform \
   trivy \
   vault

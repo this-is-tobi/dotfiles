@@ -25,6 +25,7 @@ brew install --formula \
   minio-mc \
   openshift-cli \
   scw \
+  sops \
   terraform \
   trivy \
   vault

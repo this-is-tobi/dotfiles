@@ -104,6 +104,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)         | cli  | homebrew         | apt                 |
 | [oc](https://www.openshift.com/)                                 | openshift cli                                               | cli  | homebrew         | -                   |
 | [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                | cli  | homebrew         | apt                 |
+| [sops](https://github.com/getsops/sops)                          | simple and flexible tool for managing secrets               | cli  | homebrew         | apt                 |
 | [terraform](https://www.terraform.io/)                           | infrastructure automation tool                              | cli  | homebrew         | apt                 |
 | [trivy](https://aquasecurity.github.io/trivy/)                   | vulnerability scanner for container images and file systems | cli  | homebrew         | apt                 |
 | [vault](https://vaultproject.io/)                                | vault cli                                                   | cli  | homebrew         | apt                 |
