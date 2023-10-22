@@ -41,7 +41,8 @@ krew install \
   cnpg \
   ktop \
   kubescape \
-  kyverno
+  kyverno \
+  neat
 
 
 # Install ansible
