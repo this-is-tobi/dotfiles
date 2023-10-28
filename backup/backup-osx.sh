@@ -82,6 +82,7 @@ DOT_FILES=(
   $HOME/.docker/config.json
   $HOME/.docker/features.json
   $HOME/.gitconfig
+  $HOME/.gnupg
   $HOME/.kube/config
   $HOME/.kube/config.d
   $HOME/.mc
