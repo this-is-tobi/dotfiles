@@ -134,10 +134,11 @@ It can install severals profiles in addition to the core install by providing `-
 
 ### Go
 
-| Package                                     | Description          | Type | OSX installation | Debian installation |
-| ------------------------------------------- | -------------------- | ---- | ---------------- | ------------------- |
-| [go](https://go.dev/)                       | programming language | cli  | homebrew         | shell               |
-| [cobra-cli](https://github.com/spf13/cobra) | cli build tool       | cli  | go               | go                  |
+| Package                                          | Description                              | Type | OSX installation | Debian installation |
+| ------------------------------------------------ | ---------------------------------------- | ---- | ---------------- | ------------------- |
+| [cobra-cli](https://github.com/spf13/cobra)      | cli build tool                           | cli  | go               | go                  |
+| [go](https://go.dev/)                            | programming language                     | cli  | homebrew         | shell               |
+| [operator-sdk](https://sdk.operatorframework.io) | sdk for building Kubernetes applications | cli  | homebrew         | apt                 |
 
 ### Extras
 

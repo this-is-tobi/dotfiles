@@ -12,7 +12,9 @@ brew update
 
 # Install homebrew cli packages
 printf "\n\n${red}[go] =>${no_color} Install go\n\n"
-brew install --formula go
+brew install --formula \
+  go \
+  operator-sdk
 
 
 # Install go packages

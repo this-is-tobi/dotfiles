@@ -5,14 +5,25 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
+# Add wakemeops debian repo
+if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
+  curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
+fi
+
+
 # Updating apt cache
 printf "\n\n${red}[go] =>${no_color} Update apt cache\n\n"
 sudo apt update
 
 
-# Install utils packages
+# Install apt packages
+printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
+sudo apt install -y operator-sdk
+
+
+# Install go
 printf "\n\n${red}[go] =>${no_color} Install go\n\n"
-# sudo apt install -y golang-go
 if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
   ARCH=amd64
 elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
