@@ -75,6 +75,9 @@ alias lag="lazygit"
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.docker/bin:$PATH"
 
+# gpg
+export GPG_TTY=$(tty)
+
 # golang
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
