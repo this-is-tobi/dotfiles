@@ -15,6 +15,7 @@ printf "\n\n${red}[go] =>${no_color} Install go\n\n"
 brew install --formula \
   go \
   kubebuilder \
+  kustomize \
   operator-sdk
 
 

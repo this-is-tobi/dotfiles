@@ -19,7 +19,9 @@ sudo apt update
 
 # Install apt packages
 printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
-sudo apt install -y operator-sdk
+sudo apt install -y \
+  kustomize \
+  operator-sdk
 
 
 # Install go
