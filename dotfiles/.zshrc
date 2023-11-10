@@ -71,6 +71,15 @@ alias kn="kubens"
 alias lad="lazydocker"
 alias lag="lazygit"
 
+# Utility functions
+dec () {
+  echo "$1" | base64 -d
+}
+
+enc () {
+  echo "$1" | base64
+}
+
 # Use homebrew packages instead of default system packages
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.docker/bin:$PATH"
