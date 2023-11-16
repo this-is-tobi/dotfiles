@@ -1,5 +1,6 @@
 [alias]
 	aa = add -A
+  aop = "!f() { git aa && git oopn && git push -f; }; f"
 	ap = add -p
 	br = branch
 	bv = "br -vv"
