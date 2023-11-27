@@ -48,9 +48,7 @@ krew install \
 
 # Install ansible
 if [ ! -x "$(command -v ansible)" ]; then
-  sudo echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/ansible.list > /dev/null
-  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-  sudo apt update && sudo apt install -y ansible
+  python3 -m pip install --user ansible
 fi
 
 
