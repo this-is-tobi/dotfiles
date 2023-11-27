@@ -44,7 +44,7 @@
 [commit]
 	gpgsign = true
 [user]
-	email = thibault_colin@hotmail.fr
+	email = this-is-tobi@proton.me
 	name = this-is-tobi
 # 	signingkey = ~/.ssh/id_rsa.pub
 # [gpg]
