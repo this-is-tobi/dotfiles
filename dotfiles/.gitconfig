@@ -46,6 +46,6 @@
 [user]
 	email = thibault_colin@hotmail.fr
 	name = this-is-tobi
-	signingkey = ~/.ssh/id_rsa.pub
-[gpg]
-	format = ssh
+# 	signingkey = ~/.ssh/id_rsa.pub
+# [gpg]
+# 	format = ssh
