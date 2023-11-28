@@ -20,7 +20,7 @@ sudo apt update
 # Install apt packages
 printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
-  age \
+  age \
   bat \
   chafa \
   coreutils \
