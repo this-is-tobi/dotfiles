@@ -7,7 +7,7 @@
   "workbench.colorTheme": "GitHub Dark Default",
   "workbench.fontAliasing": "antialiased",
   "workbench.iconTheme": "material-icon-theme",
-  "workbench.editor.showTabs": true,
+  "workbench.editor.showTabs": "multiple",
   "editor.fontFamily": "Input Mono, Fira Code, monospace",
   "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss06', 'zero'",
   "editor.cursorBlinking": "phase",
@@ -30,11 +30,9 @@
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
   },
-
   // git
   "git.autofetch": true,
   "git.untrackedChanges": "separate",
-
   // eslint
   "editor.codeActionsOnSave": {
     "source.fixAll": false,
@@ -54,15 +52,14 @@
     "jsonc",
     "json5"
   ],
-
   // stylelint
   "css.validate": false,
   "less.validate": true,
   "scss.validate": true,
   "files.associations": {
-    "*.css": "postcss"
+    "*.css": "postcss",
+    "*.hcl": "terraform"
   },
-
   // languages
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
@@ -71,11 +68,10 @@
   "javascript.preferences.importModuleSpecifierEnding": "js",
   "javascript.suggest.completeJSDocs": true,
   "javascript.suggest.jsdoc.generateReturns": true,
-
+  "typescript.preferences.importModuleSpecifierEnding": "js",
   "[html]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
-
   "[markdown]": {
     "editor.quickSuggestions": {
       "other": true,
@@ -86,13 +82,14 @@
     "editor.formatOnPaste": true,
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
-
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true
   },
-
-  // kubernetes
+  "conventionalCommits.showNewVersionNotes": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "workbench.startupEditor": "none",
+  "githubPullRequests.pullBranch": "never",
   "vs-kubernetes": {
     "vs-kubernetes.crd-code-completion": "enabled"
   },
@@ -101,5 +98,6 @@
   "vscode-kubernetes.log-viewer.since": -1,
   "vscode-kubernetes.log-viewer.tail": -1,
   "vscode-kubernetes.log-viewer.destination": "Webview",
-  "vscode-kubernetes.log-viewer.wrap": true
+  "vscode-kubernetes.log-viewer.wrap": true,
+  "editor.unicodeHighlight.invisibleCharacters": false
 }
