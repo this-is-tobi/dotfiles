@@ -75,9 +75,8 @@ alias lag="lazygit"
 dec () {
   echo "$1" | base64 -d
 }
-
 enc () {
-  echo "$1" | base64
+  echo -n "$1" | base64
 }
 
 # Use homebrew packages instead of default system packages
