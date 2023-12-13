@@ -30,9 +30,15 @@
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
   },
+  // general
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "workbench.startupEditor": "none",
   // git
   "git.autofetch": true,
   "git.untrackedChanges": "separate",
+  // github
+  "githubPullRequests.pullBranch": "never",
   // eslint
   "editor.codeActionsOnSave": {
     "source.fixAll": false,
@@ -86,10 +92,9 @@
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true
   },
+  // conventional commits
   "conventionalCommits.showNewVersionNotes": false,
-  "security.workspace.trust.untrustedFiles": "open",
-  "workbench.startupEditor": "none",
-  "githubPullRequests.pullBranch": "never",
+  // kubernetes
   "vs-kubernetes": {
     "vs-kubernetes.crd-code-completion": "enabled"
   },
@@ -99,5 +104,7 @@
   "vscode-kubernetes.log-viewer.tail": -1,
   "vscode-kubernetes.log-viewer.destination": "Webview",
   "vscode-kubernetes.log-viewer.wrap": true,
-  "editor.unicodeHighlight.invisibleCharacters": false
+  // markdown preview
+  "markdown-preview-enhanced.previewTheme": "github-dark.css",
+  "markdown-preview-enhanced.codeBlockTheme": "github-dark.css"
 }
