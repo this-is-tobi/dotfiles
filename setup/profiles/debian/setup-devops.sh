@@ -32,7 +32,8 @@ sudo apt install -y \
   sops \
   terraform \
   trivy \
-  vault
+  vault \
+  velero
 
 
 # Install krew plugins

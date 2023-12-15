@@ -28,7 +28,8 @@ brew install --formula \
   sops \
   terraform \
   trivy \
-  vault
+  vault \
+  velero
 
 
 

@@ -108,6 +108,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [terraform](https://www.terraform.io/)                           | infrastructure automation tool                              | cli  | homebrew         | apt                 |
 | [trivy](https://aquasecurity.github.io/trivy/)                   | vulnerability scanner for container images and file systems | cli  | homebrew         | apt                 |
 | [vault](https://vaultproject.io/)                                | vault cli                                                   | cli  | homebrew         | apt                 |
+| [velero](https://velero.io/)                                     | kubernetes backup and migration cli                         | cli  | homebrew         | apt                 |
 
 #### Krew plugins (kubectl)
 
