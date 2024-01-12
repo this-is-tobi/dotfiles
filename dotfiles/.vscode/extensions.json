@@ -12,6 +12,7 @@
     "SonarSource.sonarlint-vscode",
     "wix.vscode-import-cost",
     "wmaurer.change-case",
+    "coder.coder-remote",
 
     // github actions
     "github.vscode-github-actions",

@@ -47,6 +47,12 @@ krew install \
   neat
 
 
+# Install coder
+if [ ! -x "$(command -v coder)" ]; then
+  curl -fsSL https://coder.com/install.sh | sh
+fi
+
+
 # Install ansible
 if [ ! -x "$(command -v ansible)" ]; then
   python3 -m pip install --user ansible
