@@ -18,7 +18,7 @@ sudo apt update
 
 
 # Install apt packages
-printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
+printf "\n\n${red}[go] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   kustomize \
   operator-sdk
@@ -34,6 +34,9 @@ fi
 GO_VERSION="$(curl -s https://go.dev/dl/?mode=json | jq -r '.[0].version')"
 curl -Lo /tmp/go${GO_VERSION}.linux-${ARCH}.tar.gz https://go.dev/dl/${GO_VERSION}.linux-${ARCH}.tar.gz
 tar xf /tmp/go${GO_VERSION}.linux-${ARCH}.tar.gz -C $HOME
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 
 
 # Install go packages
@@ -44,9 +47,9 @@ go install \
 
 # Install cobra completion
 printf "\n\n${red}[go] =>${no_color} Install go packages completion\n\n"
-cobra-cli completion zsh > "${fpath[1]}/_cobra-cli"
+cobra-cli completion zsh > $HOME/.zsh/completion/cobra-cli_complete.zsh
 
 
 # Install kubebuilder
 curl -L -o kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)"
-chmod +x kubebuilder && mv kubebuilder /usr/local/bin/
+chmod +x kubebuilder && sudo mv kubebuilder /usr/local/bin/
