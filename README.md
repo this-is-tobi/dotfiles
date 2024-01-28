@@ -77,6 +77,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [nvim](https://neovim.io/)                                            | interactive cli ide (enhanced vim)                | cli     | homebrew          | shell               |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)                      | regex pattern search cli (usefull for bat-extras) | cli     | homebrew          | apt                 |
 | [rsync](https://rsync.samba.org/)                                     | file transfer tool                                | cli     | homebrew          | apt                 |
+| [sshs](https://github.com/quantumsheep/sshs)                          | interactive cli ssh client                        | cli     | homebrew          | shell               |
 | [tldr++](https://github.com/isacikgoz/tldr)                           | cheatsheet interactive cli                        | cli     | homebrew          | go                  |
 | [tree](https://mama.indstate.edu/users/ice/tree/)                     | filesystem display as tree                        | cli     | homebrew          | apt                 |
 | [vim](https://www.vim.org/)                                           | cli ide                                           | cli     | homebrew          | apt                 |

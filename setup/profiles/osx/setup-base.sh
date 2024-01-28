@@ -33,6 +33,7 @@ brew install --formula \
   ripgrep \
   rsync \
   isacikgoz/taps/tldr \
+  sshs \
   tree \
   vim \
   wget \

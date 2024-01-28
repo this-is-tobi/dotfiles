@@ -125,3 +125,16 @@ if [ ! -x "$(command -v nvim)" ]; then
   wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
   fc-cache -fv
 fi
+
+# Install sshs
+if [ ! -x "$(command -v sshs)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install sshs\n\n"
+  if [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=arm64
+  else
+    ARCH=amd64
+  fi
+  curl -sSL -o "/tmp/sshs-linux-$ARCH" "https://github.com/quantumsheep/sshs/releases/latest/download/sshs-linux-$ARCH"
+  sudo install -m 555 "/tmp/sshs-linux-$ARCH" /usr/local/bin/sshs
+  rm "/tmp/sshs-linux-$ARCH"
+fi
