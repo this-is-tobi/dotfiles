@@ -30,6 +30,7 @@ sudo apt install -y \
   minio-client \
   scw \
   sops \
+  sshpass \
   terraform \
   trivy \
   vault \

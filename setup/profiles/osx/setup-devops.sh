@@ -33,7 +33,6 @@ brew install --formula \
   velero
 
 
-
 # Install krew plugins
 printf "\n\n${red}[devops] =>${no_color} Install krew plugins\n\n"
 krew install \
@@ -48,3 +47,16 @@ krew install \
 # Install vault autocompletion
 printf "\n\n${red}[devops] =>${no_color} Install vault cli autocompletion\n\n"
 vault -autocomplete-install
+
+
+# Install sshpass
+if [ ! -x "$(command -v sshpass)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install sshpass\n\n"
+  curl -L -o /tmp/sshpass.tar.gz https://sourceforge.net/projects/sshpass/files/latest/download
+  tar zxvf /tmp/sshpass.tar.gz && rm /tmp/sshpass.tar.gz
+  SSHPASS_DIR="$(ls /tmp | grep 'sshpass')"
+  cd /tmp/$SSHPASS_DIR \
+    && ./configure \
+    && sudo make install \
+    && cd -
+fi
