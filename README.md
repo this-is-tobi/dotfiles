@@ -119,6 +119,7 @@ It can install severals profiles in addition to the core install by providing `-
 | ------------------------------------------------------------- | -------------------------------------------------------- |
 | [cert-manager](https://cert-manager.io/docs/reference/cmctl/) | cert-manager cli                                         |
 | [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | cloud native postgres cli                                |
+| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)        | df utility for pv                                        |
 | [ktop](https://github.com/vladimirvivien/ktop)                | top-like tool for Kubernetes clusters                    |
 | [kubescape](https://github.com/kubescape/kubescape/)          | kubernetes security scan                                 |
 | [kyverno](https://github.com/kyverno/kyverno)                 | kubernetes policy management                             |
