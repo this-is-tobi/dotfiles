@@ -104,13 +104,17 @@ i=$(($i + 1))
 
 mkdir "${BACKUP_DIR%/}/home"
 if [ "$BACKUP_FULL" = "true" ]; then
-  HOME_DIR="/home"
+  HOME_DIR=(
+    $HOME
+  )
 else 
-  HOME_DIR="$HOME"
+  HOME_DIR=(
+    $HOME/dev
+  )
 fi
 
 if [ "$BACKUP_COMPRESSION" = "true" ]; then
-  rsync -ahW --compress --info=progress2 "$HOME_DIR" "${BACKUP_DIR%/}/home"
+  rsync -ahW --compress --info=progress2 --exclude '**/node_modules' ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
 else
-  rsync -ahW --no-compress --info=progress2 "$HOME_DIR" "${BACKUP_DIR%/}/home"
+  rsync -ahW --no-compress --info=progress2 --exclude '**/node_modules' ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
 fi
