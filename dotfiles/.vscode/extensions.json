@@ -13,6 +13,7 @@
     "wix.vscode-import-cost",
     "wmaurer.change-case",
     "coder.coder-remote",
+    "rangav.vscode-thunder-client",
 
     // github actions
     "github.vscode-github-actions",
