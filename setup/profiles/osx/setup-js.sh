@@ -20,13 +20,6 @@ brew install --formula \
   volta
 
 
-# Install homebrew graphic app packages
-printf "\n\n${red}[js] =>${no_color} Install homebrew packages (graphic)\n\n"
-brew install --cask \
-  firefox \
-  insomnia
-
-
 # Install npm packages
 printf "\n\n${red}[js] =>${no_color} Install npm packages\n\n"
 npm install --global \

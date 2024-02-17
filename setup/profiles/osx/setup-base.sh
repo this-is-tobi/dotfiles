@@ -45,6 +45,8 @@ printf "\n\n${red}[base] =>${no_color} Install homebrew packages (graphic)\n\n"
 brew install --cask \
   brave-browser \
   docker \
+  firefox \
+  insomnia \
   mattermost \
   openvpn-connect \
   visual-studio-code

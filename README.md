@@ -85,6 +85,8 @@ It can install severals profiles in addition to the core install by providing `-
 | [yq](https://github.com/mikefarah/yq)                                 | yaml processor tool                               | cli     | homebrew          | apt                 |
 | [brave](https://brave.com/fr/)                                        | privacy compliant web browser                     | desktop | homebrew *- cask* | -                   |
 | [docker](https://www.docker.com/products/docker-desktop/)             | docker desktop                                    | desktop | homebrew *- cask* | -                   |
+| [firefox](https://www.mozilla.org/firefox/)                           | privacy compliant web browser                     | desktop | homebrew *- cask* | -                   |
+| [insomnia](https://insomnia.rest/)                                    | http and graphql client                           | desktop | homebrew *- cask* | -                   |
 | [mattermost](https://mattermost.com/)                                 | collaboration app                                 | desktop | homebrew *- cask* | -                   |
 | [openvpn-connect](https://openvpn.net/client-connect-vpn-for-mac-os/) | vpn client                                        | desktop | homebrew *- cask* | -                   |
 | [vscode](https://code.visualstudio.com/)                              | ide                                               | desktop | homebrew *- cask* | -                   |
@@ -127,15 +129,13 @@ It can install severals profiles in addition to the core install by providing `-
 
 ### Javascript
 
-| Package                                     | Description                                     | Type    | OSX installation  | Debian installation |
-| ------------------------------------------- | ----------------------------------------------- | ------- | ----------------- | ------------------- |
-| [bun](https://bun.sh/)                      | javascript runtime environment                  | cli     | homebrew          | npm                 |
-| [node](https://nodejs.org/)                 | javascript runtime environment                  | cli     | homebrew          | volta               |
-| [pnpm](https://pnpm.io/fr/)                 | javascript disk space efficient package manager | cli     | homebrew          | npm                 |
-| [volta](https://volta.sh/)                  | javascript tool manager                         | cli     | homebrew          | shell               |
-| [@antfu/ni](https://github.com/antfu/ni)    | javascript package manager wrapper              | cli     | npm               | npm                 |
-| [firefox](https://www.mozilla.org/firefox/) | privacy compliant web browser                   | desktop | homebrew *- cask* | -                   |
-| [insomnia](https://insomnia.rest/)          | http and graphql client                         | desktop | homebrew *- cask* | -                   |
+| Package                                  | Description                                     | Type | OSX installation | Debian installation |
+| ---------------------------------------- | ----------------------------------------------- | ---- | ---------------- | ------------------- |
+| [bun](https://bun.sh/)                   | javascript runtime environment                  | cli  | homebrew         | npm                 |
+| [node](https://nodejs.org/)              | javascript runtime environment                  | cli  | homebrew         | volta               |
+| [pnpm](https://pnpm.io/fr/)              | javascript disk space efficient package manager | cli  | homebrew         | npm                 |
+| [volta](https://volta.sh/)               | javascript tool manager                         | cli  | homebrew         | shell               |
+| [@antfu/ni](https://github.com/antfu/ni) | javascript package manager wrapper              | cli  | npm              | npm                 |
 
 ### Go
 
