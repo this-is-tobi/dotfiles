@@ -139,4 +139,29 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R "$SCRIPT_PATH/../dotfiles/.config/nvim" "$HOME/.config"
   cp -R "$SCRIPT_PATH/../dotfiles/.config/lazygit" "$HOME/.config"
+
+
+  # Install .vscode extensions
+  if [ -x "$(command -v code)" ]; then
+    mkdir -p "$HOME/.config/Code/User"
+    cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.config/Code/User/settings.json"
+    VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
+      | grep -v '//' \
+      | grep -E '\S' \
+      | jq -r '.recommendations[]'))
+    for extension in ${VSCODE_EXTENSIONS[@]}; do
+      echo "$extension" | xargs -L 1 code --install-extension
+    done
+  fi
+  if [ -x "$(command -v code-server)" ]; then
+    mkdir -p "$HOME/.local/share/code-server/User"
+    cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.local/share/code-server/User/settings.json"
+    VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
+      | grep -v '//' \
+      | grep -E '\S' \
+      | jq -r '.recommendations[]'))
+    for extension in ${VSCODE_EXTENSIONS[@]}; do
+      echo "$extension" | xargs -L 1 code-server --install-extension
+    done
+  fi
 fi
