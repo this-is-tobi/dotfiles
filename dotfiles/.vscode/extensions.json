@@ -33,7 +33,6 @@
     // vue
     "hollowtree.vue-snippets",
     "Vue.volar",
-    "Vue.vscode-typescript-vue-plugin",
 
     // go
     "golang.go",
