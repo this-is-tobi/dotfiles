@@ -20,6 +20,7 @@ sudo apt update
 # Install apt packages
 printf "\n\n${red}[go] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
+  kubebuilder \
   kustomize \
   operator-sdk
 
@@ -48,8 +49,3 @@ go install \
 # Install cobra completion
 printf "\n\n${red}[go] =>${no_color} Install go packages completion\n\n"
 cobra-cli completion zsh > $HOME/.zsh/completion/cobra-cli_complete.zsh
-
-
-# Install kubebuilder
-curl -L -o kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)"
-chmod +x kubebuilder && sudo mv kubebuilder /usr/local/bin/
