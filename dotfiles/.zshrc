@@ -78,6 +78,11 @@ dec () {
 enc () {
   echo -n "$1" | base64
 }
+kbp () {
+  echo "Killing process running on port $1 ..."
+  kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
+}
+
 
 # Use homebrew packages instead of default system packages
 export PATH="/usr/local/bin:$PATH"
