@@ -72,6 +72,9 @@ alias lad="lazydocker"
 alias lag="lazygit"
 
 # Utility functions
+dks () {
+  echo "$1" | yq '.data | map_values(. | @base64d)'
+}
 dec () {
   echo "$1" | base64 -d
 }
