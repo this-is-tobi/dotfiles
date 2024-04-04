@@ -61,6 +61,20 @@ if [ ! -x "$(command -v ansible)" ]; then
 fi
 
 
+
+# Install aws
+if [ ! -x "$(command -v aws)" ]; then
+  if [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=aarch64
+  else
+    ARCH=x86_64
+  fi
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-$ARCH.zip" -o "/tmp/awscliv2.zip"
+  unzip "/tmp/awscliv2.zip"
+  sudo /tmp/aws/install
+fi
+
+
 # Install argocd
 if [ ! -x "$(command -v argocd)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install argocd\n\n"

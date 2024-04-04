@@ -16,6 +16,7 @@ brew install --formula \
   act \
   ansible \
   argocd \
+  awscli \
   coder/coder/coder \
   helm \
   k9s \
