@@ -49,3 +49,5 @@
 # 	signingkey = ~/.ssh/id_rsa.pub
 # [gpg]
 # 	format = ssh
+# [gpg "ssh"]
+#   allowedSignersFile = ~/.ssh/allowed_signers
