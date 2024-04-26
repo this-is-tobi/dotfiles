@@ -19,6 +19,7 @@ brew install --formula \
   awscli \
   coder/coder/coder \
   helm \
+  norwoodj/tap/helm-docs \
   k9s \
   kind \
   krew \

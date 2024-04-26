@@ -101,6 +101,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                     | cli  | homebrew         | shell               |
 | [coder](https://coder.com/)                                      | coder cli                                                   | cli  | homebrew         | shell               |
 | [helm](https://helm.sh/)                                         | kubernetes package manager                                  | cli  | homebrew         | apt                 |
+| [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts      | cli  | homebrew         | apt                 |
 | [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                              | cli  | homebrew         | apt                 |
 | [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                | cli  | homebrew         | apt                 |
 | [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                      | cli  | homebrew         | apt                 |
