@@ -39,7 +39,7 @@ sudo apt install -y \
 
 # Install krew plugins
 printf "\n\n${red}[devops] =>${no_color} Install krew plugins\n\n"
-krew install \
+kubectl krew install \
   cert-manager \
   cnpg \
   df-pv \
