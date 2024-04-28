@@ -118,9 +118,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   printf "\n${red}${i}.${no_color} Install oh-my-zsh\n\n"
   i=$(($i + 1))
 
-  wget -O /tmp/install-oh-my-zsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-  sed -i 's/exec zsh -l/#exec zsh -l/' /tmp/install-oh-my-zsh.sh
-  sh /tmp/install-oh-my-zsh.sh
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
 
