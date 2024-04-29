@@ -77,12 +77,10 @@ i=$(($i + 1))
 DOT_FILES=(
   $HOME/.aws
   $HOME/.config
-  $HOME/.docker/config.json
-  $HOME/.docker/features.json
+  $HOME/.docker
   $HOME/.gitconfig
   $HOME/.gnupg
-  $HOME/.kube/config
-  $HOME/.kube/config.d
+  $HOME/.kube
   $HOME/.mc
   $HOME/.npmrc
   $HOME/.ssh
