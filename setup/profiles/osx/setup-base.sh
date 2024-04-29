@@ -18,7 +18,7 @@ brew install --formula \
   bat-extras \
   chafa \
   coreutils \
-  exa \
+  eza \
   exiftool \
   ffmpeg \
   fzf \

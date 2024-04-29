@@ -62,8 +62,8 @@ It can install severals profiles in addition to the core install by providing `-
 | [chafa](https://hpjansson.org/chafa/)                                 | image viewer in terminal                          | cli     | homebrew          | apt                 |
 | [coreutils](https://www.gnu.org/software/coreutils/)                  | basic file, shell and text manipulation utilities | cli     | homebrew          | apt                 |
 | [docker](https://www.docker.com/)                                     | docker engine                                     | cli     | -                 | shell               |
-| [exa](https://the.exa.website)                                        | ls command enhanced                               | cli     | homebrew          | apt                 |
 | [exiftool](https://exiftool.org/)                                     | metadata writer and reader tool                   | cli     | homebrew          | apt                 |
+| [eza](https://eza.rocks/)                                             | ls command enhanced                               | cli     | homebrew          | apt                 |
 | [ffmpeg](https://ffmpeg.org/)                                         | audio video manipulation tool                     | cli     | homebrew          | apt                 |
 | [fzf](https://github.com/junegunn/fzf)                                | command-line fuzzy finder                         | cli     | homebrew          | apt                 |
 | [gh](https://cli.github.com/)                                         | github cli                                        | cli     | homebrew          | apt                 |

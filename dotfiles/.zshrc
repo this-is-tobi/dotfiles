@@ -53,7 +53,7 @@ source $ZSH/oh-my-zsh.sh
 # Aliases
 alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
 alias dsp="docker system prune -a -f"
-alias exa="exa -lag --git"
+alias eza="eza -lag --git"
 alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohidden'"
 alias h="history"
 alias hs="history | grep"

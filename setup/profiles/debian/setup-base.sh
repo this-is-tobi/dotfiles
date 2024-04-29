@@ -24,7 +24,7 @@ sudo apt install -y \
   bat \
   chafa \
   coreutils \
-  exa \
+  eza \
   libimage-exiftool-perl \
   ffmpeg \
   fzf \
