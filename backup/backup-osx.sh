@@ -12,6 +12,7 @@ NOW=$(date +'%Y-%m-%dT%H-%M-%S')
 # Default
 BACKUP_DIR="$(pwd)/backup_$NOW"
 BACKUP_COMPRESSION="false"
+BACKUP_COMPRESSION_ARGS="--no-compress"
 BACKUP_FULL="false"
 
 # Declare script helper
@@ -37,7 +38,8 @@ print_help() {
 while getopts hcfo: flag; do
   case "${flag}" in
     c)
-      BACKUP_COMPRESSION="true";;
+      BACKUP_COMPRESSION="true"
+      BACKUP_COMPRESSION_ARGS="--compress";;
     f)
       BACKUP_FULL="true";;
     o)
@@ -65,11 +67,7 @@ ETC_FILES=(
   /etc/resolv.conf
 )
 mkdir -p "${BACKUP_DIR%/}/etc"
-if [ "$BACKUP_COMPRESSION" = "true" ]; then
-  rsync -ahW --compress --info=progress2 ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
-else
-  rsync -ahW --no-compress --info=progress2 ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
-fi
+rsync -ahW $BACKUP_COMPRESSION_ARGS --info=progress2 ${ETC_FILES[*]} "${BACKUP_DIR%/}/etc"
 
 
 # Backup dotfiles
@@ -91,11 +89,7 @@ DOT_FILES=(
   $HOME/.zshrc
 )
 mkdir -p "${BACKUP_DIR%/}/dotfiles"
-if [ "$BACKUP_COMPRESSION" = "true" ]; then
-  rsync -ahW --compress --info=progress2 ${DOT_FILES[*]} "${BACKUP_DIR%/}/dotfiles"
-else
-  rsync -ahW --no-compress --info=progress2 ${DOT_FILES[*]} "${BACKUP_DIR%/}/dotfiles"
-fi
+rsync -ahW $BACKUP_COMPRESSION_ARGS --info=progress2 ${DOT_FILES[*]} "${BACKUP_DIR%/}/dotfiles"
 
 
 # Backup home directory
@@ -119,11 +113,7 @@ else
   )
 fi
 
-if [ "$BACKUP_COMPRESSION" = "true" ]; then
-  rsync -ahW --compress --info=progress2 --exclude '**/node_modules' ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
-else
-  rsync -ahW --no-compress --info=progress2 --exclude '**/node_modules' ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
-fi
+rsync -ahW $BACKUP_COMPRESSION_ARGS --info=progress2 --exclude '**/node_modules' ${HOME_DIRS[*]} "${BACKUP_DIR%/}/home"
 
 
 # Backup brave
@@ -135,9 +125,5 @@ if [ -d $HOME/Library/Application\ Support/BraveSoftware ]; then
     $HOME/Library/Application\ Support/BraveSoftware/Brave-Browser/Default
   )
   mkdir -p "${BACKUP_DIR%/}/brave"
-  if [ "$BACKUP_COMPRESSION" = "true" ]; then
-    rsync -ahW --compress --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
-  else
-    rsync -ahW --no-compress --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
-  fi
+  rsync -ahW $BACKUP_COMPRESSION_ARGS --info=progress2 ${BRAVE_FILES[*]} "${BACKUP_DIR%/}/brave"
 fi
