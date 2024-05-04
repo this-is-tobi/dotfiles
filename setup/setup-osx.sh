@@ -190,4 +190,10 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
       echo "$extension" | xargs -L 1 code --install-extension
     done
   fi
+
+
+  # Update brew links if architecture is arm64
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+    gsed -i 's/\/usr\/local/\/opt\/homebrew/g' "$HOME/.zshrc"
+  fi
 fi
