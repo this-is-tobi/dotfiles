@@ -70,6 +70,7 @@ alias kl="kubectl logs"
 alias kn="kubens"
 alias lad="lazydocker"
 alias lag="lazygit"
+# alias sed="gsed"
 
 # Utility functions
 dks () {

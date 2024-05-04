@@ -25,6 +25,7 @@ brew install --formula \
   gh \
   glab \
   gnupg \
+  gsed \
   jq \
   lazydocker \
   lazygit \

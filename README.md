@@ -69,6 +69,7 @@ It can install severals profiles in addition to the core install by providing `-
 | [gh](https://cli.github.com/)                                         | github cli                                        | cli     | homebrew          | apt                 |
 | [glab](https://gitlab.com/gitlab-org/cli)                             | gitlab cli                                        | cli     | homebrew          | apt                 |
 | [gnupg](https://gnupg.org/)                                           | encryption tool                                   | cli     | homebrew          | apt                 |
+| [gsed](https://www.gnu.org/software/sed/)                             | non-interactive command-line text editor          | cli     | homebrew          | -                   |
 | [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/)                      | zsh configuration manager                         | cli     | shell             | shell               |
 | [jq](https://stedolan.github.io/jq/)                                  | json processor tool                               | cli     | homebrew          | apt                 |
 | [lazydocker](https://github.com/jesseduffield/lazydocker)             | lazier way to manage everything docker            | cli     | homebrew          | apt                 |
