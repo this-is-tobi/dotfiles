@@ -121,8 +121,8 @@ if [ ! -x "$(command -v nvim)" ]; then
   sudo mv /tmp/nvim/nvim-linux64/share/* /usr/local/share 
   sudo mv /tmp/nvim/nvim-linux64/lib/* /usr/local/lib
 
-  wget -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
-  wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
+  wget -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
+  wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
   fc-cache -fv
 fi
 
