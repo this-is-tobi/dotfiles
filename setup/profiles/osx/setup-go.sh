@@ -23,8 +23,3 @@ brew install --formula \
 printf "\n\n${red}[go] =>${no_color} Install go packages\n\n"
 go install \
   github.com/spf13/cobra-cli@latest
-
-
-# Install completion
-printf "\n\n${red}[go] =>${no_color} Install go packages completion\n\n"
-cobra-cli completion zsh > /usr/local/share/zsh/site-functions/_cobra-cli

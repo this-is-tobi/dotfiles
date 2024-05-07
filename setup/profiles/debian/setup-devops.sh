@@ -103,8 +103,3 @@ if [ ! -x "$(command -v helm-docs)" ]; then
   tar xf /tmp/helm-docs/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz -C /tmp/helm-docs 
   sudo mv /tmp/helm-docs /usr/local/bin/helm-docs
 fi
-
-
-# Install vault autocompletion
-printf "\n\n${red}[devops] =>${no_color} Install vault cli autocompletion\n\n"
-vault -autocomplete-install

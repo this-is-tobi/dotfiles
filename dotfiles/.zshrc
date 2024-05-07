@@ -1,27 +1,27 @@
-# Path to your oh-my-zsh installation.
+# path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# History
+# history
 export HISTSIZE=10000
 export SAVEHIST=10000
 export HISTFILE="$HOME/.zsh_history"
 export HIST_STAMPS="yyyy-mm-dd"
 
-# Locales
+# locales
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
-# Config directory
+# config directory
 export XDG_CONFIG_HOME="$HOME/.config"
 
-# Preferred editor for local and remote sessions
+# preferred editor for local and remote sessions
 export EDITOR='nvim'
 
-# Theme (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
+# theme (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
 ZSH_THEME="gnzh"
 
-# Plugins
+# plugins
 plugins=(
   aliases
   ansible
@@ -48,10 +48,25 @@ plugins=(
   volta
 )
 
+# brew settings
+if type brew &>/dev/null; then
+  # configure brew fpath
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  # aliases
+  alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
+
+  # use homebrew packages instead of default system packages
+  export PATH="/usr/local/bin:$PATH"
+  export PATH="$HOME/.docker/bin:$PATH"
+
+  # lesspipe.sh
+  export LESSOPEN="|/usr/local/bin/lesspipe.sh %s"
+fi
+
 source $ZSH/oh-my-zsh.sh
 
-# Aliases
-alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
+# aliases
 alias dsp="docker system prune -a -f"
 alias eza="eza -lag --git"
 alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohidden'"
@@ -72,7 +87,7 @@ alias lad="lazydocker"
 alias lag="lazygit"
 # alias sed="gsed"
 
-# Utility functions
+# utility functions
 dks () {
   echo "$1" | yq '.data | map_values(. | @base64d)'
 }
@@ -87,10 +102,8 @@ kbp () {
   kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
 }
 
-
-# Use homebrew packages instead of default system packages
-export PATH="/usr/local/bin:$PATH"
-export PATH="$HOME/.docker/bin:$PATH"
+# completion
+export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 # gpg
 export GPG_TTY=$(tty)
@@ -109,16 +122,3 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-
-# kubectl completion
-source <(kubectl completion zsh)
-
-# terrafom completion
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/local/bin/terraform terraform
-
-# minio completion
-complete -o nospace -C /usr/local/bin/mc mc
-
-# Scaleway CLI autocomplete initialization.
-eval "$(scw autocomplete script shell=zsh)"

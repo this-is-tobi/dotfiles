@@ -44,8 +44,3 @@ export PATH=$PATH:$GOBIN
 printf "\n\n${red}[go] =>${no_color} Install go packages\n\n"
 go install \
   github.com/spf13/cobra-cli@latest
-
-
-# Install cobra completion
-printf "\n\n${red}[go] =>${no_color} Install go packages completion\n\n"
-cobra-cli completion zsh > $HOME/.zsh/completion/cobra-cli_complete.zsh

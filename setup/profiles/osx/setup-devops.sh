@@ -46,8 +46,3 @@ kubectl krew install \
   kubescape \
   kyverno \
   neat
-
-
-# Install vault autocompletion
-printf "\n\n${red}[devops] =>${no_color} Install vault cli autocompletion\n\n"
-vault -autocomplete-install

@@ -17,11 +17,14 @@ INSTALL_BASE="false"
 INSTALL_DEVOPS="false"
 INSTALL_GO="false"
 INSTALL_JS="false"
+INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
 
 # Declare script helper
 TEXT_HELPER="\nThis script aims to install a full setup for debian.
 Following flags are available:
+
+  -c    Install cli completions.
 
   -d    Copy dotfiles.
 
@@ -39,8 +42,10 @@ print_help() {
 }
 
 # Parse options
-while getopts hdp: flag; do
+while getopts hcdp: flag; do
   case "${flag}" in
+    c)
+      INSTALL_COMPLETIONS="true";;
     d)
       COPY_DOTFILES="true";;
     p)
@@ -125,6 +130,15 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   i=$(($i + 1))
 
   sh "$SCRIPT_PATH/profiles/debian/setup-js.sh"
+fi
+
+
+# Install cli completions
+if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install cli completions\n\n"
+  i=$(($i + 1))
+
+  sh "$SCRIPT_PATH/completions.sh"
 fi
 
 
