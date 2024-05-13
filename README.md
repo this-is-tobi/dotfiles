@@ -48,6 +48,8 @@ It can install severals profiles in addition to the core install by providing `-
 
 > *For more infos use `-h` flag with the script to print help.*
 
+CLI completions are referenced and installed via [this file](./setup/completions.sh).
+
 > *Packages can come from different sources such as homebrew, apt, npm, etc...*
 
 > *Apt come with [WakeMeOps](https://docs.wakemeops.com/) repository.*
