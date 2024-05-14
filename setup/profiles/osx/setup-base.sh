@@ -20,6 +20,7 @@ brew install --formula \
   coreutils \
   eza \
   exiftool \
+  fd \
   ffmpeg \
   fzf \
   gh \
@@ -55,6 +56,8 @@ brew install --cask \
 
 # Install neovim fonts
 printf "\n\n${red}[base] =>${no_color} Install neovim fonts\n\n"
-wget -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
-wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
+mkdir ~/.fonts
+wget -O /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
+wget -O /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts
+cp ~/.fonts/*.ttf ~/Library/Fonts/
 fc-cache -fv

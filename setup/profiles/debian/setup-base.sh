@@ -26,6 +26,7 @@ sudo apt install -y \
   coreutils \
   eza \
   libimage-exiftool-perl \
+  fd-find \
   ffmpeg \
   fzf \
   github-cli \
@@ -121,8 +122,9 @@ if [ ! -x "$(command -v nvim)" ]; then
   sudo mv /tmp/nvim/nvim-linux64/share/* /usr/local/share 
   sudo mv /tmp/nvim/nvim-linux64/lib/* /usr/local/lib
 
-  wget -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
-  wget -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
+  mkdir ~/.fonts
+  wget -O /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
+  wget -O /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
   fc-cache -fv
 fi
 
