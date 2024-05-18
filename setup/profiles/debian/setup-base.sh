@@ -131,7 +131,7 @@ fi
 # Install sshs
 if [ ! -x "$(command -v sshs)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install sshs\n\n"
-  if [ "$(uname -m)" = "aarch64" ]; then
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     ARCH=arm64
   else
     ARCH=amd64
@@ -139,4 +139,18 @@ if [ ! -x "$(command -v sshs)" ]; then
   curl -sSL -o "/tmp/sshs-linux-$ARCH" "https://github.com/quantumsheep/sshs/releases/latest/download/sshs-linux-$ARCH"
   sudo install -m 555 "/tmp/sshs-linux-$ARCH" /usr/local/bin/sshs
   rm "/tmp/sshs-linux-$ARCH"
+fi
+
+# Install cheat
+if [ ! -x "$(command -v cheat)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install sshs\n\n"
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=arm64
+  else
+    ARCH=amd64
+  fi
+  wget -O /tmp/cheat-linux-$ARCH.gz https://github.com/cheat/cheat/releases/download/4.4.2/cheat-linux-$ARCH.gz 
+  gunzip /tmp/cheat-linux-$ARCH.gz
+  chmod +x /tmp/cheat-linux-amd64
+  sudo mv /tmp/cheat-linux-amd64 /usr/local/bin/cheat
 fi

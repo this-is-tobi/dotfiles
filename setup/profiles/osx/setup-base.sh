@@ -17,6 +17,7 @@ brew install --formula \
   bat \
   bat-extras \
   chafa \
+  cheat \
   coreutils \
   eza \
   exiftool \

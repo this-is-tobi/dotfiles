@@ -64,7 +64,7 @@ fi
 
 # Install aws
 if [ ! -x "$(command -v aws)" ]; then
-  if [ "$(uname -m)" = "aarch64" ]; then
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     ARCH=aarch64
   else
     ARCH=x86_64
@@ -78,7 +78,7 @@ fi
 # Install argocd
 if [ ! -x "$(command -v argocd)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install argocd\n\n"
-  if [ "$(uname -m)" = "aarch64" ]; then
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     ARCH=arm64
   else
     ARCH=amd64

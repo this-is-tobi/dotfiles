@@ -12,13 +12,15 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │   ├── extensions.json
 │   └── settings.json
 ├── .config
+│   ├── cheat
+│   │   └── conf.yml
 │   ├── lazygit
 │   │   └── config.yml
 │   └── nvim
+│       ├── init.lua
 │       └── lua
 │           ├── config
-│           ├── plugins
-│           └── init.lua
+│           └── plugins
 ├── .gitconfig
 └── .zshrc
 ```
@@ -62,6 +64,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [bat](https://github.com/sharkdp/bat)                                 | cat command enhanced                                 | cli     | homebrew          | apt                 |
 | [bat-extras](https://github.com/eth-p/bat-extras)                     | bat combo with other commands                        | cli     | homebrew          | shell               |
 | [chafa](https://hpjansson.org/chafa/)                                 | image viewer in terminal                             | cli     | homebrew          | apt                 |
+| [cheat](https://github.com/cheat/cheat)                               | create and view interactive cheat sheets             | cli     | homebrew          | shell               |
 | [coreutils](https://www.gnu.org/software/coreutils/)                  | basic file, shell and text manipulation utilities    | cli     | homebrew          | apt                 |
 | [docker](https://www.docker.com/)                                     | docker engine                                        | cli     | -                 | shell               |
 | [exiftool](https://exiftool.org/)                                     | metadata writer and reader tool                      | cli     | homebrew          | apt                 |

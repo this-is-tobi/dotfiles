@@ -128,3 +128,6 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# cheat
+export CHEAT_USE_FZF=true

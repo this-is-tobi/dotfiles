@@ -5,6 +5,9 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
+source $HOME/.zshrc
+
+
 # Create completion directory if not exists
 [ ! -d "$COMPLETION_DIR" ] && mkdir -p "$COMPLETION_DIR"
 
@@ -37,3 +40,8 @@ printf "\n\n${red}[completion] =>${no_color} Install minio completion\n\n"
 # Install scw completion
 printf "\n\n${red}[completion] =>${no_color} Install scw completion\n\n"
 [ -x "$(command -v scw)" ] && scw autocomplete install
+
+
+# Install cheat completion
+printf "\n\n${red}[completion] =>${no_color} Install cheat completion\n\n"
+[ -x "$(command -v cheat)" ] && curl -sSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
