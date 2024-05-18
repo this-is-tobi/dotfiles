@@ -25,6 +25,8 @@ ZSH_THEME="gnzh"
 plugins=(
   aliases
   ansible
+  brew
+  bun
   docker
   docker-compose
   gh
@@ -32,6 +34,7 @@ plugins=(
   gitignore
   golang
   helm
+  kind
   kubectl
   kubectx
   microk8s
@@ -40,6 +43,7 @@ plugins=(
   node
   npm
   oc
+  rsync
   scw
   sudo
   systemadmin
@@ -70,7 +74,7 @@ source $ZSH/oh-my-zsh.sh
 alias dsp="docker system prune -a -f"
 alias eza="eza -lag --git"
 alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohidden'"
-alias h="history"
+alias h="history | fzf --preview 'bat --color=always {}' --preview-window='right:60%:hidden'"
 alias hs="history | grep"
 alias hsi="history | grep -i"
 alias img="chafa"
