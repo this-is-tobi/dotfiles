@@ -76,12 +76,13 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [glab](https://gitlab.com/gitlab-org/cli)                             | gitlab cli                                           | cli     | homebrew          | apt                 |
 | [gnupg](https://gnupg.org/)                                           | encryption tool                                      | cli     | homebrew          | apt                 |
 | [gsed](https://www.gnu.org/software/sed/)                             | non-interactive command-line text editor             | cli     | homebrew          | -                   |
-| [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/)                      | zsh configuration manager                            | cli     | shell             | shell               |
 | [jq](https://stedolan.github.io/jq/)                                  | json processor tool                                  | cli     | homebrew          | apt                 |
 | [lazydocker](https://github.com/jesseduffield/lazydocker)             | lazier way to manage everything docker               | cli     | homebrew          | apt                 |
 | [lazygit](https://github.com/jesseduffield/lazygit)                   | lazier way to manage everything git                  | cli     | homebrew          | shell               |
 | [nmap](https://nmap.org/)                                             | port scanning utility                                | cli     | homebrew          | apt                 |
 | [nvim](https://neovim.io/)                                            | interactive cli ide (enhanced vim)                   | cli     | homebrew          | shell               |
+| [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/)                      | zsh configuration manager                            | cli     | shell             | shell               |
+| [proto](https://moonrepo.dev/proto)                                   | pluggable multi-language version manager             | cli     | homebrew          | shell               |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)                      | regex pattern search cli (usefull for bat-extras)    | cli     | homebrew          | apt                 |
 | [rsync](https://rsync.samba.org/)                                     | file transfer tool                                   | cli     | homebrew          | apt                 |
 | [sshs](https://github.com/quantumsheep/sshs)                          | interactive cli ssh client                           | cli     | homebrew          | shell               |

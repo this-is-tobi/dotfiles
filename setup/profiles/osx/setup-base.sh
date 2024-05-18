@@ -33,6 +33,7 @@ brew install --formula \
   lazygit \
   nmap \
   nvim \
+  proto \
   ripgrep \
   rsync \
   isacikgoz/taps/tldr \

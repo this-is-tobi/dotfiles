@@ -45,3 +45,8 @@ printf "\n\n${red}[completion] =>${no_color} Install scw completion\n\n"
 # Install cheat completion
 printf "\n\n${red}[completion] =>${no_color} Install cheat completion\n\n"
 [ -x "$(command -v cheat)" ] && curl -sSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
+
+
+# Install proto completion
+printf "\n\n${red}[completion] =>${no_color} Install proto completion\n\n"
+[ -x "$(command -v proto)" ] && proto completions --shell zsh > $COMPLETION_DIR/_proto

@@ -154,3 +154,9 @@ if [ ! -x "$(command -v cheat)" ]; then
   chmod +x /tmp/cheat-linux-amd64
   sudo mv /tmp/cheat-linux-amd64 /usr/local/bin/cheat
 fi
+
+# Install proto
+if [ ! -x "$(command -v proto)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install proto\n\n"
+  curl -fsSL https://moonrepo.dev/install/proto.sh | bash
+fi
