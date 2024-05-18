@@ -87,6 +87,12 @@ alias lad="lazydocker"
 alias lag="lazygit"
 # alias sed="gsed"
 
+if [ "$(uname)" = "Darwin" ]; then
+  # intel/arm switch aliases for osx
+  alias arm="env /usr/bin/arch -arm64 /bin/zsh --login"
+  alias intel="env /usr/bin/arch -x86_64 /bin/zsh --login"
+fi
+
 # utility functions
 dks () {
   echo "$1" | yq '.data | map_values(. | @base64d)'
