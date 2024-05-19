@@ -96,6 +96,7 @@ if [ -z "$(groups $USER | grep 'docker')" ]; then
   sudo usermod -aG docker $USER
 fi
 
+
 # Install lazygit
 if [ ! -x "$(command -v lazygit)" ]; then
   printf "\n\n${red}[base] =>${no_color} Install lazygit\n\n"
@@ -110,6 +111,7 @@ if [ ! -x "$(command -v lazygit)" ]; then
   tar xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
   sudo install /tmp/lazygit/lazygit /usr/local/bin
 fi
+
 
 # Install nvim
 if [ ! -x "$(command -v nvim)" ]; then
@@ -128,6 +130,7 @@ if [ ! -x "$(command -v nvim)" ]; then
   fc-cache -fv
 fi
 
+
 # Install sshs
 if [ ! -x "$(command -v sshs)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install sshs\n\n"
@@ -141,22 +144,43 @@ if [ ! -x "$(command -v sshs)" ]; then
   rm "/tmp/sshs-linux-$ARCH"
 fi
 
+
 # Install cheat
 if [ ! -x "$(command -v cheat)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install sshs\n\n"
+  printf "\n\n${red}[devops] =>${no_color} Install cheat\n\n"
   if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     ARCH=arm64
   else
     ARCH=amd64
   fi
-  wget -O /tmp/cheat-linux-$ARCH.gz https://github.com/cheat/cheat/releases/download/4.4.2/cheat-linux-$ARCH.gz 
+  wget -O /tmp/cheat-linux-$ARCH.gz "https://github.com/cheat/cheat/releases/latest/download/cheat-linux-$ARCH.gz"
   gunzip /tmp/cheat-linux-$ARCH.gz
   chmod +x /tmp/cheat-linux-amd64
   sudo mv /tmp/cheat-linux-amd64 /usr/local/bin/cheat
 fi
 
+
 # Install proto
 if [ ! -x "$(command -v proto)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install proto\n\n"
   curl -fsSL https://moonrepo.dev/install/proto.sh | bash
+fi
+
+
+# Install vhs
+if [ ! -x "$(command -v vhs)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install vhs\n\n"
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=aarch64
+  else
+    ARCH=x86_64
+  fi
+  wget -O /tmp/ttyd "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.$ARCH"
+  chmod +x /tmp/ttyd
+  sudo mv /tmp/ttyd /usr/local/bin/ttyd
+
+  sudo mkdir -p /etc/apt/keyrings
+  curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+  sudo apt update && sudo apt install -y vhs
 fi

@@ -19,4 +19,3 @@ brew install --cask \
   soulseek \
   transmission \
   vlc
-

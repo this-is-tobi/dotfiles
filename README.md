@@ -88,6 +88,8 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [sshs](https://github.com/quantumsheep/sshs)                          | interactive cli ssh client                           | cli     | homebrew          | shell               |
 | [tldr++](https://github.com/isacikgoz/tldr)                           | cheatsheet interactive cli                           | cli     | homebrew          | go                  |
 | [tree](https://mama.indstate.edu/users/ice/tree/)                     | filesystem display as tree                           | cli     | homebrew          | apt                 |
+| [ttyd](https://github.com/tsl0922/ttyd)                               | share terminal over the web                          | cli     | homebrew          | shell               |
+| [vhs](https://github.com/charmbracelet/vhs)                           | cli home video recorder                              | cli     | homebrew          | apt                 |
 | [vim](https://www.vim.org/)                                           | cli ide                                              | cli     | homebrew          | apt                 |
 | [wget](https://www.gnu.org/software/wget/)                            | internet file retriever                              | cli     | homebrew          | apt                 |
 | [yq](https://github.com/mikefarah/yq)                                 | yaml processor tool                                  | cli     | homebrew          | apt                 |
@@ -113,8 +115,8 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                              | cli  | homebrew         | apt                 |
 | [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                | cli  | homebrew         | apt                 |
 | [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                      | cli  | homebrew         | apt                 |
-| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                    | cli  | homebrew         | apt                 |
 | [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                              | cli  | homebrew         | apt                 |
+| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                    | cli  | homebrew         | apt                 |
 | [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)         | cli  | homebrew         | apt                 |
 | [oc](https://www.openshift.com/)                                 | openshift cli                                               | cli  | homebrew         | -                   |
 | [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                | cli  | homebrew         | apt                 |

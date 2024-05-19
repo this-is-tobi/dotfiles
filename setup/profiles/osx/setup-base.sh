@@ -39,6 +39,8 @@ brew install --formula \
   isacikgoz/taps/tldr \
   sshs \
   tree \
+  ttyd \
+  vhs \
   vim \
   wget \
   yq
