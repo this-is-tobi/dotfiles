@@ -168,6 +168,38 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [transmission](https://transmissionbt.com/)                   | torrent client            | desktop | homebrew *- cask* | -                   |
 | [vlc](https://videolan.org/)                                  | video player              | desktop | homebrew *- cask* | -                   |
 
+## Oh-my-zsh
+
+Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.sh/) and a number of plugins which are listed below to enhance the shell experience :
+
+- [aliases](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aliases)
+- [ansible](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ansible)
+- [brew](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew)
+- [bun](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/bun)
+- [docker](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker)
+- [docker-compose](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-compose)
+- [gh](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gh)
+- [git](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git)
+- [gitignore](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitignore)
+- [golang](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/golang)
+- [helm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/helm)
+- [kind](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kind)
+- [kubectl](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectl)
+- [kubectx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectx)
+- [microk8s](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/microk8s)
+- [minikube](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/minikube)
+- [nmap](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nmap)
+- [node](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/node)
+- [npm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/npm)
+- [oc](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/oc)
+- [rsync](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rsync)
+- [scw](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/scw)
+- [sudo](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo)
+- [systemadmin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/systemadmin)
+- [terraform](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/terraform)
+- [vault](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vault)
+- [volta](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/volta)
+
 ## Further utilities
 
 - Check out [Arkade](https://github.com/alexellis/arkade) for more devops tools.
