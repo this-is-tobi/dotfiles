@@ -71,6 +71,7 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 # aliases
+alias cs="cheat_bat"
 alias dsp="docker system prune -a -f"
 alias eza="eza -lag --git"
 alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohidden'"
@@ -98,6 +99,9 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # utility functions
+cheat_bat () {
+  cheat "$@" | bat --language=md
+}
 dks () {
   echo "$1" | yq '.data | map_values(. | @base64d)'
 }
