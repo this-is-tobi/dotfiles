@@ -202,6 +202,10 @@ Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.
 - [vault](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vault)
 - [volta](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/volta)
 
+## Cheatsheets
+
+The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few extra sheets](https://github.com/this-is-tobi/cheatsheets) which can be listed with the command `cheat -l -p personal`.personal`.
+
 ## Further utilities
 
 - Check out [Arkade](https://github.com/alexellis/arkade) for more devops tools.

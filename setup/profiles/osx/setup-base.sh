@@ -58,6 +58,11 @@ brew install --cask \
   visual-studio-code
 
 
+# Install addition cheatsheets
+curl -s https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/clone-subdir.sh | bash -s -- \
+  -u "https://github.com/this-is-tobi/cheatsheets" -s "sheets" -o "$HOME/.config/cheat/cheatsheets/personal" -d
+
+
 # Install neovim fonts
 printf "\n\n${red}[base] =>${no_color} Install neovim fonts\n\n"
 mkdir ~/.fonts

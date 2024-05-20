@@ -157,6 +157,9 @@ if [ ! -x "$(command -v cheat)" ]; then
   gunzip /tmp/cheat-linux-$ARCH.gz
   chmod +x /tmp/cheat-linux-amd64
   sudo mv /tmp/cheat-linux-amd64 /usr/local/bin/cheat
+
+  curl -s https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/clone-subdir.sh | bash -s -- \
+    -u "https://github.com/this-is-tobi/cheatsheets" -s "sheets" -o "$HOME/.config/cheat/cheatsheets/personal" -d
 fi
 
 
