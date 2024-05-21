@@ -204,7 +204,7 @@ Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.
 
 ## Cheatsheets
 
-The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few extra sheets](https://github.com/this-is-tobi/cheatsheets) which can be listed with the command `cheat -l -p personal`.personal`.
+The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few extra sheets](https://github.com/this-is-tobi/cheatsheets) which can be listed with the command `cheat -l -p personal`.
 
 ## Further utilities
 
