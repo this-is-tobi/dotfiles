@@ -106,7 +106,15 @@ cheat_bat () {
   cheat "$@" | bat --language=md
 }
 dks () {
-  echo "$1" | yq '.data | map_values(. | @base64d)'
+  if [ -z "$1" ] && [ -z "$2" ]; then
+    echo "Decode kubernetes secret given its name and optionally its namespace as a second argument"
+    return 0
+  fi
+  if [ -n "$2" ]; then
+    kubectl -n "$2" get secret "$1" -oyaml | yq '.data | map_values(. | @base64d)'
+  else
+    kubectl get secret "$1" -oyaml | yq '.data | map_values(. | @base64d)'
+  fi
 }
 dec () {
   echo "$1" | base64 -d
