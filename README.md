@@ -41,7 +41,7 @@ These scripts are intended to install common packages on proper os :
 - [setup-osx.sh](./setup/setup-osx.sh)
 - [setup-debian.sh](./setup/setup-debian.sh)
 
-It can install severals profiles in addition to the core install by providing `-p <profile_name>` *(example: `./setup-osx.sh -p devops`)*. The following additional profiles are available :
+It can install severals profiles in addition to the core install by providing `-p <profile_name>` *(example: `./setup-osx.sh -p devops`)*. The following profiles are available :
 - [base](#base) *- base packages*
 - [devops](#devops) *- devops oriented packages*
 - [extras](#extras) *- extras personnal packages (only available for osx)*
