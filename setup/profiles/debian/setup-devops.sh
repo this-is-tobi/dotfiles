@@ -75,6 +75,21 @@ if [ ! -x "$(command -v aws)" ]; then
 fi
 
 
+# Install argo
+if [ ! -x "$(command -v argo)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install argo\n\n"
+  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=arm64
+  else
+    ARCH=amd64
+  fi
+  wget -O /tmp/argo-linux-$ARCH.gz "https://github.com/argoproj/argo-workflows/releases/latest/download/argo-linux-$ARCH.gz"
+  gunzip /tmp/argo-linux-$ARCH.gz
+  chmod +x /tmp/argo-linux-amd64
+  sudo mv /tmp/argo-linux-amd64 /usr/local/bin/argo
+fi
+
+
 # Install argocd
 if [ ! -x "$(command -v argocd)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install argocd\n\n"
