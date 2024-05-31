@@ -50,3 +50,13 @@ printf "\n\n${red}[completion] =>${no_color} Install cheat completion\n\n"
 # Install proto completion
 printf "\n\n${red}[completion] =>${no_color} Install proto completion\n\n"
 [ -x "$(command -v proto)" ] && proto completions --shell zsh > $COMPLETION_DIR/_proto
+
+
+# Install argo completion
+printf "\n\n${red}[completion] =>${no_color} Install argo completion\n\n"
+[ -x "$(command -v argo)" ] && argo completions --shell zsh > $COMPLETION_DIR/_argo
+
+
+# Install argocd completion
+printf "\n\n${red}[completion] =>${no_color} Install argocd completion\n\n"
+[ -x "$(command -v argocd)" ] && argocd completions --shell zsh > $COMPLETION_DIR/_argocd
