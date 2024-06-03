@@ -5,19 +5,16 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
-# Updating homebrew cache
-printf "\n\n${red}[js] =>${no_color} Update homebrew\n\n"
-brew update
-
-
-# Install homebrew cli packages
-printf "\n\n${red}[js] =>${no_color} Install homebrew packages (cli)\n\n"
-brew tap oven-sh/bun
-brew install --formula \
-  bun \
-  node \
-  pnpm \
-  volta
+# Install proto packages
+printf "\n\n${red}[js] =>${no_color} Install proto packages\n\n"
+PACKAGES=(
+  bun
+  node
+  pnpm
+)
+for pkg in ${PACKAGES[*]}; do
+  proto install $pkg
+done
 
 
 # Install npm packages

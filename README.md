@@ -144,10 +144,9 @@ CLI completions are referenced and installed via [this file](./setup/completions
 
 | Package                                  | Description                                     | Type | OSX installation | Debian installation |
 | ---------------------------------------- | ----------------------------------------------- | ---- | ---------------- | ------------------- |
-| [bun](https://bun.sh/)                   | javascript runtime environment                  | cli  | homebrew         | npm                 |
-| [node](https://nodejs.org/)              | javascript runtime environment                  | cli  | homebrew         | volta               |
-| [pnpm](https://pnpm.io/fr/)              | javascript disk space efficient package manager | cli  | homebrew         | npm                 |
-| [volta](https://volta.sh/)               | javascript tool manager                         | cli  | homebrew         | shell               |
+| [bun](https://bun.sh/)                   | javascript runtime environment                  | cli  | proto            | proto               |
+| [node](https://nodejs.org/)              | javascript runtime environment                  | cli  | proto            | proto               |
+| [pnpm](https://pnpm.io/fr/)              | javascript disk space efficient package manager | cli  | proto            | proto               |
 | [@antfu/ni](https://github.com/antfu/ni) | javascript package manager wrapper              | cli  | npm              | npm                 |
 
 ### Go
@@ -155,7 +154,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | Package                                                       | Description                                     | Type | OSX installation | Debian installation |
 | ------------------------------------------------------------- | ----------------------------------------------- | ---- | ---------------- | ------------------- |
 | [cobra-cli](https://github.com/spf13/cobra)                   | cli build tool                                  | cli  | go               | go                  |
-| [go](https://go.dev/)                                         | programming language                            | cli  | homebrew         | shell               |
+| [go](https://go.dev/)                                         | programming language                            | cli  | proto            | proto               |
 | [kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) | sdk for building Kubernetes APIs using CRDs     | cli  | homebrew         | apt                 |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize)     | customization of kubernetes YAML configurations | cli  | homebrew         | apt                 |
 | [operator-sdk](https://sdk.operatorframework.io)              | sdk for building Kubernetes applications        | cli  | homebrew         | apt                 |
@@ -201,7 +200,6 @@ Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.
 - [systemadmin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/systemadmin)
 - [terraform](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/terraform)
 - [vault](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vault)
-- [volta](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/volta)
 
 ## Cheatsheets
 

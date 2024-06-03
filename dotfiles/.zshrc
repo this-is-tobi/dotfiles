@@ -49,7 +49,6 @@ plugins=(
   systemadmin
   terraform
   vault
-  volta
 )
 
 # brew settings
@@ -133,17 +132,16 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 # gpg
 export GPG_TTY=$(tty)
 
-# golang
-export GOPATH=$HOME/go
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN
+# go
+export GOBIN="$HOME/go/bin"
+export PATH="$GOBIN:$PATH"
 
 # tldr++
 TLDR_OS=osx # linux
 
-# volta
-VOLTA_HOME=$HOME/.volta
-export PATH="$VOLTA_HOME/bin:$PATH"
+# proto
+export PROTO_HOME="$HOME/.proto"
+export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PATH"
 
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

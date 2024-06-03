@@ -10,10 +10,19 @@ printf "\n\n${red}[go] =>${no_color} Update homebrew\n\n"
 brew update
 
 
+# Install proto packages
+printf "\n\n${red}[js] =>${no_color} Install proto packages\n\n"
+PACKAGES=(
+  go
+)
+for pkg in ${PACKAGES[*]}; do
+  proto install $pkg
+done
+
+
 # Install homebrew cli packages
 printf "\n\n${red}[go] =>${no_color} Install go\n\n"
 brew install --formula \
-  go \
   kubebuilder \
   kustomize \
   operator-sdk
