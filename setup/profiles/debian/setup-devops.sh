@@ -21,6 +21,7 @@ sudo apt update
 printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   act \
+  argo \
   helm \
   k9s \
   kind \
@@ -72,21 +73,6 @@ if [ ! -x "$(command -v aws)" ]; then
   curl "https://awscli.amazonaws.com/awscli-exe-linux-$ARCH.zip" -o "/tmp/awscliv2.zip"
   unzip "/tmp/awscliv2.zip"
   sudo /tmp/aws/install
-fi
-
-
-# Install argo
-if [ ! -x "$(command -v argo)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install argo\n\n"
-  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    ARCH=arm64
-  else
-    ARCH=amd64
-  fi
-  wget -O /tmp/argo-linux-$ARCH.gz "https://github.com/argoproj/argo-workflows/releases/latest/download/argo-linux-$ARCH.gz"
-  gunzip /tmp/argo-linux-$ARCH.gz
-  chmod +x /tmp/argo-linux-amd64
-  sudo mv /tmp/argo-linux-amd64 /usr/local/bin/argo
 fi
 
 

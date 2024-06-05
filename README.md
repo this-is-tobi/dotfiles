@@ -106,9 +106,9 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | Package                                                          | Description                                                 | Type | OSX installation | Debian installation |
 | ---------------------------------------------------------------- | ----------------------------------------------------------- | ---- | ---------------- | ------------------- |
 | [act](https://github.com/nektos/act)                             | local github actions                                        | cli  | homebrew         | apt                 |
-| [ansible](https://docs.ansible.com/)                             | automation tool                                             | cli  | homebrew         | shell               |
-| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                          | cli  | homebrew         | shell               |
-| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                 | cli  | homebrew         | apt                 |
+| [ansible](https://docs.ansible.com/)                             | automation tool                                             | cli  | homebrew         | pip                 |
+| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                          | cli  | homebrew         | apt                 |
+| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                 | cli  | homebrew         | shell               |
 | [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                     | cli  | homebrew         | shell               |
 | [coder](https://coder.com/)                                      | coder cli                                                   | cli  | homebrew         | shell               |
 | [helm](https://helm.sh/)                                         | kubernetes package manager                                  | cli  | homebrew         | apt                 |
