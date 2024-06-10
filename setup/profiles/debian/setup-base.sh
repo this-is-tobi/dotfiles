@@ -170,3 +170,13 @@ if [ ! -x "$(command -v vhs)" ]; then
   echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
   sudo apt update && sudo apt install -y vhs
 fi
+
+
+# Install teleport
+if [ ! -x "$(command -v vhs)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install vhs\n\n"
+  TELEPORT_EDITION="oss"
+  TELEPORT_VERSION="$(curl -s "https://api.github.com/repos/gravitational/teleport/releases/latest" | jq -r '.tag_name' | sed -E 's/v([0-9]+\.[0-9]+\.[0-9]+)/\1/g')"
+  # install script will use apt package manager
+  curl https://goteleport.com/static/install.sh | bash -s ${TELEPORT_VERSION?} ${TELEPORT_EDITION?}
+fi

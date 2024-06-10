@@ -31,6 +31,7 @@ brew install --formula \
   scw \
   sops \
   sshpass \
+  teleport \
   terraform \
   trivy \
   vault \

@@ -72,6 +72,14 @@ printf "\n${red}[completion] =>${no_color} Install scw completion\n"
 [ -x "$(command -v scw)" ] && scw autocomplete install
 
 
+# Install teleport completion
+printf "\n${red}[completion] =>${no_color} Install teleport completion\n"
+[ -x "$(command -v teleport)" ] && teleport --completion-script-zsh > $COMPLETION_DIR/_teleport
+[ -x "$(command -v tbot)" ] && tbot --completion-script-zsh > $COMPLETION_DIR/_tbot
+[ -x "$(command -v tctl)" ] && tctl --completion-script-zsh > $COMPLETION_DIR/_tctl
+[ -x "$(command -v tsh)" ] && tsh --completion-script-zsh > $COMPLETION_DIR/_tsh
+
+
 # Install terrafom completion
 printf "\n${red}[completion] =>${no_color} Install terraform completion\n"
 [ -x "$(command -v terraform)" ] && terraform -install-autocomplete

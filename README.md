@@ -103,30 +103,31 @@ CLI completions are referenced and installed via [this file](./setup/completions
 
 ### Devops
 
-| Package                                                          | Description                                                 | Type | OSX installation | Debian installation |
-| ---------------------------------------------------------------- | ----------------------------------------------------------- | ---- | ---------------- | ------------------- |
-| [act](https://github.com/nektos/act)                             | local github actions                                        | cli  | homebrew         | apt                 |
-| [ansible](https://docs.ansible.com/)                             | automation tool                                             | cli  | homebrew         | pip                 |
-| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                          | cli  | homebrew         | apt                 |
-| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                 | cli  | homebrew         | shell               |
-| [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                     | cli  | homebrew         | shell               |
-| [coder](https://coder.com/)                                      | coder cli                                                   | cli  | homebrew         | shell               |
-| [helm](https://helm.sh/)                                         | kubernetes package manager                                  | cli  | homebrew         | apt                 |
-| [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts      | cli  | homebrew         | apt                 |
-| [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                              | cli  | homebrew         | apt                 |
-| [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                | cli  | homebrew         | apt                 |
-| [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                      | cli  | homebrew         | apt                 |
-| [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                              | cli  | homebrew         | apt                 |
-| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                    | cli  | homebrew         | apt                 |
-| [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)         | cli  | homebrew         | apt                 |
-| [oc](https://www.openshift.com/)                                 | openshift cli                                               | cli  | homebrew         | -                   |
-| [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                | cli  | homebrew         | apt                 |
-| [sops](https://github.com/getsops/sops)                          | simple and flexible tool for managing secrets               | cli  | homebrew         | apt                 |
-| [sshpass](https://sourceforge.net/projects/sshpass/)             | non-interactive ssh password auth                           | cli  | homebrew         | apt                 |
-| [terraform](https://www.terraform.io/)                           | infrastructure automation tool                              | cli  | homebrew         | apt                 |
-| [trivy](https://aquasecurity.github.io/trivy/)                   | vulnerability scanner for container images and file systems | cli  | homebrew         | apt                 |
-| [vault](https://vaultproject.io/)                                | vault cli                                                   | cli  | homebrew         | apt                 |
-| [velero](https://velero.io/)                                     | kubernetes backup and migration cli                         | cli  | homebrew         | apt                 |
+| Package                                                          | Description                                                     | Type | OSX installation | Debian installation |
+| ---------------------------------------------------------------- | --------------------------------------------------------------- | ---- | ---------------- | ------------------- |
+| [act](https://github.com/nektos/act)                             | local github actions                                            | cli  | homebrew         | apt                 |
+| [ansible](https://docs.ansible.com/)                             | automation tool                                                 | cli  | homebrew         | pip                 |
+| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                              | cli  | homebrew         | apt                 |
+| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | cli  | homebrew         | shell               |
+| [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                         | cli  | homebrew         | shell               |
+| [coder](https://coder.com/)                                      | coder cli                                                       | cli  | homebrew         | shell               |
+| [helm](https://helm.sh/)                                         | kubernetes package manager                                      | cli  | homebrew         | apt                 |
+| [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts          | cli  | homebrew         | apt                 |
+| [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                                  | cli  | homebrew         | apt                 |
+| [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                    | cli  | homebrew         | apt                 |
+| [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                          | cli  | homebrew         | apt                 |
+| [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                                  | cli  | homebrew         | apt                 |
+| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                        | cli  | homebrew         | apt                 |
+| [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)             | cli  | homebrew         | apt                 |
+| [oc](https://www.openshift.com/)                                 | openshift cli                                                   | cli  | homebrew         | -                   |
+| [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                    | cli  | homebrew         | apt                 |
+| [sops](https://github.com/getsops/sops)                          | simple and flexible tool for managing secrets                   | cli  | homebrew         | apt                 |
+| [sshpass](https://sourceforge.net/projects/sshpass/)             | non-interactive ssh password auth                               | cli  | homebrew         | apt                 |
+| [teleport](https://goteleport.com/)                              | modern ssh server for teams managing distributed infrastructure | cli  | homebrew         | apt                 |
+| [terraform](https://www.terraform.io/)                           | infrastructure automation tool                                  | cli  | homebrew         | apt                 |
+| [trivy](https://aquasecurity.github.io/trivy/)                   | vulnerability scanner for container images and file systems     | cli  | homebrew         | apt                 |
+| [vault](https://vaultproject.io/)                                | vault cli                                                       | cli  | homebrew         | apt                 |
+| [velero](https://velero.io/)                                     | kubernetes backup and migration cli                             | cli  | homebrew         | apt                 |
 
 #### Krew plugins (kubectl)
 
