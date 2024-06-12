@@ -27,6 +27,7 @@ plugins=(
   ansible
   brew
   bun
+  colored-man-pages
   docker
   docker-compose
   gh
@@ -48,7 +49,6 @@ plugins=(
   sudo
   systemadmin
   terraform
-  vault
 )
 
 # brew settings

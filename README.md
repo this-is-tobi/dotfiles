@@ -175,32 +175,32 @@ CLI completions are referenced and installed via [this file](./setup/completions
 
 Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.sh/) and a number of plugins which are listed below to enhance the shell experience :
 
-- [aliases](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aliases)
-- [ansible](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ansible)
-- [brew](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew)
-- [bun](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/bun)
-- [docker](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker)
-- [docker-compose](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-compose)
-- [gh](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gh)
-- [git](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git)
-- [gitignore](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitignore)
-- [golang](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/golang)
-- [helm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/helm)
-- [kind](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kind)
-- [kubectl](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectl)
-- [kubectx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectx)
-- [microk8s](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/microk8s)
-- [minikube](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/minikube)
-- [nmap](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nmap)
-- [node](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/node)
-- [npm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/npm)
-- [oc](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/oc)
-- [rsync](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rsync)
-- [scw](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/scw)
-- [sudo](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo)
-- [systemadmin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/systemadmin)
-- [terraform](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/terraform)
-- [vault](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vault)
+- [aliases](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aliases) *- list the shortcuts that are currently available.*
+- [ansible](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ansible) *- add several aliases for useful ansible.*
+- [brew](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew) *- add several aliases for common brew commands.*
+- [bun](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/bun) *- set up completion for bun.*
+- [colored-man-pages](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colored-man-pages) *- add colors to man pages.*
+- [docker](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker) *- set up completion and aliases for docker commands.*
+- [docker-compose](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-compose) *- set up completion and aliases for docker-compose commands.*
+- [gh](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gh) *- add completion for the GitHub cli.*
+- [git](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git) *- provide many aliases and a few useful functions.*
+- [gitignore](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitignore) *- use of gitignore.io from the command line.*
+- [golang](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/golang) *- set up completion and aliases for golang.*
+- [helm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/helm) *- set up completion and aliases for helm commands.*
+- [kind](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kind) *- add completion for the Kind tool.*
+- [kubectl](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectl) *- add completion and aliases for kubectl commands.*
+- [kubectx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectx) *- show active kubectl context.*
+- [microk8s](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/microk8s) *- provide completion and useful aliases for microk8s.*
+- [minikube](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/minikube) *- set up completion for minikube.*
+- [nmap](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nmap) *- add some useful aliases for nmap.*
+- [node](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/node) *- add node-docs function that opens proper section in nodejs doc.*
+- [npm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/npm) *- provide completion as well as adding many useful aliases.*
+- [oc](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/oc) *- provide completion for OC commands.*
+- [rsync](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rsync) *- add aliases for frequent rsync commands.*
+- [scw](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/scw) *- add completion options for all scw commands.*
+- [sudo](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo) *- prefix current/previous command with sudo by pressing esc twice.*
+- [systemadmin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/systemadmin) *- add bunch of aliases and functions for sysadmins.*
+- [terraform](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/terraform) *- add completion for terraform, as well as aliases and a prompt function.*
 
 ## Cheatsheets
 
