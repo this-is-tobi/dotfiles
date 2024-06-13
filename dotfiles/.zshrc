@@ -101,6 +101,12 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # utility functions
+b64_d () {
+  echo "$1" | base64 -d
+}
+b64_e () {
+  echo -n "$1" | base64
+}
 cheat_bat () {
   cheat "$@" | bat --language=md
 }
@@ -115,15 +121,12 @@ dks () {
     kubectl get secret "$1" -oyaml | yq '.data | map_values(. | @base64d)'
   fi
 }
-dec () {
-  echo "$1" | base64 -d
-}
-enc () {
-  echo -n "$1" | base64
-}
 kbp () {
   echo "Killing process running on port $1 ..."
   kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
+}
+url_e () {
+  jq -rn --arg x "$1" '$x | @uri'
 }
 
 # completion
