@@ -21,6 +21,8 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │       └── lua
 │           ├── config
 │           └── plugins
+├── .mattermost
+│   └── theme-config.json
 ├── .gitconfig
 └── .zshrc
 ```
