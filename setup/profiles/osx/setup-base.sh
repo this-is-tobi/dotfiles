@@ -28,6 +28,7 @@ brew install --formula \
   glab \
   gnupg \
   gsed \
+  glow \
   jq \
   lazydocker \
   lazygit \

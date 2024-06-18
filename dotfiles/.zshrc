@@ -70,7 +70,7 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 # aliases
-alias cs="cheat_bat"
+alias cs="cheat_glow"
 alias dsp="docker system prune -a -f"
 alias eza="eza -lag --git"
 alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohidden'"
@@ -107,8 +107,8 @@ b64_d () {
 b64_e () {
   echo -n "$1" | base64
 }
-cheat_bat () {
-  cheat "$@" | bat --language=md
+cheat_glow () {
+  cheat "$@" | glow --width=150
 }
 dks () {
   if [ -z "$1" ] && [ -z "$2" ]; then

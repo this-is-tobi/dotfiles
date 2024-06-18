@@ -76,6 +76,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [fzf](https://github.com/junegunn/fzf)                                | command-line fuzzy finder                            | cli     | homebrew          | apt                 |
 | [gh](https://cli.github.com/)                                         | github cli                                           | cli     | homebrew          | apt                 |
 | [glab](https://gitlab.com/gitlab-org/cli)                             | gitlab cli                                           | cli     | homebrew          | apt                 |
+| [glow](https://github.com/charmbracelet/glow)                         | render markdown on the CLI, with pizzazz             | cli     | homebrew          | apt                 |
 | [gnupg](https://gnupg.org/)                                           | encryption tool                                      | cli     | homebrew          | apt                 |
 | [gsed](https://www.gnu.org/software/sed/)                             | non-interactive command-line text editor             | cli     | homebrew          | -                   |
 | [jq](https://stedolan.github.io/jq/)                                  | json processor tool                                  | cli     | homebrew          | apt                 |
