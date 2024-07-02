@@ -43,6 +43,7 @@ sudo apt install -y \
   rsync \
   tree \
   vim \
+  watch \
   wget \
   yq
 

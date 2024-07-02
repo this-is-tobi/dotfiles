@@ -94,6 +94,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [ttyd](https://github.com/tsl0922/ttyd)                               | share terminal over the web                          | cli     | homebrew          | shell               |
 | [vhs](https://github.com/charmbracelet/vhs)                           | cli home video recorder                              | cli     | homebrew          | apt                 |
 | [vim](https://www.vim.org/)                                           | cli ide                                              | cli     | homebrew          | apt                 |
+| [watch](https://en.wikipedia.org/wiki/Watch_(command))                | cli tool that runs the specified command repeatedly  | cli     | homebrew          | apt                 |
 | [wget](https://www.gnu.org/software/wget/)                            | internet file retriever                              | cli     | homebrew          | apt                 |
 | [yq](https://github.com/mikefarah/yq)                                 | yaml processor tool                                  | cli     | homebrew          | apt                 |
 | [brave](https://brave.com/fr/)                                        | privacy compliant web browser                        | desktop | homebrew *- cask* | -                   |

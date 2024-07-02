@@ -43,6 +43,7 @@ brew install --formula \
   ttyd \
   vhs \
   vim \
+  watch \
   wget \
   yq
 
