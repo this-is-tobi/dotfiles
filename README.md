@@ -115,6 +115,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | cli  | homebrew         | shell               |
 | [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                         | cli  | homebrew         | shell               |
 | [coder](https://coder.com/)                                      | coder cli                                                       | cli  | homebrew         | shell               |
+| [dive](https://github.com/wagoodman/dive)                        | tool for exploring each layer in a docker image                 | cli  | homebrew         | apt                 |
 | [helm](https://helm.sh/)                                         | kubernetes package manager                                      | cli  | homebrew         | apt                 |
 | [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts          | cli  | homebrew         | apt                 |
 | [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                                  | cli  | homebrew         | apt                 |

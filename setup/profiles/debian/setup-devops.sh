@@ -22,6 +22,7 @@ printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   act \
   argo \
+  dive \
   helm \
   k9s \
   kind \

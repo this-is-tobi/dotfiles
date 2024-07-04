@@ -19,6 +19,7 @@ brew install --formula \
   argocd \
   awscli \
   coder/coder/coder \
+  dive \
   helm \
   norwoodj/tap/helm-docs \
   k9s \
