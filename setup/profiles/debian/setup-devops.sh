@@ -22,6 +22,7 @@ printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
 sudo apt install -y \
   act \
   argo \
+  argocd \
   dive \
   helm \
   k9s \
@@ -63,7 +64,6 @@ if [ ! -x "$(command -v ansible)" ]; then
 fi
 
 
-
 # Install aws
 if [ ! -x "$(command -v aws)" ]; then
   if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
@@ -74,20 +74,6 @@ if [ ! -x "$(command -v aws)" ]; then
   curl "https://awscli.amazonaws.com/awscli-exe-linux-$ARCH.zip" -o "/tmp/awscliv2.zip"
   unzip "/tmp/awscliv2.zip"
   sudo /tmp/aws/install
-fi
-
-
-# Install argocd
-if [ ! -x "$(command -v argocd)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install argocd\n\n"
-  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    ARCH=arm64
-  else
-    ARCH=amd64
-  fi
-  curl -sSL -o "/tmp/argocd-linux-$ARCH" "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-$ARCH"
-  sudo install -m 555 "/tmp/argocd-linux-$ARCH" /usr/local/bin/argocd
-  rm "/tmp/argocd-linux-$ARCH"
 fi
 
 

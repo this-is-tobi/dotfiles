@@ -112,7 +112,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [act](https://github.com/nektos/act)                             | local github actions                                            | cli  | homebrew         | apt                 |
 | [ansible](https://docs.ansible.com/)                             | automation tool                                                 | cli  | homebrew         | pip                 |
 | [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                              | cli  | homebrew         | apt                 |
-| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | cli  | homebrew         | shell               |
+| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | cli  | homebrew         | apt                 |
 | [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                         | cli  | homebrew         | shell               |
 | [coder](https://coder.com/)                                      | coder cli                                                       | cli  | homebrew         | shell               |
 | [dive](https://github.com/wagoodman/dive)                        | tool for exploring each layer in a docker image                 | cli  | homebrew         | apt                 |
