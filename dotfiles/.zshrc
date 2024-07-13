@@ -101,10 +101,10 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # utility functions
-b64_d () {
+b64d () {
   echo "$1" | base64 -d
 }
-b64_e () {
+b64e () {
   echo -n "$1" | base64
 }
 cheat_glow () {
@@ -125,7 +125,7 @@ kbp () {
   echo "Killing process running on port $1 ..."
   kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
 }
-url_e () {
+urle () {
   jq -rn --arg x "$1" '$x | @uri'
 }
 
