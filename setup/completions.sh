@@ -52,6 +52,26 @@ printf "\n${red}[completion] =>${no_color} Install kubectl completion\n"
 [ -x "$(command -v kubectl)" ] && kubectl completion zsh > $COMPLETION_DIR/_kubectl
 
 
+# Install kubectl-cnpg completion
+printf "\n${red}[completion] =>${no_color} Install kubectl-cnpg completion\n"
+[ -x "$(command -v kubectl-cnpg)" ] && kubectl-cnpg completion zsh > $COMPLETION_DIR/_kubectl-cnpg
+
+
+# Install kubectl-kubescape completion
+printf "\n${red}[completion] =>${no_color} Install kubectl-kubescape completion\n"
+[ -x "$(command -v kubectl-kubescape)" ] && kubectl-kubescape completion zsh > $COMPLETION_DIR/_kubectl-kubescape
+
+
+# Install kubectl-kyverno completion
+printf "\n${red}[completion] =>${no_color} Install kubectl-kyverno completion\n"
+[ -x "$(command -v kubectl-kyverno)" ] && kubectl-kyverno completion zsh > $COMPLETION_DIR/_kubectl-kyverno
+
+
+# Install kustomize completion
+printf "\n${red}[completion] =>${no_color} Install kustomize completion\n"
+[ -x "$(command -v kustomize)" ] && kustomize completion zsh > $COMPLETION_DIR/_kustomize
+
+
 # Install minio completion
 printf "\n${red}[completion] =>${no_color} Install minio completion\n"
 [ -x "$(command -v mc)" ] && mc --autocompletion
