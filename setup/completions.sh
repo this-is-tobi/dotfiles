@@ -37,6 +37,11 @@ printf "\n${red}[completion] =>${no_color} Install docker completion\n"
 [ -x "$(command -v docker)" ] && docker completion zsh > $COMPLETION_DIR/_docker
 
 
+# Install glow completion
+printf "\n${red}[completion] =>${no_color} Install glow completion\n"
+[ -x "$(command -v glow)" ] && glow completion zsh > $COMPLETION_DIR/_glow
+
+
 # Install helm completion
 printf "\n${red}[completion] =>${no_color} Install helm completion\n"
 [ -x "$(command -v helm)" ] && helm completion zsh > $COMPLETION_DIR/_helm
@@ -45,6 +50,11 @@ printf "\n${red}[completion] =>${no_color} Install helm completion\n"
 # Install kind completion
 printf "\n${red}[completion] =>${no_color} Install kind completion\n"
 [ -x "$(command -v kind)" ] && kind completion zsh > $COMPLETION_DIR/_kind
+
+
+# Install kubebuilder completion
+printf "\n${red}[completion] =>${no_color} Install kubebuilder completion\n"
+[ -x "$(command -v kubebuilder)" ] && kubebuilder completion zsh > $COMPLETION_DIR/_kubebuilder
 
 
 # Install kubectl completion
@@ -77,6 +87,11 @@ printf "\n${red}[completion] =>${no_color} Install minio completion\n"
 [ -x "$(command -v mc)" ] && mc --autocompletion
 
 
+# Install operator-sdk completion
+printf "\n${red}[completion] =>${no_color} Install operator-sdk completion\n"
+[ -x "$(command -v operator-sdk)" ] && operator-sdk completion zsh > $COMPLETION_DIR/_operator-sdk
+
+
 # Install pnpm completion
 printf "\n${red}[completion] =>${no_color} Install pnpm completion\n"
 [ -x "$(command -v pnpm)" ] && pnpm completion zsh > $COMPLETION_DIR/_pnpm
@@ -100,14 +115,24 @@ printf "\n${red}[completion] =>${no_color} Install teleport completion\n"
 [ -x "$(command -v tsh)" ] && tsh --completion-script-zsh > $COMPLETION_DIR/_tsh
 
 
-# Install terrafom completion
+# Install terraform completion
 printf "\n${red}[completion] =>${no_color} Install terraform completion\n"
 [ -x "$(command -v terraform)" ] && terraform -install-autocomplete
+
+
+# Install trivy completion
+printf "\n${red}[completion] =>${no_color} Install trivy completion\n"
+[ -x "$(command -v trivy)" ] && trivy completion zsh > $COMPLETION_DIR/_trivy
 
 
 # Install vault completion
 printf "\n${red}[completion] =>${no_color} Install vault completion\n"
 [ -x "$(command -v vault)" ] && vault -autocomplete-install
+
+
+# Install velero completion
+printf "\n${red}[completion] =>${no_color} Install velero completion\n"
+[ -x "$(command -v velero)" ] && velero completion zsh > $COMPLETION_DIR/_velero
 
 
 # Install yq completion
