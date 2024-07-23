@@ -62,8 +62,7 @@ _kube_ps1_shell_type() {
 }
 
 _kube_ps1_init() {
-  # [[ -f "${_KUBE_PS1_DISABLE_PATH}" ]] && KUBE_PS1_ENABLED=off
-  KUBE_PS1_ENABLED=off
+  [[ -f "${_KUBE_PS1_DISABLE_PATH}" ]] && KUBE_PS1_ENABLED=off
 
   case "$(_kube_ps1_shell_type)" in
     "zsh")
