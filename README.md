@@ -23,6 +23,8 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │           └── plugins
 ├── .mattermost
 │   └── theme-config.json
+├── .oh-my-zsh
+│   └── this-is-tobi.zsh-theme
 ├── .gitconfig
 └── .zshrc
 ```
@@ -44,12 +46,13 @@ These scripts are intended to install common packages on proper os :
 - [setup-debian.sh](./setup/setup-debian.sh)
 
 It can install severals profiles in addition to the core install by providing `-p <profile_name>` *(example: `./setup-osx.sh -p devops`)*. The following profiles are available :
-- [base](#base) *- base packages*
-- [devops](#devops) *- devops oriented packages*
-- [extras](#extras) *- extras personnal packages (only available for osx)*
-- [go](#go) *- go developer oriented packages*
-- [js](#javascript) *- js developer oriented packages*
+- [base](#base) *- base packages.*
+- [devops](#devops) *- devops oriented packages.*
+- [extras](#extras) *- extras personnal packages (only available for osx).*
+- [go](#go) *- go developer oriented packages.*
+- [js](#javascript) *- js developer oriented packages.*
 
+> [!TIP]
 > *For more infos use `-h` flag with the script to print help.*
 
 CLI completions are referenced and installed via [this file](./setup/completions.sh).
@@ -206,6 +209,8 @@ Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.
 - [sudo](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo) *- prefix current/previous command with sudo by pressing esc twice.*
 - [systemadmin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/systemadmin) *- add bunch of aliases and functions for sysadmins.*
 - [terraform](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/terraform) *- add completion for terraform, as well as aliases and a prompt function.*
+
+This configuration uses a [custom oh-my-zsh theme](./dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme) that blends [gnzh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#gnzh) with the [kube-ps1 plugin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kube-ps1).
 
 ## Cheatsheets
 
