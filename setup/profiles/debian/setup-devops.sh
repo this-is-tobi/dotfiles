@@ -25,6 +25,7 @@ sudo apt install -y \
   argocd \
   dive \
   helm \
+  helm-docs \
   k9s \
   kind \
   krew \
@@ -76,22 +77,6 @@ if [ ! -x "$(command -v aws)" ]; then
   curl "https://awscli.amazonaws.com/awscli-exe-linux-$ARCH.zip" -o "/tmp/awscliv2.zip"
   unzip "/tmp/awscliv2.zip"
   sudo /tmp/aws/install
-fi
-
-
-# Install helm-docs
-if [ ! -x "$(command -v helm-docs)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install helm-docs\n\n"
-  if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-    ARCH=x86_64
-  elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    ARCH=arm64
-  fi
-  mkdir /tmp/helm-docs
-  HELM_DOCS_VERSION=$(curl -s "https://api.github.com/repos/norwoodj/helm-docs/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-  curl -sLo /tmp/helm-docs/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz "https://github.com/norwoodj/helm-docs/releases/latest/download/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz"
-  tar xf /tmp/helm-docs/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz -C /tmp/helm-docs 
-  sudo mv /tmp/helm-docs /usr/local/bin/helm-docs
 fi
 
 
