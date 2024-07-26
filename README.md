@@ -127,6 +127,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                                  | cli  | homebrew         | apt                 |
 | [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                        | cli  | homebrew         | apt                 |
 | [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)             | cli  | homebrew         | apt                 |
+| [mkcert](https://github.com/FiloSottile/mkcert)                  | simple zero-config tool to make locally trusted certificates    | cli  | homebrew         | shell               |
 | [oc](https://www.openshift.com/)                                 | openshift cli                                                   | cli  | homebrew         | -                   |
 | [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                    | cli  | homebrew         | apt                 |
 | [sops](https://github.com/getsops/sops)                          | simple and flexible tool for managing secrets                   | cli  | homebrew         | apt                 |

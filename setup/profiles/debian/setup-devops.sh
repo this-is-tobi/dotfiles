@@ -54,12 +54,14 @@ kubectl krew install \
 
 # Install coder
 if [ ! -x "$(command -v coder)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install coder\n\n"
   curl -fsSL https://coder.com/install.sh | sh
 fi
 
 
 # Install ansible
 if [ ! -x "$(command -v ansible)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install ansible\n\n"
   python3 -m pip install --user ansible
 fi
 
@@ -79,7 +81,7 @@ fi
 
 # Install helm-docs
 if [ ! -x "$(command -v helm-docs)" ]; then
-  printf "\n\n${red}[base] =>${no_color} Install helm-docs\n\n"
+  printf "\n\n${red}[devops] =>${no_color} Install helm-docs\n\n"
   if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
     ARCH=x86_64
   elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
@@ -90,4 +92,19 @@ if [ ! -x "$(command -v helm-docs)" ]; then
   curl -sLo /tmp/helm-docs/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz "https://github.com/norwoodj/helm-docs/releases/latest/download/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz"
   tar xf /tmp/helm-docs/helm-docs_${HELM_DOCS_VERSION}_Linux_${ARCH}.tar.gz -C /tmp/helm-docs 
   sudo mv /tmp/helm-docs /usr/local/bin/helm-docs
+fi
+
+
+# Install mkcert
+if [ ! -x "$(command -v mkcert)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install mkcert\n\n"
+  if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+    ARCH=amd64
+  elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+    ARCH=arm64
+  fi
+  mkdir /tmp/mkcert
+  MKCERT_VERSION=$(curl -s "https://api.github.com/repos/FiloSottile/mkcert/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
+  curl -sLo /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} "https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-v${MKCERT_VERSION}-linux-${ARCH}"
+  sudo mv /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} /usr/local/bin/mkcert
 fi

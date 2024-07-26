@@ -28,6 +28,7 @@ brew install --formula \
   kubectx \
   kubernetes-cli \
   minio-mc \
+  mkcert \
   openshift-cli \
   scw \
   sops \
