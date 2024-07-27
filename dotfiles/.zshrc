@@ -77,7 +77,7 @@ alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohid
 alias gs="git stash"
 alias gsa="git stash apply"
 alias gsp="git stash pop"
-alias h="history | fzf --preview 'bat --color=always {}' --preview-window='right:60%:hidden'"
+alias h="history | tail -r | fzf --preview 'bat --color=always {}' --preview-window='right:60%:hidden'"
 alias hs="history | grep"
 alias hsi="history | grep -i"
 alias img="chafa"
