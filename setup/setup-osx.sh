@@ -188,7 +188,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   mkdir -p "$HOME/.config"
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && gsed -i 's/^# alias sed=.*/alias sed="gsed"/g' "$HOME/.zshrc"
-  cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$ZSH_CUSTOM/themes/this-is-tobi.zsh-theme"
+  cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R "$SCRIPT_PATH/../dotfiles/.config/nvim" "$HOME/.config"
   cp -R "$SCRIPT_PATH/../dotfiles/.config/lazygit" "$HOME/.config"
