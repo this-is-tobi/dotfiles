@@ -41,10 +41,10 @@
   "githubPullRequests.pullBranch": "never",
   // eslint
   "editor.codeActionsOnSave": {
-    "source.fixAll": false,
-    "source.fixAll.eslint": true,
-    "source.organizeImports": false
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
   },
+  "eslint.format.enable": true,
   "eslint.quiet": true,
   "eslint.validate": [
     "javascript",

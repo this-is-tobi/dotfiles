@@ -59,6 +59,9 @@
     "tomoki1207.pdf",
 
     // prisma ORM
-    "prisma.prisma"
+    "prisma.prisma",
+
+    // terraform
+    "hashicorp.terraform"
   ]
 }
