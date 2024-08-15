@@ -8,9 +8,6 @@ The `dotfiles/` folder provides the following dotfiles templates :
 
 ```sh
 ./dotfiles
-├── .vscode
-│   ├── extensions.json
-│   └── settings.json
 ├── .config
 │   ├── cheat
 │   │   └── conf.yml
@@ -25,7 +22,11 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │   └── theme-config.json
 ├── .oh-my-zsh
 │   └── this-is-tobi.zsh-theme
+├── .vscode
+│   ├── extensions.json
+│   └── settings.json
 ├── .gitconfig
+├── .prototools
 └── .zshrc
 ```
 

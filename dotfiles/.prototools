@@ -1,0 +1,4 @@
+[settings]
+auto-install = true
+auto-clean = true
+pin-latest = "global"
