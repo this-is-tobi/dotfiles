@@ -30,6 +30,10 @@
     // eslint
     "dbaeumer.vscode-eslint",
 
+    // typescript
+    "mylesmurphy.prettify-ts",
+    "yoavbls.pretty-ts-errors",
+
     // vue
     "hollowtree.vue-snippets",
     "Vue.volar",
