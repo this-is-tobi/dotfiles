@@ -122,6 +122,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [dive](https://github.com/wagoodman/dive)                        | tool for exploring each layer in a docker image                 | cli  | homebrew         | apt                 |
 | [helm](https://helm.sh/)                                         | kubernetes package manager                                      | cli  | homebrew         | apt                 |
 | [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts          | cli  | homebrew         | apt                 |
+| [k6](https://k6.io/)                                             | modern load testing tool, using Go and javascript               | cli  | homebrew         | shell               |
 | [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                                  | cli  | homebrew         | apt                 |
 | [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                    | cli  | homebrew         | apt                 |
 | [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                          | cli  | homebrew         | apt                 |

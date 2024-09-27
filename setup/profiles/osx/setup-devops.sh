@@ -22,6 +22,7 @@ brew install --formula \
   dive \
   helm \
   norwoodj/tap/helm-docs \
+  k6 \
   k9s \
   kind \
   krew \
