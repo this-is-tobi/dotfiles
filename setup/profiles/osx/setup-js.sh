@@ -11,6 +11,7 @@ PACKAGES=(
   bun
   node
   pnpm
+  yarn
 )
 for pkg in ${PACKAGES[*]}; do
   proto install $pkg

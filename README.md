@@ -154,12 +154,13 @@ CLI completions are referenced and installed via [this file](./setup/completions
 
 ### Javascript
 
-| Package                                  | Description                                     | Type | OSX installation | Debian installation |
-| ---------------------------------------- | ----------------------------------------------- | ---- | ---------------- | ------------------- |
-| [bun](https://bun.sh/)                   | javascript runtime environment                  | cli  | proto            | proto               |
-| [node](https://nodejs.org/)              | javascript runtime environment                  | cli  | proto            | proto               |
-| [pnpm](https://pnpm.io/fr/)              | javascript disk space efficient package manager | cli  | proto            | proto               |
-| [@antfu/ni](https://github.com/antfu/ni) | javascript package manager wrapper              | cli  | npm              | npm                 |
+| Package                                  | Description                                          | Type | OSX installation | Debian installation |
+| ---------------------------------------- | ---------------------------------------------------- | ---- | ---------------- | ------------------- |
+| [@antfu/ni](https://github.com/antfu/ni) | javascript package manager wrapper                   | cli  | npm              | npm                 |
+| [bun](https://bun.sh/)                   | javascript runtime environment                       | cli  | proto            | proto               |
+| [node](https://nodejs.org/)              | javascript runtime environment                       | cli  | proto            | proto               |
+| [pnpm](https://pnpm.io/)                 | javascript disk space efficient package manager      | cli  | proto            | proto               |
+| [yarn](https://yarnpkg.com/)             | package manager that doubles down as project manager | cli  | proto            | proto               |
 
 ### Go
 
