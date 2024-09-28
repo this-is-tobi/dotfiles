@@ -19,6 +19,7 @@ INSTALL_GO="false"
 INSTALL_JS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
+REMOVE_TMP_CONTENT="false"
 
 # Declare script helper
 TEXT_HELPER="\nThis script aims to install a full setup for debian.
@@ -35,6 +36,8 @@ Following flags are available:
           -> 'js'
         Default is no profile, this flag can be used with a CSV list (ex: -p "base,js").
 
+  -r    Remove all tmp files after installation.
+
   -h    Print script help.\n\n"
 
 print_help() {
@@ -42,7 +45,7 @@ print_help() {
 }
 
 # Parse options
-while getopts hcdp: flag; do
+while getopts hcdp:r flag; do
   case "${flag}" in
     c)
       INSTALL_COMPLETIONS="true";;
@@ -53,6 +56,8 @@ while getopts hcdp: flag; do
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
       [[ "$OPTARG" =~ "go" ]] && INSTALL_GO="true"
       [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
+    r)
+      REMOVE_TMP_CONTENT="true";;
     h | *)
       print_help
       exit 0;;
@@ -179,4 +184,12 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
       echo "$extension" | xargs -L 1 code-server --install-extension
     done
   fi
+fi
+
+
+if [[ "$REMOVE_TMP_CONTENT" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Remove tmp files\n\n"
+  i=$(($i + 1))
+
+  rm -rf /tmp/*
 fi

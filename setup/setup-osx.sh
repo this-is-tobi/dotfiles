@@ -20,6 +20,7 @@ INSTALL_GO="false"
 INSTALL_JS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
+REMOVE_TMP_CONTENT="false"
 
 # Declare script helper
 TEXT_HELPER="\nThis script aims to install a full setup for osx.
@@ -37,6 +38,8 @@ Following flags are available:
           -> 'extras' (for personnal use)
         Default is no additional profile, this flag can be used multiple times.
 
+  -r    Remove all tmp files after installation.
+
   -h    Print script help.\n\n"
 
 print_help() {
@@ -44,7 +47,7 @@ print_help() {
 }
 
 # Parse options
-while getopts hcdp: flag; do
+while getopts hcdp:r flag; do
   case "${flag}" in
     c)
       INSTALL_COMPLETIONS="true";;
@@ -56,6 +59,8 @@ while getopts hcdp: flag; do
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
       [[ "$OPTARG" =~ "go" ]] && INSTALL_GO="true"
       [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
+    r)
+      REMOVE_TMP_CONTENT="true";;
     h | *)
       print_help
       exit 0;;
@@ -212,4 +217,12 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     gsed -i 's/\/usr\/local/\/opt\/homebrew/g' "$HOME/.zshrc"
   fi
+fi
+
+
+if [[ "$REMOVE_TMP_CONTENT" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Remove tmp files\n\n"
+  i=$(($i + 1))
+
+  rm -rf /tmp/*
 fi
