@@ -50,7 +50,8 @@ kubectl krew install \
   ktop \
   kubescape \
   kyverno \
-  neat
+  neat \
+  stern
 
 
 # Install coder

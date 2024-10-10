@@ -151,6 +151,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [kubescape](https://github.com/kubescape/kubescape/)          | kubernetes security scan                                 |
 | [kyverno](https://github.com/kyverno/kyverno)                 | kubernetes policy management                             |
 | [neat](https://github.com/itaysk/kubectl-neat)                | kubernetes yaml/json output clean up to make it readable |
+| [stern](https://github.com/stern/stern)                       | multi pod and container log tailing for Kubernetes       |
 
 ### Javascript
 

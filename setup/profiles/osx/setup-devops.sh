@@ -50,4 +50,5 @@ kubectl krew install \
   ktop \
   kubescape \
   kyverno \
-  neat
+  neat \
+  stern

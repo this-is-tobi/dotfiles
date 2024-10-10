@@ -77,6 +77,11 @@ printf "\n${red}[completion] =>${no_color} Install kubectl-kyverno completion\n"
 [ -x "$(command -v kubectl-kyverno)" ] && kubectl-kyverno completion zsh > $COMPLETION_DIR/_kubectl-kyverno
 
 
+# Install kubectl-stern completion
+printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n"
+[ -x "$(command -v kubectl-stern)" ] && kubectl-stern completion zsh > $COMPLETION_DIR/_kubectl-stern
+
+
 # Install kustomize completion
 printf "\n${red}[completion] =>${no_color} Install kustomize completion\n"
 [ -x "$(command -v kustomize)" ] && kustomize completion zsh > $COMPLETION_DIR/_kustomize
