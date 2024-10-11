@@ -26,6 +26,7 @@ sudo apt install -y \
   dive \
   helm \
   helm-docs \
+  k6 \
   k9s \
   kind \
   krew \
@@ -90,23 +91,7 @@ if [ ! -x "$(command -v mkcert)" ]; then
     ARCH=arm64
   fi
   mkdir /tmp/mkcert
-  K6_VERSION=$(curl -s "https://api.github.com/repos/FiloSottile/mkcert/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-  curl -sLo /tmp/mkcert/mkcert-v${K6_VERSION}-linux-${ARCH} "https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-v${MKCERT_VERSION}-linux-${ARCH}"
+  MKCERT_VERSION=$(curl -s "https://api.github.com/repos/FiloSottile/mkcert/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
+  curl -sLo /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} "https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-v${MKCERT_VERSION}-linux-${ARCH}"
   sudo mv /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} /usr/local/bin/mkcert
-fi
-
-
-# Install k6
-if [ ! -x "$(command -v k6)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install k6\n\n"
-  if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-    ARCH=amd64
-  elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    ARCH=arm64
-  fi
-  mkdir /tmp/k6
-  K6_VERSION=$(curl -s "https://api.github.com/repos/grafana/k6/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-  curl -sLo /tmp/k6/k6-v${K6_VERSION}-linux-${ARCH}.tar.gz "https://github.com/grafana/k6/releases/download/v${K6_VERSION}/k6-v${K6_VERSION}-linux-${ARCH}.tar.gz" \
-  tar xf /tmp/k6/k6-v${K6_VERSION}-linux-${ARCH}.tar.gz -C /tmp/k6/k6
-  sudo mv /tmp/k6/k6 /usr/local/bin/k6
 fi
