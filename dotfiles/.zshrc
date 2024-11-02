@@ -110,33 +110,8 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # utility functions
-b64d () {
-  echo "$1" | base64 -d
-}
-b64e () {
-  echo -n "$1" | base64
-}
-cheat_glow () {
-  cheat "$@" | glow --width=150
-}
-dks () {
-  if [ -z "$1" ] && [ -z "$2" ]; then
-    echo "Decode kubernetes secret given its name and optionally its namespace as a second argument"
-    return 0
-  fi
-  if [ -n "$2" ]; then
-    kubectl -n "$2" get secret "$1" -oyaml | yq '.data | map_values(. | @base64d)'
-  else
-    kubectl get secret "$1" -oyaml | yq '.data | map_values(. | @base64d)'
-  fi
-}
-kbp () {
-  echo "Killing process running on port $1 ..."
-  kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
-}
-urle () {
-  jq -rn --arg x "$1" '$x | @uri'
-}
+[ -f "$HOME/.config/dotfiles/functions.sh" ] && source "$HOME/.config/dotfiles/functions.sh"
+[ -f "$HOME/.config/dotfiles/functions-completion.sh" ] && source "$HOME/.config/dotfiles/functions-completion.sh"
 
 # completion
 export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
