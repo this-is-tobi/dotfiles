@@ -77,9 +77,13 @@ printf "\nScript settings:
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 sudo apt update && sudo apt install -y \
   curl \
+  locales \
   jq \
   sed \
   wget
+
+# Uncomment en_US.UTF-8 for inclusion in generation and generate locales
+sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen && locale-gen
 
 # Install zsh
 if [ ! -x "$(command -v zsh)" ]; then
