@@ -137,7 +137,7 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install base profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/osx/setup-base.sh"
+  $SCRIPT_PATH/profiles/osx/setup-base.sh
 fi
 
 
@@ -146,7 +146,7 @@ if [[ "$INSTALL_EXTRAS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install extras profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/osx/setup-extras.sh"
+  $SCRIPT_PATH/profiles/osx/setup-extras.sh
 fi
 
 
@@ -155,7 +155,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install devops profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/osx/setup-devops.sh"
+  $SCRIPT_PATH/profiles/osx/setup-devops.sh
 fi
 
 
@@ -164,7 +164,7 @@ if [[ "$INSTALL_GO" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install go profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/osx/setup-go.sh"
+  $SCRIPT_PATH/profiles/osx/setup-go.sh
 fi
 
 
@@ -173,7 +173,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/osx/setup-js.sh"
+  $SCRIPT_PATH/profiles/osx/setup-js.sh
 fi
 
 
@@ -182,7 +182,7 @@ if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install cli completions\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/completions.sh"
+  $SCRIPT_PATH/completions.sh
 fi
 
 

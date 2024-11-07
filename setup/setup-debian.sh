@@ -107,7 +107,7 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install base profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/debian/setup-base.sh"
+  $SCRIPT_PATH/profiles/debian/setup-base.sh
 fi
 
 
@@ -116,7 +116,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install devops profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/debian/setup-devops.sh"
+  $SCRIPT_PATH/profiles/debian/setup-devops.sh
 fi
 
 
@@ -125,7 +125,7 @@ if [[ "$INSTALL_GO" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install go profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/debian/setup-go.sh"
+  $SCRIPT_PATH/profiles/debian/setup-go.sh
 fi
 
 
@@ -134,7 +134,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/profiles/debian/setup-js.sh"
+  $SCRIPT_PATH/profiles/debian/setup-js.sh
 fi
 
 
@@ -143,7 +143,7 @@ if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install cli completions\n\n"
   i=$(($i + 1))
 
-  sh "$SCRIPT_PATH/completions.sh"
+  $SCRIPT_PATH/completions.sh
 fi
 
 
