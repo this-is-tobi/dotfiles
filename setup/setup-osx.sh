@@ -196,8 +196,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
   cp "$SCRIPT_PATH/../dotfiles/.prototools" "$HOME/.proto/.prototools"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
-  cp -R "$SCRIPT_PATH/../dotfiles/.config/nvim" "$HOME/.config"
-  cp -R "$SCRIPT_PATH/../dotfiles/.config/lazygit" "$HOME/.config"
+  cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
 
 
   # Install .vscode extensions
