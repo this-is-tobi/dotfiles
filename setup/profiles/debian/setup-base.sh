@@ -183,8 +183,8 @@ fi
 
 
 # Install teleport
-if [ ! -x "$(command -v vhs)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install vhs\n\n"
+if [ ! -x "$(command -v tsh)" ]; then
+  printf "\n\n${red}[devops] =>${no_color} Install tsh\n\n"
   TELEPORT_EDITION="oss"
   TELEPORT_VERSION="$(curl -s "https://api.github.com/repos/gravitational/teleport/releases/latest" | jq -r '.tag_name' | sed -E 's/v([0-9]+\.[0-9]+\.[0-9]+)/\1/g')"
   # install script will use apt package manager
