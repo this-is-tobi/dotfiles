@@ -19,7 +19,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export EDITOR='nvim'
 
 # theme (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
-ZSH_THEME="gnzh"
+ZSH_THEME="this-is-tobi" # gnzh
 
 # plugins
 plugins=(
