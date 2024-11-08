@@ -82,6 +82,16 @@ printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n"
 [ -x "$(command -v kubectl-stern)" ] && kubectl-stern completion zsh > $COMPLETION_DIR/_kubectl-stern
 
 
+# Install kubens completion
+printf "\n${red}[completion] =>${no_color} Install kubens completion\n"
+[ -x "$(command -v kubens)" ] && curl -sL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubens.zsh > $COMPLETION_DIR/_kubens
+
+
+# Install kubens completion
+printf "\n${red}[completion] =>${no_color} Install kubectx completion\n"
+[ -x "$(command -v kubectx)" ] && curl -sL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
+
+
 # Install kustomize completion
 printf "\n${red}[completion] =>${no_color} Install kustomize completion\n"
 [ -x "$(command -v kustomize)" ] && kustomize completion zsh > $COMPLETION_DIR/_kustomize
