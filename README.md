@@ -64,50 +64,51 @@ CLI completions are referenced and installed via [this file](./setup/completions
 
 ### Base
 
-| Package                                                               | Description                                          | Type    | OSX installation  | Debian installation |
-| --------------------------------------------------------------------- | ---------------------------------------------------- | ------- | ----------------- | ------------------- |
-| [age](https://github.com/FiloSottile/age)                             | simple, modern and secure encryption tool            | cli     | homebrew          | apt                 |
-| [bat](https://github.com/sharkdp/bat)                                 | cat command enhanced                                 | cli     | homebrew          | apt                 |
-| [bat-extras](https://github.com/eth-p/bat-extras)                     | bat combo with other commands                        | cli     | homebrew          | shell               |
-| [chafa](https://hpjansson.org/chafa/)                                 | image viewer in terminal                             | cli     | homebrew          | apt                 |
-| [cheat](https://github.com/cheat/cheat)                               | create and view interactive cheat sheets             | cli     | homebrew          | apt                 |
-| [coreutils](https://www.gnu.org/software/coreutils/)                  | basic file, shell and text manipulation utilities    | cli     | homebrew          | apt                 |
-| [docker](https://www.docker.com/)                                     | docker engine                                        | cli     | -                 | shell               |
-| [exiftool](https://exiftool.org/)                                     | metadata writer and reader tool                      | cli     | homebrew          | apt                 |
-| [eza](https://eza.rocks/)                                             | ls command enhanced                                  | cli     | homebrew          | apt                 |
-| [fd](https://github.com/sharkdp/fd)                                   | simple, fast and user-friendly alternative to 'find' | cli     | homebrew          | apt                 |
-| [ffmpeg](https://ffmpeg.org/)                                         | audio video manipulation tool                        | cli     | homebrew          | apt                 |
-| [fzf](https://github.com/junegunn/fzf)                                | command-line fuzzy finder                            | cli     | homebrew          | apt                 |
-| [gh](https://cli.github.com/)                                         | github cli                                           | cli     | homebrew          | apt                 |
-| [glab](https://gitlab.com/gitlab-org/cli)                             | gitlab cli                                           | cli     | homebrew          | apt                 |
-| [glow](https://github.com/charmbracelet/glow)                         | render markdown on the CLI, with pizzazz             | cli     | homebrew          | apt                 |
-| [gnupg](https://gnupg.org/)                                           | encryption tool                                      | cli     | homebrew          | apt                 |
-| [gsed](https://www.gnu.org/software/sed/)                             | non-interactive command-line text editor             | cli     | homebrew          | -                   |
-| [jq](https://stedolan.github.io/jq/)                                  | json processor tool                                  | cli     | homebrew          | apt                 |
-| [lazydocker](https://github.com/jesseduffield/lazydocker)             | lazier way to manage everything docker               | cli     | homebrew          | apt                 |
-| [lazygit](https://github.com/jesseduffield/lazygit)                   | lazier way to manage everything git                  | cli     | homebrew          | shell               |
-| [nmap](https://nmap.org/)                                             | port scanning utility                                | cli     | homebrew          | apt                 |
-| [nvim](https://neovim.io/)                                            | interactive cli ide (enhanced vim)                   | cli     | homebrew          | shell               |
-| [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh/)                      | zsh configuration manager                            | cli     | shell             | shell               |
-| [proto](https://moonrepo.dev/proto)                                   | pluggable multi-language version manager             | cli     | homebrew          | shell               |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)                      | regex pattern search cli (usefull for bat-extras)    | cli     | homebrew          | apt                 |
-| [rsync](https://rsync.samba.org/)                                     | file transfer tool                                   | cli     | homebrew          | apt                 |
-| [sshs](https://github.com/quantumsheep/sshs)                          | interactive cli ssh client                           | cli     | homebrew          | shell               |
-| [tldr++](https://github.com/isacikgoz/tldr)                           | cheatsheet interactive cli                           | cli     | homebrew          | go                  |
-| [tree](https://mama.indstate.edu/users/ice/tree/)                     | filesystem display as tree                           | cli     | homebrew          | apt                 |
-| [ttyd](https://github.com/tsl0922/ttyd)                               | share terminal over the web                          | cli     | homebrew          | shell               |
-| [vhs](https://github.com/charmbracelet/vhs)                           | cli home video recorder                              | cli     | homebrew          | apt                 |
-| [vim](https://www.vim.org/)                                           | cli ide                                              | cli     | homebrew          | apt                 |
-| [watch](https://en.wikipedia.org/wiki/Watch_(command))                | cli tool that runs the specified command repeatedly  | cli     | homebrew          | apt                 |
-| [wget](https://www.gnu.org/software/wget/)                            | internet file retriever                              | cli     | homebrew          | apt                 |
-| [yq](https://github.com/mikefarah/yq)                                 | yaml processor tool                                  | cli     | homebrew          | apt                 |
-| [brave](https://brave.com/fr/)                                        | privacy compliant web browser                        | desktop | homebrew *- cask* | -                   |
-| [docker](https://www.docker.com/products/docker-desktop/)             | docker desktop                                       | desktop | homebrew *- cask* | -                   |
-| [firefox](https://www.mozilla.org/firefox/)                           | privacy compliant web browser                        | desktop | homebrew *- cask* | -                   |
-| [insomnia](https://insomnia.rest/)                                    | http and graphql client                              | desktop | homebrew *- cask* | -                   |
-| [mattermost](https://mattermost.com/)                                 | collaboration app                                    | desktop | homebrew *- cask* | -                   |
-| [openvpn-connect](https://openvpn.net/client-connect-vpn-for-mac-os/) | vpn client                                           | desktop | homebrew *- cask* | -                   |
-| [vscode](https://code.visualstudio.com/)                              | ide                                                  | desktop | homebrew *- cask* | -                   |
+| Package                                                              | Description                                               | Type    | OSX installation  | Debian installation |
+| -------------------------------------------------------------------- | --------------------------------------------------------- | ------- | ----------------- | ------------------- |
+| [age](https://github.com/FiloSottile/age)                            | simple, modern and secure encryption tool                 | cli     | homebrew          | apt                 |
+| [bat](https://github.com/sharkdp/bat)                                | cat command enhanced                                      | cli     | homebrew          | apt                 |
+| [bat-extras](https://github.com/eth-p/bat-extras)                    | bat combo with other commands                             | cli     | homebrew          | shell               |
+| [chafa](https://hpjansson.org/chafa)                                 | image viewer in terminal                                  | cli     | homebrew          | apt                 |
+| [cheat](https://github.com/cheat/cheat)                              | create and view interactive cheat sheets                  | cli     | homebrew          | apt                 |
+| [coreutils](https://www.gnu.org/software/coreutils)                  | basic file, shell and text manipulation utilities         | cli     | homebrew          | apt                 |
+| [cosign](https://docs.sigstore.dev)                                  | code signing and transparency for containers and binaries | cli     | homebrew          | shell               |
+| [docker](https://www.docker.com)                                     | docker engine                                             | cli     | -                 | shell               |
+| [exiftool](https://exiftool.org)                                     | metadata writer and reader tool                           | cli     | homebrew          | apt                 |
+| [eza](https://eza.rocks)                                             | ls command enhanced                                       | cli     | homebrew          | apt                 |
+| [fd](https://github.com/sharkdp/fd)                                  | simple, fast and user-friendly alternative to 'find'      | cli     | homebrew          | apt                 |
+| [ffmpeg](https://ffmpeg.org)                                         | audio video manipulation tool                             | cli     | homebrew          | apt                 |
+| [fzf](https://github.com/junegunn/fzf)                               | command-line fuzzy finder                                 | cli     | homebrew          | apt                 |
+| [gh](https://cli.github.com)                                         | github cli                                                | cli     | homebrew          | apt                 |
+| [glab](https://gitlab.com/gitlab-org/cli)                            | gitlab cli                                                | cli     | homebrew          | apt                 |
+| [glow](https://github.com/charmbracelet/glow)                        | render markdown on the CLI, with pizzazz                  | cli     | homebrew          | apt                 |
+| [gnupg](https://gnupg.org)                                           | encryption tool                                           | cli     | homebrew          | apt                 |
+| [gsed](https://www.gnu.org/software/sed)                             | non-interactive command-line text editor                  | cli     | homebrew          | -                   |
+| [jq](https://stedolan.github.io/jq)                                  | json processor tool                                       | cli     | homebrew          | apt                 |
+| [lazydocker](https://github.com/jesseduffield/lazydocker)            | lazier way to manage everything docker                    | cli     | homebrew          | apt                 |
+| [lazygit](https://github.com/jesseduffield/lazygit)                  | lazier way to manage everything git                       | cli     | homebrew          | shell               |
+| [nmap](https://nmap.org)                                             | port scanning utility                                     | cli     | homebrew          | apt                 |
+| [nvim](https://neovim.io)                                            | interactive cli ide (enhanced vim)                        | cli     | homebrew          | shell               |
+| [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)                      | zsh configuration manager                                 | cli     | shell             | shell               |
+| [proto](https://moonrepo.dev/proto)                                  | pluggable multi-language version manager                  | cli     | homebrew          | shell               |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                     | regex pattern search cli (usefull for bat-extras)         | cli     | homebrew          | apt                 |
+| [rsync](https://rsync.samba.org)                                     | file transfer tool                                        | cli     | homebrew          | apt                 |
+| [sshs](https://github.com/quantumsheep/sshs)                         | interactive cli ssh client                                | cli     | homebrew          | shell               |
+| [tldr++](https://github.com/isacikgoz/tldr)                          | cheatsheet interactive cli                                | cli     | homebrew          | go                  |
+| [tree](https://mama.indstate.edu/users/ice/tree)                     | filesystem display as tree                                | cli     | homebrew          | apt                 |
+| [ttyd](https://github.com/tsl0922/ttyd)                              | share terminal over the web                               | cli     | homebrew          | shell               |
+| [vhs](https://github.com/charmbracelet/vhs)                          | cli home video recorder                                   | cli     | homebrew          | apt                 |
+| [vim](https://www.vim.org)                                           | cli ide                                                   | cli     | homebrew          | apt                 |
+| [watch](https://en.wikipedia.org/wiki/Watch_(command))               | cli tool that runs the specified command repeatedly       | cli     | homebrew          | apt                 |
+| [wget](https://www.gnu.org/software/wget)                            | internet file retriever                                   | cli     | homebrew          | apt                 |
+| [yq](https://github.com/mikefarah/yq)                                | yaml processor tool                                       | cli     | homebrew          | apt                 |
+| [brave](https://brave.com/fr)                                        | privacy compliant web browser                             | desktop | homebrew *- cask* | -                   |
+| [docker](https://www.docker.com/products/docker-desktop)             | docker desktop                                            | desktop | homebrew *- cask* | -                   |
+| [firefox](https://www.mozilla.org/firefox)                           | privacy compliant web browser                             | desktop | homebrew *- cask* | -                   |
+| [insomnia](https://insomnia.rest)                                    | http and graphql client                                   | desktop | homebrew *- cask* | -                   |
+| [mattermost](https://mattermost.com)                                 | collaboration app                                         | desktop | homebrew *- cask* | -                   |
+| [openvpn-connect](https://openvpn.net/client-connect-vpn-for-mac-os) | vpn client                                                | desktop | homebrew *- cask* | -                   |
+| [vscode](https://code.visualstudio.com)                              | ide                                                       | desktop | homebrew *- cask* | -                   |
 
 ### Devops
 

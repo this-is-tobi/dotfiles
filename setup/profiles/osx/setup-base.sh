@@ -19,6 +19,7 @@ brew install --formula \
   chafa \
   cheat \
   coreutils \
+  cosign \
   eza \
   exiftool \
   fd \
