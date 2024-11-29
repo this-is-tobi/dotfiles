@@ -72,7 +72,7 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [chafa](https://hpjansson.org/chafa)                                 | image viewer in terminal                                  | cli     | homebrew          | apt                 |
 | [cheat](https://github.com/cheat/cheat)                              | create and view interactive cheat sheets                  | cli     | homebrew          | apt                 |
 | [coreutils](https://www.gnu.org/software/coreutils)                  | basic file, shell and text manipulation utilities         | cli     | homebrew          | apt                 |
-| [cosign](https://docs.sigstore.dev)                                  | code signing and transparency for containers and binaries | cli     | homebrew          | shell               |
+| [cosign](https://docs.sigstore.dev)                                  | code signing and transparency for containers and binaries | cli     | homebrew          | apt                 |
 | [docker](https://www.docker.com)                                     | docker engine                                             | cli     | -                 | shell               |
 | [exiftool](https://exiftool.org)                                     | metadata writer and reader tool                           | cli     | homebrew          | apt                 |
 | [eza](https://eza.rocks)                                             | ls command enhanced                                       | cli     | homebrew          | apt                 |

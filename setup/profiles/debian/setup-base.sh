@@ -25,6 +25,7 @@ sudo apt install -y \
   chafa \
   cheat \
   coreutils \
+  cosign \
   eza \
   libimage-exiftool-perl \
   fd-find \
@@ -189,17 +190,4 @@ if [ ! -x "$(command -v tsh)" ]; then
   TELEPORT_VERSION="$(curl -s "https://api.github.com/repos/gravitational/teleport/releases/latest" | jq -r '.tag_name' | sed -E 's/v([0-9]+\.[0-9]+\.[0-9]+)/\1/g')"
   # install script will use apt package manager
   curl https://goteleport.com/static/install.sh | bash -s ${TELEPORT_VERSION?} ${TELEPORT_EDITION?}
-fi
-
-
-# Install cosign
-if [ ! -x "$(command -v cosign)" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Install cosign\n\n"
-  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    ARCH=aarch64
-  else
-    ARCH=amd64
-  fi
-  curl -sSL -o "/tmp/cosign" "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-$ARCH"
-  sudo mv /tmp/cosign /usr/local/bin
 fi
