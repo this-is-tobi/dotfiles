@@ -102,6 +102,11 @@ printf "\n${red}[completion] =>${no_color} Install minio completion\n"
 [ -x "$(command -v mc)" ] && mc --autocompletion
 
 
+# Install ollama completion
+printf "\n${red}[completion] =>${no_color} Install ollama completion\n"
+[ -x "$(command -v ollama)" ] && wget -O $COMPLETION_DIR/_ollama https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/_ollama.zsh
+
+
 # Install operator-sdk completion
 printf "\n${red}[completion] =>${no_color} Install operator-sdk completion\n"
 [ -x "$(command -v operator-sdk)" ] && operator-sdk completion zsh > $COMPLETION_DIR/_operator-sdk
