@@ -19,7 +19,6 @@ brew install --formula \
   argocd \
   awscli \
   coder/coder/coder \
-  dive \
   helm \
   norwoodj/tap/helm-docs \
   k6 \
@@ -32,12 +31,9 @@ brew install --formula \
   mkcert \
   openshift-cli \
   scw \
-  sops \
   sshpass \
   teleport \
   terraform \
-  trivy \
-  vault \
   velero
 
 
@@ -48,7 +44,5 @@ kubectl krew install \
   cnpg \
   df-pv \
   ktop \
-  kubescape \
-  kyverno \
   neat \
   stern

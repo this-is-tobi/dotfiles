@@ -18,6 +18,7 @@ INSTALL_BASE="false"
 INSTALL_DEVOPS="false"
 INSTALL_GO="false"
 INSTALL_JS="false"
+INSTALL_SECOPS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
 REMOVE_TMP_CONTENT="false"
@@ -36,6 +37,7 @@ Following flags are available:
           -> 'devops'
           -> 'go'
           -> 'js'
+          -> 'secops'
         Default is no profile, this flag can be used with a CSV list (ex: -p "base,js").
 
   -r    Remove all tmp files after installation.
@@ -58,7 +60,8 @@ while getopts hcdp:r flag; do
       [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
       [[ "$OPTARG" =~ "go" ]] && INSTALL_GO="true"
-      [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true";;
+      [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true"
+      [[ "$OPTARG" =~ "secops" ]] && INSTALL_SECOPS="true";;
     r)
       REMOVE_TMP_CONTENT="true";;
     h | *)
@@ -74,7 +77,8 @@ printf "\nScript settings:
   -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
   -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
   -> install ${red}[go]${no_color} profile: ${red}$INSTALL_GO${no_color}
-  -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}\n"
+  -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}
+  -> install ${red}[secops]${no_color} profile: ${red}$INSTALL_SECOPS${no_color}\n"
 
 
 # Install common
@@ -125,6 +129,15 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   i=$(($i + 1))
 
   $SCRIPT_PATH/profiles/debian/setup-devops.sh
+fi
+
+
+# Install secops profile
+if [[ "$INSTALL_SECOPS" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install secops profile\n\n"
+  i=$(($i + 1))
+
+  $SCRIPT_PATH/profiles/debian/setup-secops.sh
 fi
 
 

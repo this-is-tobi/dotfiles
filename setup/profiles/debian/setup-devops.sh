@@ -23,7 +23,6 @@ sudo apt install -y \
   act \
   argo \
   argocd \
-  dive \
   helm \
   helm-docs \
   k6 \
@@ -34,11 +33,8 @@ sudo apt install -y \
   kubectl \
   minio-client \
   scw \
-  sops \
   sshpass \
   terraform \
-  trivy \
-  vault \
   velero
 
 
@@ -49,8 +45,6 @@ krew install \
   cnpg \
   df-pv \
   ktop \
-  kubescape \
-  kyverno \
   neat \
   stern
 
