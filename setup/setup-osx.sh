@@ -13,6 +13,7 @@ i=1
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Default
+INSTALL_AI="false"
 INSTALL_BASE="false"
 INSTALL_DEVOPS="false"
 INSTALL_EXTRAS="false"
@@ -31,6 +32,7 @@ Following flags are available:
   -d    Copy dotfiles.
 
   -p    Install additional packages according to the given profile, available profiles are :
+          -> 'ai'
           -> 'base'
           -> 'devops'
           -> 'go'
@@ -54,6 +56,7 @@ while getopts hcdp:r flag; do
     d)
       COPY_DOTFILES="true";;
     p)
+      [[ "$OPTARG" =~ "ai" ]] && INSTALL_AI="true"
       [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
       [[ "$OPTARG" =~ "extras" ]] && INSTALL_EXTRAS="true"
       [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
@@ -116,6 +119,7 @@ fi
 
 # Settings
 printf "\nScript settings:
+  -> install ${red}[ai]${no_color} profile: ${red}$INSTALL_AI${no_color}
   -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
   -> install ${red}[extras]${no_color} profile: ${red}$INSTALL_EXTRAS${no_color}
   -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
@@ -174,6 +178,15 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   i=$(($i + 1))
 
   $SCRIPT_PATH/profiles/osx/setup-js.sh
+fi
+
+
+# Install ai profile
+if [[ "$INSTALL_AI" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install ai profile\n\n"
+  i=$(($i + 1))
+
+  $SCRIPT_PATH/profiles/osx/setup-ai.sh
 fi
 
 

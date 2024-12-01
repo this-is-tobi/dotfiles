@@ -6,7 +6,7 @@ no_color='\033[0m'
 
 
 # Updating homebrew cache
-printf "\n\n${red}[base] =>${no_color} Update homebrew\n\n"
+printf "\n\n${red}[extras] =>${no_color} Update homebrew\n\n"
 brew update
 
 

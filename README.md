@@ -174,6 +174,12 @@ CLI completions are referenced and installed via [this file](./setup/completions
 | [kustomize](https://github.com/kubernetes-sigs/kustomize)     | customization of kubernetes YAML configurations | cli  | homebrew         | apt                 |
 | [operator-sdk](https://sdk.operatorframework.io)              | sdk for building Kubernetes applications        | cli  | homebrew         | apt                 |
 
+### AI
+
+| Package                      | Description                                    | Type | OSX installation  | Debian installation |
+| ---------------------------- | ---------------------------------------------- | ---- | ----------------- | ------------------- |
+| [ollama](https://ollama.com) | get up and running with large language models. | cli  | homebrew *- cask* | shell               |
+
 ### Extras
 
 | Package                                                       | Description               | Type    | OSX installation  | Debian installation |

@@ -1,8 +1,21 @@
 {
   "recommendations": [
-    // themes & icons
-    "GitHub.github-vscode-theme",
-    "pkief.material-icon-theme",
+    // ai
+    "continue.continue",
+
+    // ansible
+    "redhat.ansible",
+    
+    // csv
+    "mechatroner.rainbow-csv",
+
+    // css
+    "csstools.postcss",
+    "stylelint.vscode-stylelint",
+    "voorjaar.windicss-intellisense",
+
+    // eslint
+    "dbaeumer.vscode-eslint",
 
     // general
     "ms-vscode-remote.remote-containers",
@@ -24,11 +37,28 @@
     "mhutchie.git-graph",
     "vivaxy.vscode-conventional-commits",
 
-    // ansible
-    "redhat.ansible",
+    // go
+    "golang.go",
 
-    // eslint
-    "dbaeumer.vscode-eslint",
+    // kubernetes
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+
+    // markdown
+    "shd101wyy.markdown-preview-enhanced",
+    "yzhang.markdown-all-in-one",
+
+    // pdf
+    "tomoki1207.pdf",
+
+    // prisma ORM
+    "prisma.prisma",
+
+    // terraform
+    "hashicorp.terraform",
+
+    // themes & icons
+    "GitHub.github-vscode-theme",
+    "pkief.material-icon-theme",
 
     // typescript
     "mylesmurphy.prettify-ts",
@@ -38,34 +68,7 @@
     "hollowtree.vue-snippets",
     "Vue.volar",
 
-    // go
-    "golang.go",
-
-    // kubernetes
-    "ms-kubernetes-tools.vscode-kubernetes-tools",
-
-    // markdown
-    "yzhang.markdown-all-in-one",
-    "shd101wyy.markdown-preview-enhanced",
-
-    // css
-    "csstools.postcss",
-    "stylelint.vscode-stylelint",
-    "voorjaar.windicss-intellisense",
-
-    // csv
-    "mechatroner.rainbow-csv",
-
     // yaml
-    "redhat.vscode-yaml",
-
-    // pdf
-    "tomoki1207.pdf",
-
-    // prisma ORM
-    "prisma.prisma",
-
-    // terraform
-    "hashicorp.terraform"
+    "redhat.vscode-yaml"
   ]
 }
