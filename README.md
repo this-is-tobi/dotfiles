@@ -18,6 +18,8 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │       └── lua
 │           ├── config
 │           └── plugins
+├── .continue
+│   └── config.json
 ├── .mattermost
 │   └── theme-config.json
 ├── .oh-my-zsh
