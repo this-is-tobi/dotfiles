@@ -27,9 +27,9 @@
     }
   ],
   "tabAutocompleteModel": {
-    "title": "Qwen2.5-Coder 3B",
+    "title": "Qwen2.5-Coder 1.5B",
     "provider": "ollama",
-    "model": "qwen2.5-coder:3b"
+    "model": "qwen2.5-coder:1.5b"
   },
   "embeddingsProvider": {
     "title": "Nomic-embed-text",
