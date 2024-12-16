@@ -32,6 +32,7 @@ sudo apt install -y \
   kubectx \
   kubectl \
   minio-client \
+  oc \
   scw \
   sshpass \
   terraform \
@@ -47,22 +48,6 @@ krew install \
   ktop \
   neat \
   stern
-
-
-# Install openshift cli
-if [ ! -x "$(command -v oc)" ]; then
-  printf "\n\n${red}[base] =>${no_color} Install openshift cli\n\n"
-  if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-    ARCH=""
-  elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    ARCH="-arm64"
-  fi
-  mkdir /tmp/openshift-cli
-  OC_VERSION=$(curl -s "https://api.github.com/repos/okd-project/okd/releases/latest " | jq -r '.tag_name' )
-  curl -Lo /tmp/openshift-cli/oc.tar.gz "https://github.com/okd-project/okd/releases/download/${OC_VERSION}/openshift-client-linux${ARCH}-${OC_VERSION}.tar.gz"
-  tar xf /tmp/openshift-cli/oc.tar.gz -C /tmp/openshift-cli
-  sudo mv /tmp/openshift-cli/oc /usr/local/bin/oc
-fi
 
 
 # Install coder
