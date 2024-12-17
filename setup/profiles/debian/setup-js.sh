@@ -10,6 +10,7 @@ printf "\n\n${red}[js] =>${no_color} Install proto packages\n\n"
 PACKAGES=(
   bun
   node
+  npm
   pnpm
   yarn
 )

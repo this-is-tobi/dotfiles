@@ -109,7 +109,7 @@ if [ ! -x "$(command -v lazygit)" ]; then
   mkdir /tmp/lazygit
   LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
   curl -Lo /tmp/lazygit/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
-  tar xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
+  tar -xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
   sudo install /tmp/lazygit/lazygit /usr/local/bin
 fi
 
@@ -119,7 +119,7 @@ if [ ! -x "$(command -v nvim)" ]; then
   printf "\n\n${red}[base] =>${no_color} Install neovim\n\n"
   mkdir /tmp/nvim
   curl -sLo /tmp/nvim/nvim-linux64.tar.gz "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
-  tar xf /tmp/nvim/nvim-linux64.tar.gz -C /tmp/nvim 
+  tar -xf /tmp/nvim/nvim-linux64.tar.gz -C /tmp/nvim 
   sudo mv /tmp/nvim/nvim-linux64/bin/* /usr/local/bin 
   sudo mv /tmp/nvim/nvim-linux64/man/man1/* /usr/local/man/man1 
   sudo mv /tmp/nvim/nvim-linux64/share/* /usr/local/share 
@@ -149,7 +149,7 @@ fi
 # Install proto
 if [ ! -x "$(command -v proto)" ]; then
   printf "\n\n${red}[devops] =>${no_color} Install proto\n\n"
-  curl -fsSL https://moonrepo.dev/install/proto.sh | bash
+  curl -fsSL https://moonrepo.dev/install/proto.sh | bash -s -- --yes
 fi
 
 

@@ -5,7 +5,7 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
-source $HOME/.zshrc
+export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 
 # Create completion directory if not exists

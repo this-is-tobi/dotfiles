@@ -84,11 +84,16 @@ printf "\nScript settings:
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 sudo apt update && sudo apt install -y \
+  build-essential \
   curl \
-  locales \
+  gzip \
   jq \
+  locales \
   sed \
-  wget
+  tar \
+  unzip \
+  wget \
+  xz-utils
 
 # Uncomment en_US.UTF-8 for inclusion in generation and generate locales
 sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen && locale-gen
@@ -120,6 +125,8 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   i=$(($i + 1))
 
   $SCRIPT_PATH/profiles/debian/setup-base.sh
+  export PROTO_HOME="$HOME/.proto"
+  export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PATH"
 fi
 
 
