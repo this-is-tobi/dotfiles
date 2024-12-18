@@ -21,5 +21,5 @@ done
 
 # Install npm packages
 printf "\n\n${red}[js] =>${no_color} Install npm packages\n\n"
-sudo npm install --global \
+npm install --global \
   @antfu/ni

@@ -24,7 +24,7 @@ printf "\n${red}[completion] =>${no_color} Install argocd completion\n"
 
 # Install cheat completion
 printf "\n${red}[completion] =>${no_color} Install cheat completion\n"
-[ -x "$(command -v cheat)" ] && curl -sSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
+[ -x "$(command -v cheat)" ] && curl -fsSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
 
 
 # Install cobra completion
@@ -84,12 +84,12 @@ printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n"
 
 # Install kubens completion
 printf "\n${red}[completion] =>${no_color} Install kubens completion\n"
-[ -x "$(command -v kubens)" ] && curl -sL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubens.zsh > $COMPLETION_DIR/_kubens
+[ -x "$(command -v kubens)" ] && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubens.zsh > $COMPLETION_DIR/_kubens
 
 
 # Install kubens completion
 printf "\n${red}[completion] =>${no_color} Install kubectx completion\n"
-[ -x "$(command -v kubectx)" ] && curl -sL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
+[ -x "$(command -v kubectx)" ] && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
 
 
 # Install kustomize completion
@@ -104,7 +104,7 @@ printf "\n${red}[completion] =>${no_color} Install minio completion\n"
 
 # Install ollama completion
 printf "\n${red}[completion] =>${no_color} Install ollama completion\n"
-[ -x "$(command -v ollama)" ] && wget -O $COMPLETION_DIR/_ollama https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/_ollama.zsh
+[ -x "$(command -v ollama)" ] && curl -fsSL -o $COMPLETION_DIR/_ollama https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/_ollama.zsh
 
 
 # Install operator-sdk completion

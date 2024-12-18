@@ -8,7 +8,7 @@ no_color='\033[0m'
 # Add wakemeops debian repo
 if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
   printf "\n\n${red}[secops] =>${no_color} Add wakemeops apt repository\n\n"
-  curl -sSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
+  curl -fsSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
 fi
 
 
@@ -31,5 +31,4 @@ sudo apt install -y \
 # Install krew plugins
 printf "\n\n${red}[secops] =>${no_color} Install krew plugins\n\n"
 krew install \
-  kubescape \
-  kyverno 
+  kubescape

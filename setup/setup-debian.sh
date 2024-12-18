@@ -85,8 +85,10 @@ printf "\nScript settings:
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 sudo apt update && sudo apt install -y \
   build-essential \
+  ca-certificates \
   curl \
   gzip \
+  gnupg \
   jq \
   locales \
   sed \
