@@ -40,7 +40,7 @@ Following flags are available:
           -> 'go'
           -> 'js'
           -> 'secops'
-        Default is no additional profile, this flag can be used multiple times.
+        Default is no profile, this flag can be used with a CSV list (ex: -p "base,js").
 
   -r    Remove all tmp files after installation.
 
