@@ -48,7 +48,7 @@ These scripts are intended to install common packages on proper os :
 - [setup-osx.sh](./setup/setup-osx.sh)
 - [setup-debian.sh](./setup/setup-debian.sh)
 
-It can install severals profiles in addition to the core install by providing `-p <profile_name>` *(example: `./setup-osx.sh -p devops`)*. The following profiles are available :
+It can install severals profiles in addition to the core install by providing `-p <profile_name>` *(example: `./setup-osx.sh -p 'devops,secops'`)*. The following profiles are available :
 - [base](#base) *- base packages.*
 - [ai](#ia) *- ai oriented packages.*
 - [devops](#devops) *- devops oriented packages.*
@@ -58,6 +58,8 @@ It can install severals profiles in addition to the core install by providing `-
 - [extras](#extras) *- extras personnal packages (only available for osx).*
 
 > [!TIP]
+> *Use flag `-l` to use lite mode setup and install only main tools.*
+> 
 > *For more infos use `-h` flag with the script to print help.*
 
 CLI completions are referenced and installed via [this file](./setup/completions.sh).
@@ -66,144 +68,185 @@ CLI completions are referenced and installed via [this file](./setup/completions
 
 > *Apt come with [WakeMeOps](https://docs.wakemeops.com/) repository.*
 
+
+### Core
+
+#### Command line interfaces
+
+| Package                                                               | Description                                                           | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [build-essential](https://packages.debian.org/en/sid/build-essential) | informational list of essential packages for building debian packages | x         | -                | apt                 |
+| [ca-certificates](https://packages.debian.org/en/sid/ca-certificates) | common CA certificates                                                | x         | homebrew         | apt                 |
+| [coreutils](https://www.gnu.org/software/coreutils)                   | basic file, shell and text manipulation utilities                     | x         | -                | apt                 |
+| [curl](https://curl.se/)                                              | command line tool and library for transferring data with URLs         | x         | homebrew         | apt                 |
+| [gnupg](https://gnupg.org)                                            | encryption tool                                                       | x         | homebrew         | apt                 |
+| [gzip](https://www.gnu.org/software/gzip)                             | popular data compression program                                      | x         | homebrew         | apt                 |
+| [jq](https://stedolan.github.io/jq)                                   | json processor tool                                                   | x         | homebrew         | apt                 |
+| [locales](https://packages.debian.org/en/sid/locales)                 | tools to generate locale definitions                                  | x         | -                | apt                 |
+| [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)                       | zsh configuration manager                                             | x         | shell            | shell               |
+| [sed](https://www.gnu.org/software/sed)                               | non-interactive command-line text editor                              | x         | homebrew         | apt                 |
+| [tar](https://www.gnu.org/software/tar)                               | program to create and manipulate tar archives                         | x         | -                | apt                 |
+| [unzip](https://packages.debian.org/en/sid/unzip)                     | de-archiver for zip files                                             | x         | homebrew         | apt                 |
+| [wget](https://www.gnu.org/software/wget)                             | package for retrieving files using HTTP, HTTPS, FTP and FTPS          | x         | homebrew         | apt                 |
+| [xz-utils](https://packages.debian.org/en/sid/xz-utils)               | xz format compression utilities                                       | x         | homebrew         | apt                 |
+
 ### Base
 
-| Package                                                              | Description                                          | Type    | OSX installation  | Debian installation |
-| -------------------------------------------------------------------- | ---------------------------------------------------- | ------- | ----------------- | ------------------- |
-| [bat](https://github.com/sharkdp/bat)                                | cat command enhanced                                 | cli     | homebrew          | apt                 |
-| [bat-extras](https://github.com/eth-p/bat-extras)                    | bat combo with other commands                        | cli     | homebrew          | shell               |
-| [chafa](https://hpjansson.org/chafa)                                 | image viewer in terminal                             | cli     | homebrew          | apt                 |
-| [cheat](https://github.com/cheat/cheat)                              | create and view interactive cheat sheets             | cli     | homebrew          | apt                 |
-| [coreutils](https://www.gnu.org/software/coreutils)                  | basic file, shell and text manipulation utilities    | cli     | homebrew          | apt                 |
-| [docker](https://www.docker.com)                                     | docker engine                                        | cli     | -                 | shell               |
-| [exiftool](https://exiftool.org)                                     | metadata writer and reader tool                      | cli     | homebrew          | apt                 |
-| [eza](https://eza.rocks)                                             | ls command enhanced                                  | cli     | homebrew          | apt                 |
-| [fd](https://github.com/sharkdp/fd)                                  | simple, fast and user-friendly alternative to 'find' | cli     | homebrew          | apt                 |
-| [ffmpeg](https://ffmpeg.org)                                         | audio video manipulation tool                        | cli     | homebrew          | apt                 |
-| [fzf](https://github.com/junegunn/fzf)                               | command-line fuzzy finder                            | cli     | homebrew          | apt                 |
-| [gh](https://cli.github.com)                                         | github cli                                           | cli     | homebrew          | apt                 |
-| [glab](https://gitlab.com/gitlab-org/cli)                            | gitlab cli                                           | cli     | homebrew          | apt                 |
-| [glow](https://github.com/charmbracelet/glow)                        | render markdown on the CLI, with pizzazz             | cli     | homebrew          | apt                 |
-| [gnupg](https://gnupg.org)                                           | encryption tool                                      | cli     | homebrew          | apt                 |
-| [gsed](https://www.gnu.org/software/sed)                             | non-interactive command-line text editor             | cli     | homebrew          | -                   |
-| [jq](https://stedolan.github.io/jq)                                  | json processor tool                                  | cli     | homebrew          | apt                 |
-| [lazydocker](https://github.com/jesseduffield/lazydocker)            | lazier way to manage everything docker               | cli     | homebrew          | apt                 |
-| [lazygit](https://github.com/jesseduffield/lazygit)                  | lazier way to manage everything git                  | cli     | homebrew          | shell               |
-| [nmap](https://nmap.org)                                             | port scanning utility                                | cli     | homebrew          | apt                 |
-| [nvim](https://neovim.io)                                            | interactive cli ide (enhanced vim)                   | cli     | homebrew          | shell               |
-| [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)                      | zsh configuration manager                            | cli     | shell             | shell               |
-| [proto](https://moonrepo.dev/proto)                                  | pluggable multi-language version manager             | cli     | homebrew          | shell               |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)                     | regex pattern search cli (usefull for bat-extras)    | cli     | homebrew          | apt                 |
-| [rsync](https://rsync.samba.org)                                     | file transfer tool                                   | cli     | homebrew          | apt                 |
-| [sshs](https://github.com/quantumsheep/sshs)                         | interactive cli ssh client                           | cli     | homebrew          | shell               |
-| [tldr++](https://github.com/isacikgoz/tldr)                          | cheatsheet interactive cli                           | cli     | homebrew          | go                  |
-| [tree](https://mama.indstate.edu/users/ice/tree)                     | filesystem display as tree                           | cli     | homebrew          | apt                 |
-| [ttyd](https://github.com/tsl0922/ttyd)                              | share terminal over the web                          | cli     | homebrew          | shell               |
-| [vhs](https://github.com/charmbracelet/vhs)                          | cli home video recorder                              | cli     | homebrew          | apt                 |
-| [vim](https://www.vim.org)                                           | cli ide                                              | cli     | homebrew          | apt                 |
-| [watch](https://en.wikipedia.org/wiki/Watch_(command))               | cli tool that runs the specified command repeatedly  | cli     | homebrew          | apt                 |
-| [wget](https://www.gnu.org/software/wget)                            | internet file retriever                              | cli     | homebrew          | apt                 |
-| [yq](https://github.com/mikefarah/yq)                                | yaml processor tool                                  | cli     | homebrew          | apt                 |
-| [brave](https://brave.com/fr)                                        | privacy compliant web browser                        | desktop | homebrew *- cask* | -                   |
-| [docker](https://www.docker.com/products/docker-desktop)             | docker desktop                                       | desktop | homebrew *- cask* | -                   |
-| [firefox](https://www.mozilla.org/firefox)                           | privacy compliant web browser                        | desktop | homebrew *- cask* | -                   |
-| [insomnia](https://insomnia.rest)                                    | http and graphql client                              | desktop | homebrew *- cask* | -                   |
-| [mattermost](https://mattermost.com)                                 | collaboration app                                    | desktop | homebrew *- cask* | -                   |
-| [openvpn-connect](https://openvpn.net/client-connect-vpn-for-mac-os) | vpn client                                           | desktop | homebrew *- cask* | -                   |
-| [vscode](https://code.visualstudio.com)                              | ide                                                  | desktop | homebrew *- cask* | -                   |
+#### Command line interfaces
+
+| Package                                                   | Description                                          | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------------------- | ---------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [bat](https://github.com/sharkdp/bat)                     | cat command enhanced                                 | x         | homebrew         | apt                 |
+| [bat-extras](https://github.com/eth-p/bat-extras)         | bat combo with other commands                        | x         | homebrew         | shell               |
+| [chafa](https://hpjansson.org/chafa)                      | image viewer in terminal                             | -         | homebrew         | apt                 |
+| [cheat](https://github.com/cheat/cheat)                   | create and view interactive cheat sheets             | x         | homebrew         | apt                 |
+| [exiftool](https://exiftool.org)                          | metadata writer and reader tool                      | -         | homebrew         | apt                 |
+| [eza](https://eza.rocks)                                  | ls command enhanced                                  | x         | homebrew         | apt                 |
+| [fd](https://github.com/sharkdp/fd)                       | simple, fast and user-friendly alternative to 'find' | x         | homebrew         | apt                 |
+| [ffmpeg](https://ffmpeg.org)                              | audio video manipulation tool                        | -         | homebrew         | apt                 |
+| [fzf](https://github.com/junegunn/fzf)                    | command-line fuzzy finder                            | x         | homebrew         | apt                 |
+| [gh](https://cli.github.com)                              | github cli                                           | -         | homebrew         | apt                 |
+| [glab](https://gitlab.com/gitlab-org/cli)                 | gitlab cli                                           | -         | homebrew         | apt                 |
+| [glow](https://github.com/charmbracelet/glow)             | render markdown on the CLI, with pizzazz             | x         | homebrew         | apt                 |
+| [lazydocker](https://github.com/jesseduffield/lazydocker) | lazier way to manage everything docker               | -         | homebrew         | apt                 |
+| [lazygit](https://github.com/jesseduffield/lazygit)       | lazier way to manage everything git                  | -         | homebrew         | shell               |
+| [nmap](https://nmap.org)                                  | port scanning utility                                | x         | homebrew         | apt                 |
+| [nvim](https://neovim.io)                                 | interactive cli ide (enhanced vim)                   | -         | homebrew         | shell               |
+| [proto](https://moonrepo.dev/proto)                       | pluggable multi-language version manager             | x         | homebrew         | shell               |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)          | regex pattern search cli (usefull for bat-extras)    | x         | homebrew         | apt                 |
+| [rsync](https://rsync.samba.org)                          | file transfer tool                                   | x         | homebrew         | apt                 |
+| [sshs](https://github.com/quantumsheep/sshs)              | interactive cli ssh client                           | x         | homebrew         | shell               |
+| [tldr++](https://github.com/isacikgoz/tldr)               | cheatsheet interactive cli                           | -         | homebrew         | shell               |
+| [tree](https://mama.indstate.edu/users/ice/tree)          | filesystem display as tree                           | x         | homebrew         | apt                 |
+| [ttyd](https://github.com/tsl0922/ttyd)                   | share terminal over the web                          | -         | homebrew         | shell               |
+| [vhs](https://github.com/charmbracelet/vhs)               | cli home video recorder                              | -         | homebrew         | apt                 |
+| [vim](https://www.vim.org)                                | cli ide                                              | x         | homebrew         | apt                 |
+| [watch](https://en.wikipedia.org/wiki/Watch_(command))    | cli tool that runs the specified command repeatedly  | x         | homebrew         | apt                 |
+| [yq](https://github.com/mikefarah/yq)                     | yaml processor tool                                  | x         | homebrew         | apt                 |
+
+#### Applications
+
+| Package                                                              | Description                   | Lite mode | OSX installation  | Debian installation |
+| -------------------------------------------------------------------- | ----------------------------- | --------- | ----------------- | ------------------- |
+| [brave](https://brave.com/fr)                                        | privacy compliant web browser | -         | homebrew *- cask* | -                   |
+| [firefox](https://www.mozilla.org/firefox)                           | privacy compliant web browser | -         | homebrew *- cask* | -                   |
+| [insomnia](https://insomnia.rest)                                    | http and graphql client       | -         | homebrew *- cask* | -                   |
+| [mattermost](https://mattermost.com)                                 | collaboration app             | -         | homebrew *- cask* | -                   |
+| [openvpn-connect](https://openvpn.net/client-connect-vpn-for-mac-os) | vpn client                    | -         | homebrew *- cask* | -                   |
+| [vscode](https://code.visualstudio.com)                              | ide                           | -         | homebrew *- cask* | -                   |
 
 ### Devops
 
-| Package                                                          | Description                                                     | Type | OSX installation | Debian installation |
-| ---------------------------------------------------------------- | --------------------------------------------------------------- | ---- | ---------------- | ------------------- |
-| [act](https://github.com/nektos/act)                             | local github actions                                            | cli  | homebrew         | apt                 |
-| [ansible](https://docs.ansible.com/)                             | automation tool                                                 | cli  | homebrew         | pip                 |
-| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                              | cli  | homebrew         | apt                 |
-| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | cli  | homebrew         | apt                 |
-| [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                         | cli  | homebrew         | shell               |
-| [coder](https://coder.com/)                                      | coder cli                                                       | cli  | homebrew         | shell               |
-| [helm](https://helm.sh/)                                         | kubernetes package manager                                      | cli  | homebrew         | apt                 |
-| [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts          | cli  | homebrew         | apt                 |
-| [k6](https://k6.io/)                                             | modern load testing tool, using Go and javascript               | cli  | homebrew         | apt                 |
-| [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                                  | cli  | homebrew         | apt                 |
-| [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                    | cli  | homebrew         | apt                 |
-| [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                          | cli  | homebrew         | apt                 |
-| [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                                  | cli  | homebrew         | apt                 |
-| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                        | cli  | homebrew         | apt                 |
-| [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)             | cli  | homebrew         | apt                 |
-| [mkcert](https://github.com/FiloSottile/mkcert)                  | simple zero-config tool to make locally trusted certificates    | cli  | homebrew         | shell               |
-| [oc](https://www.openshift.com/)                                 | openshift cli                                                   | cli  | homebrew         | apt                 |
-| [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                    | cli  | homebrew         | apt                 |
-| [sshpass](https://sourceforge.net/projects/sshpass/)             | non-interactive ssh password auth                               | cli  | homebrew         | apt                 |
-| [teleport](https://goteleport.com/)                              | modern ssh server for teams managing distributed infrastructure | cli  | homebrew         | apt                 |
-| [terraform](https://www.terraform.io/)                           | infrastructure automation tool                                  | cli  | homebrew         | apt                 |
-| [velero](https://velero.io/)                                     | kubernetes backup and migration cli                             | cli  | homebrew         | apt                 |
+#### Command line interfaces
 
-#### Krew plugins (kubectl)
+| Package                                                          | Description                                                     | Lite mode | OSX installation | Debian installation |
+| ---------------------------------------------------------------- | --------------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [act](https://github.com/nektos/act)                             | local github actions                                            | -         | homebrew         | apt                 |
+| [ansible](https://docs.ansible.com/)                             | automation tool                                                 | x         | homebrew         | pip                 |
+| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                              | -         | homebrew         | apt                 |
+| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | -         | homebrew         | apt                 |
+| [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                         | -         | homebrew         | shell               |
+| [coder](https://coder.com/)                                      | coder cli                                                       | -         | homebrew         | shell               |
+| [docker](https://www.docker.com)                                 | docker engine                                                   | x         | -                | shell               |
+| [helm](https://helm.sh/)                                         | kubernetes package manager                                      | x         | homebrew         | apt                 |
+| [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts          | x         | homebrew         | apt                 |
+| [k6](https://k6.io/)                                             | modern load testing tool, using Go and javascript               | -         | homebrew         | apt                 |
+| [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                                  | -         | homebrew         | apt                 |
+| [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                    | -         | homebrew         | apt                 |
+| [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                          | x         | homebrew         | apt                 |
+| [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                                  | x         | homebrew         | apt                 |
+| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                        | x         | homebrew         | apt                 |
+| [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)             | x         | homebrew         | apt                 |
+| [mkcert](https://github.com/FiloSottile/mkcert)                  | simple zero-config tool to make locally trusted certificates    | -         | homebrew         | shell               |
+| [oc](https://www.openshift.com/)                                 | openshift cli                                                   | -         | homebrew         | apt                 |
+| [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                    | -         | homebrew         | apt                 |
+| [sshpass](https://sourceforge.net/projects/sshpass/)             | non-interactive ssh password auth                               | x         | homebrew         | apt                 |
+| [teleport](https://goteleport.com/)                              | modern ssh server for teams managing distributed infrastructure | -         | homebrew         | apt                 |
+| [terraform](https://www.terraform.io/)                           | infrastructure automation tool                                  | x         | homebrew         | apt                 |
+| [velero](https://velero.io/)                                     | kubernetes backup and migration cli                             | -         | homebrew         | apt                 |
 
-| Plugin                                                        | Description                                              |
-| ------------------------------------------------------------- | -------------------------------------------------------- |
-| [cert-manager](https://cert-manager.io/docs/reference/cmctl/) | cert-manager cli                                         |
-| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | cloud native postgres cli                                |
-| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)        | df utility for pv                                        |
-| [ktop](https://github.com/vladimirvivien/ktop)                | top-like tool for Kubernetes clusters                    |
-| [neat](https://github.com/itaysk/kubectl-neat)                | kubernetes yaml/json output clean up to make it readable |
-| [stern](https://github.com/stern/stern)                       | multi pod and container log tailing for Kubernetes       |
+#### Applications
+
+| Package                                                  | Description    | Lite mode | OSX installation  | Debian installation |
+| -------------------------------------------------------- | -------------- | --------- | ----------------- | ------------------- |
+| [docker](https://www.docker.com/products/docker-desktop) | docker desktop | x         | homebrew *- cask* | -                   |
+
+#### Kubectl plugins
+
+| Plugin                                                        | Description                                              | Lite mode | OSX installation | Debian installation |
+| ------------------------------------------------------------- | -------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [cert-manager](https://cert-manager.io/docs/reference/cmctl/) | cert-manager cli                                         | x         | krew             | krew                |
+| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | cloud native postgres cli                                | x         | krew             | krew                |
+| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)        | df utility for pv                                        | x         | krew             | krew                |
+| [ktop](https://github.com/vladimirvivien/ktop)                | top-like tool for Kubernetes clusters                    | x         | krew             | krew                |
+| [neat](https://github.com/itaysk/kubectl-neat)                | kubernetes yaml/json output clean up to make it readable | x         | krew             | krew                |
+| [stern](https://github.com/stern/stern)                       | multi pod and container log tailing for Kubernetes       | x         | krew             | krew                |
 
 ### Secops
 
-| Package                                        | Description                                                 | Type | OSX installation | Debian installation |
-| ---------------------------------------------- | ----------------------------------------------------------- | ---- | ---------------- | ------------------- |
-| [age](https://github.com/FiloSottile/age)      | simple, modern and secure encryption tool                   | cli  | homebrew         | apt                 |
-| [cosign](https://docs.sigstore.dev)            | code signing and transparency for containers and binaries   | cli  | homebrew         | apt                 |
-| [dive](https://github.com/wagoodman/dive)      | tool for exploring each layer in a docker image             | cli  | homebrew         | apt                 |
-| [sops](https://github.com/getsops/sops)        | simple and flexible tool for managing secrets               | cli  | homebrew         | apt                 |
-| [trivy](https://aquasecurity.github.io/trivy/) | vulnerability scanner for container images and file systems | cli  | homebrew         | apt                 |
-| [vault](https://vaultproject.io/)              | vault cli                                                   | cli  | homebrew         | apt                 |
+#### Command line interfaces
 
-#### Krew plugins (kubectl)
+| Package                                       | Description                                                 | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------- | ----------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [age](https://github.com/FiloSottile/age)     | simple, modern and secure encryption tool                   | -         | homebrew         | apt                 |
+| [cosign](https://docs.sigstore.dev)           | code signing and transparency for containers and binaries   | x         | homebrew         | apt                 |
+| [dive](https://github.com/wagoodman/dive)     | tool for exploring each layer in a docker image             | -         | homebrew         | apt                 |
+| [sops](https://github.com/getsops/sops)       | simple and flexible tool for managing secrets               | -         | homebrew         | apt                 |
+| [trivy](https://aquasecurity.github.io/trivy) | vulnerability scanner for container images and file systems | x         | homebrew         | apt                 |
+| [vault](https://vaultproject.io)              | vault cli                                                   | -         | homebrew         | apt                 |
 
-| Plugin                                               | Description                  |
-| ---------------------------------------------------- | ---------------------------- |
-| [kubescape](https://github.com/kubescape/kubescape/) | kubernetes security scan     |
-| [kyverno](https://github.com/kyverno/kyverno)        | kubernetes policy management |
+#### Kubectl plugins
+
+| Plugin                                              | Description                  | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------------- | ---------------------------- | --------- | ---------------- | ------------------- |
+| [kubescape](https://github.com/kubescape/kubescape) | kubernetes security scan     | -         | krew             | krew                |
+| [kyverno](https://github.com/kyverno/kyverno)       | kubernetes policy management | -         | krew             | -                   |
 
 ### Javascript
 
-| Package                                  | Description                                          | Type | OSX installation | Debian installation |
-| ---------------------------------------- | ---------------------------------------------------- | ---- | ---------------- | ------------------- |
-| [@antfu/ni](https://github.com/antfu/ni) | javascript package manager wrapper                   | cli  | npm              | npm                 |
-| [bun](https://bun.sh/)                   | javascript runtime environment                       | cli  | proto            | proto               |
-| [node](https://nodejs.org/)              | javascript runtime environment                       | cli  | proto            | proto               |
-| [pnpm](https://pnpm.io/)                 | javascript disk space efficient package manager      | cli  | proto            | proto               |
-| [yarn](https://yarnpkg.com/)             | package manager that doubles down as project manager | cli  | proto            | proto               |
+#### Command line interfaces
+
+| Package                                  | Description                                          | Lite mode | OSX installation | Debian installation |
+| ---------------------------------------- | ---------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [@antfu/ni](https://github.com/antfu/ni) | javascript package manager wrapper                   | x         | npm              | npm                 |
+| [bun](https://bun.sh)                    | javascript runtime environment                       | -         | proto            | proto               |
+| [node](https://nodejs.org)               | javascript runtime environment                       | x         | proto            | proto               |
+| [npm](https://github.com/npm/cli)        | javascript package manager                           | x         | proto            | proto               |
+| [pnpm](https://pnpm.io)                  | javascript disk space efficient package manager      | -         | proto            | proto               |
+| [yarn](https://yarnpkg.com)              | package manager that doubles down as project manager | -         | proto            | proto               |
 
 ### Go
 
-| Package                                                       | Description                                     | Type | OSX installation | Debian installation |
-| ------------------------------------------------------------- | ----------------------------------------------- | ---- | ---------------- | ------------------- |
-| [cobra-cli](https://github.com/spf13/cobra)                   | cli build tool                                  | cli  | go               | go                  |
-| [go](https://go.dev/)                                         | programming language                            | cli  | proto            | proto               |
-| [kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) | sdk for building Kubernetes APIs using CRDs     | cli  | homebrew         | apt                 |
-| [kustomize](https://github.com/kubernetes-sigs/kustomize)     | customization of kubernetes YAML configurations | cli  | homebrew         | apt                 |
-| [operator-sdk](https://sdk.operatorframework.io)              | sdk for building Kubernetes applications        | cli  | homebrew         | apt                 |
+#### Command line interfaces
+
+| Package                                                       | Description                                     | Lite mode | OSX installation | Debian installation |
+| ------------------------------------------------------------- | ----------------------------------------------- | --------- | ---------------- | ------------------- |
+| [cobra-cli](https://github.com/spf13/cobra)                   | cli build tool                                  | -         | go               | go                  |
+| [go](https://go.dev/)                                         | programming language                            | x         | proto            | proto               |
+| [kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) | sdk for building Kubernetes APIs using CRDs     | -         | homebrew         | apt                 |
+| [kustomize](https://github.com/kubernetes-sigs/kustomize)     | customization of kubernetes YAML configurations | -         | homebrew         | apt                 |
+| [operator-sdk](https://sdk.operatorframework.io)              | sdk for building Kubernetes applications        | -         | homebrew         | apt                 |
 
 ### AI
 
-| Package                      | Description                                    | Type | OSX installation  | Debian installation |
-| ---------------------------- | ---------------------------------------------- | ---- | ----------------- | ------------------- |
-| [ollama](https://ollama.com) | get up and running with large language models. | cli  | homebrew *- cask* | shell               |
+#### Applications
+
+| Package                      | Description                                    | Lite mode | OSX installation  | Debian installation |
+| ---------------------------- | ---------------------------------------------- | --------- | ----------------- | ------------------- |
+| [ollama](https://ollama.com) | get up and running with large language models. | -         | homebrew *- cask* | shell               |
 
 ### Extras
 
-| Package                                                       | Description               | Type    | OSX installation  | Debian installation |
-| ------------------------------------------------------------- | ------------------------- | ------- | ----------------- | ------------------- |
-| [audacity](https://www.audacityteam.org/)                     | audio manipulation app    | desktop | homebrew *- cask* | -                   |
-| [discord](https://discord.com/)                               | collaboration app         | desktop | homebrew *- cask* | -                   |
-| [raspberry-pi-imager](https://www.raspberrypi.org/downloads/) | raspberrypi image manager | desktop | homebrew *- cask* | -                   |
-| [soulseek](https://slsknet.org/)                              | file sharing app          | desktop | homebrew *- cask* | -                   |
-| [transmission](https://transmissionbt.com/)                   | torrent client            | desktop | homebrew *- cask* | -                   |
-| [vlc](https://videolan.org/)                                  | video player              | desktop | homebrew *- cask* | -                   |
+#### Command line interfaces
+
+| Package                                                       | Description               | Lite mode | OSX installation  | Debian installation |
+| ------------------------------------------------------------- | ------------------------- | --------- | ----------------- | ------------------- |
+| [audacity](https://www.audacityteam.org/)                     | audio manipulation app    | -         | homebrew *- cask* | -                   |
+| [discord](https://discord.com/)                               | collaboration app         | -         | homebrew *- cask* | -                   |
+| [raspberry-pi-imager](https://www.raspberrypi.org/downloads/) | raspberrypi image manager | -         | homebrew *- cask* | -                   |
+| [soulseek](https://slsknet.org/)                              | file sharing app          | -         | homebrew *- cask* | -                   |
+| [transmission](https://transmissionbt.com/)                   | torrent client            | -         | homebrew *- cask* | -                   |
+| [vlc](https://videolan.org/)                                  | video player              | x         | homebrew *- cask* | -                   |
 
 ## Oh-my-zsh
 

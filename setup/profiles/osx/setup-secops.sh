@@ -5,24 +5,36 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
-# Updating homebrew cache
-printf "\n\n${red}[secops] =>${no_color} Update homebrew\n\n"
-brew update
+install_lite_setup() {
+  # Install homebrew cli packages
+  printf "\n\n${red}[secops] =>${no_color} Install homebrew packages (cli)\n\n"
+  brew update && brew install --formula \
+    cosign \
+    trivy
+}
+
+install_additional_setup() {
+  # Install homebrew cli packages
+  printf "\n\n${red}[secops] =>${no_color} Install homebrew packages (cli)\n\n"
+  brew update && brew install --formula \
+    age \
+    dive \
+    sops \
+    vault
 
 
-# Install homebrew cli packages
-printf "\n\n${red}[secops] =>${no_color} Install homebrew packages (cli)\n\n"
-brew install --formula \
-  age \
-  cosign \
-  dive \
-  sops \
-  trivy \
-  vault
+  # Install krew plugins
+  printf "\n\n${red}[secops] =>${no_color} Install krew plugins\n\n"
+  kubectl krew install \
+    kubescape \
+    kyverno
+}
 
 
-# Install krew plugins
-printf "\n\n${red}[secops] =>${no_color} Install krew plugins\n\n"
-kubectl krew install \
-  kubescape \
-  kyverno 
+# Install lite setup
+install_lite_setup
+
+# Install full setup
+if [ "$FULL_MODE_SETUP" = "true" ]; then
+  install_additional_setup
+fi

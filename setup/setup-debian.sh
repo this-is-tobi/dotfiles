@@ -22,6 +22,7 @@ INSTALL_SECOPS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
 REMOVE_TMP_CONTENT="false"
+FULL_MODE_SETUP="true"
 
 # Declare script helper
 TEXT_HELPER="\nThis script aims to install a full setup for debian.
@@ -30,6 +31,8 @@ Following flags are available:
   -c    Install cli completions.
 
   -d    Copy dotfiles.
+
+  -l    Run with lite mode, only major tools will be installed.
 
   -p    Install additional packages according to the given profile, available profiles are :
           -> 'ai'
@@ -49,12 +52,14 @@ print_help() {
 }
 
 # Parse options
-while getopts hcdp:r flag; do
+while getopts hcdlp:r flag; do
   case "${flag}" in
     c)
       INSTALL_COMPLETIONS="true";;
     d)
       COPY_DOTFILES="true";;
+    l)
+      FULL_MODE_SETUP="false";;
     p)
       [[ "$OPTARG" =~ "ai" ]] && INSTALL_AI="true"
       [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
@@ -73,6 +78,7 @@ done
 
 # Settings
 printf "\nScript settings:
+  -> install ${red}full setup${no_color}: ${red}$FULL_MODE_SETUP${no_color}
   -> install ${red}[ai]${no_color} profile: ${red}$INSTALL_AI${no_color}
   -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
   -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
@@ -80,6 +86,7 @@ printf "\nScript settings:
   -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}
   -> install ${red}[secops]${no_color} profile: ${red}$INSTALL_SECOPS${no_color}\n"
 
+export FULL_MODE_SETUP=$FULL_MODE_SETUP
 
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
