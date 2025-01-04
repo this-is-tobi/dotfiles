@@ -287,14 +287,14 @@ The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few
 
 ## Functions
 
-In addition, this installation script adds a [utility functions](https://github.com/this-is-tobi/dotfiles/blob/main/dotfiles/.config/dotfiles/functions.sh) file that can be used locally, as well as a tools function that allows you to execute on-the-fly my list of [utility scripts](https://github.com/this-is-tobi/tools/tree/main/shell) available on Github. To use this function, type the following command :
+In addition, this installation script adds an [utility functions](https://github.com/this-is-tobi/dotfiles/blob/main/dotfiles/.config/dotfiles/functions.sh) file that can be used locally, as well as a tools function that allows you to execute on-the-fly my list of [utility scripts](https://github.com/this-is-tobi/tools/tree/main/shell) available on Github. To use this function, type the following command :
 
 ```sh
 tools <script_name> -h
 ```
 
 > [!TIP]
-> The function is covered by auto-completion, type `tools` then tab to see the list of scripts.
+> The function is covered by auto-completion, type `tools` then `<tab>` to see the list of scripts.
 
 ## Further utilities
 
