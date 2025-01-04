@@ -105,6 +105,7 @@ alias kn="kubens"
 alias kneat="kubectl-neat"
 alias lad="lazydocker"
 alias lag="lazygit"
+alias pubip="dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '\"'"
 # alias sed="gsed"
 
 if [ "$(uname)" = "Darwin" ]; then
