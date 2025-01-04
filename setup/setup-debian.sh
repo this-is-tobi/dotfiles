@@ -184,15 +184,6 @@ if [[ "$INSTALL_AI" = "true" ]]; then
 fi
 
 
-# Install cli completions
-if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install cli completions\n\n"
-  i=$(($i + 1))
-
-  $SCRIPT_PATH/completions.sh
-fi
-
-
 # Copy dotfiles
 if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
@@ -230,6 +221,16 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
       echo "$extension" | xargs -L 1 code-server --install-extension
     done
   fi
+fi
+
+
+# Install cli completions
+if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install cli completions\n\n"
+  i=$(($i + 1))
+
+  $SCRIPT_PATH/completions.sh
+  git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions && sed -i 's|^# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|g' "$HOME/.zshrc"
 fi
 
 

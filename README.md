@@ -62,7 +62,7 @@ It can install severals profiles in addition to the core install by providing `-
 > 
 > *For more infos use `-h` flag with the script to print help.*
 
-CLI completions are referenced and installed via [this file](./setup/completions.sh).
+CLI completions are referenced and installed via the [zsh-completions](https://github.com/zsh-users/zsh-completions) repository and [this custom file](./setup/completions.sh).
 
 > *Packages can come from different sources such as homebrew, apt, npm, etc...*
 

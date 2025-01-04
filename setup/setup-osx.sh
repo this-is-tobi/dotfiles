@@ -223,15 +223,6 @@ if [[ "$INSTALL_AI" = "true" ]]; then
 fi
 
 
-# Install cli completions
-if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install cli completions\n\n"
-  i=$(($i + 1))
-
-  $SCRIPT_PATH/completions.sh
-fi
-
-
 # Copy dotfiles
 if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
@@ -263,6 +254,16 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     gsed -i 's/\/usr\/local/\/opt\/homebrew/g' "$HOME/.zshrc"
   fi
+fi
+
+
+# Install cli completions
+if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
+  printf "\n${red}${i}.${no_color} Install cli completions\n\n"
+  i=$(($i + 1))
+
+  $SCRIPT_PATH/completions.sh
+  git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions && gsed -i 's|^# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|g' "$HOME/.zshrc"
 fi
 
 

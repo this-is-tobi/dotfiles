@@ -67,6 +67,10 @@ if type brew &>/dev/null; then
   export LESSOPEN="|/usr/local/bin/lesspipe.sh %s"
 fi
 
+# add common completion
+export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
+# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+
 source $ZSH/oh-my-zsh.sh
 
 # aliases
@@ -112,9 +116,6 @@ fi
 # utility functions
 [ -f "$HOME/.config/dotfiles/functions.sh" ] && source "$HOME/.config/dotfiles/functions.sh"
 [ -f "$HOME/.config/dotfiles/functions-completion.sh" ] && source "$HOME/.config/dotfiles/functions-completion.sh"
-
-# completion
-export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 # gpg
 export GPG_TTY=$(tty)
