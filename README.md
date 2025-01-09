@@ -110,7 +110,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [glow](https://github.com/charmbracelet/glow)             | render markdown on the CLI, with pizzazz             | x         | homebrew         | apt                 |
 | [lazydocker](https://github.com/jesseduffield/lazydocker) | lazier way to manage everything docker               | -         | homebrew         | apt                 |
 | [lazygit](https://github.com/jesseduffield/lazygit)       | lazier way to manage everything git                  | -         | homebrew         | shell               |
-| [nmap](https://nmap.org)                                  | port scanning utility                                | x         | homebrew         | apt                 |
+| [nmap](https://nmap.org)                                  | port scanning utility                                | -         | homebrew         | apt                 |
 | [nvim](https://neovim.io)                                 | interactive cli ide (enhanced vim)                   | -         | homebrew         | shell               |
 | [proto](https://moonrepo.dev/proto)                       | pluggable multi-language version manager             | x         | homebrew         | shell               |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | regex pattern search cli (usefull for bat-extras)    | x         | homebrew         | apt                 |

@@ -18,7 +18,6 @@ install_lite_setup() {
     man \
     man-db \
     manpages-dev \
-    nmap \
     ripgrep \
     rsync \
     tree \
@@ -88,7 +87,8 @@ install_additional_setup() {
     ffmpeg \
     github-cli \
     glab \
-    lazydocker
+    lazydocker \
+    nmap
 
 
   # Install nvim

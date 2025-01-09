@@ -16,7 +16,6 @@ install_lite_setup() {
     fd \
     fzf \
     glow \
-    nmap \
     proto \
     ripgrep \
     rsync \
@@ -49,6 +48,7 @@ install_additional_setup() {
     glab \
     lazydocker \
     lazygit \
+    nmap \
     nvim \
     isacikgoz/taps/tldr \
     ttyd \
