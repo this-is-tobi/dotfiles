@@ -15,6 +15,7 @@ install_lite_setup() {
     eza \
     fd-find \
     fzf \
+    glow \
     man \
     man-db \
     manpages-dev \
@@ -60,22 +61,6 @@ install_lite_setup() {
     curl -fsSL -o "/tmp/sshs-linux-$ARCH" "https://github.com/quantumsheep/sshs/releases/latest/download/sshs-linux-$ARCH"
     sudo install -m 555 "/tmp/sshs-linux-$ARCH" /usr/local/bin/sshs
     rm "/tmp/sshs-linux-$ARCH"
-  fi
-
-
-  # Install glow
-  if [ ! -x "$(command -v glow)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install glow\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=x86_64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=arm64
-    fi
-    mkdir /tmp/glow
-    GLOW_VERSION=$(curl -fsSL "https://api.github.com/repos/charmbracelet/glow/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/glow.tar.gz "https://github.com/charmbracelet/glow/releases/latest/download/glow_${GLOW_VERSION}_Linux_${ARCH}.tar.gz"
-    tar -xf /tmp/glow.tar.gz -C /tmp
-    sudo mv /tmp/glow/glow /usr/local/bin
   fi
 }
 
