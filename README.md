@@ -118,7 +118,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [sshs](https://github.com/quantumsheep/sshs)              | interactive cli ssh client                           | x         | homebrew         | shell               |
 | [tldr++](https://github.com/isacikgoz/tldr)               | cheatsheet interactive cli                           | -         | homebrew         | shell               |
 | [tree](https://mama.indstate.edu/users/ice/tree)          | filesystem display as tree                           | x         | homebrew         | apt                 |
-| [ttyd](https://github.com/tsl0922/ttyd)                   | share terminal over the web                          | -         | homebrew         | shell               |
+| [ttyd](https://github.com/tsl0922/ttyd)                   | share terminal over the web                          | -         | homebrew         | apt                 |
 | [vhs](https://github.com/charmbracelet/vhs)               | cli home video recorder                              | -         | homebrew         | apt                 |
 | [vim](https://www.vim.org)                                | cli ide                                              | x         | homebrew         | apt                 |
 | [watch](https://en.wikipedia.org/wiki/Watch_(command))    | cli tool that runs the specified command repeatedly  | x         | homebrew         | apt                 |

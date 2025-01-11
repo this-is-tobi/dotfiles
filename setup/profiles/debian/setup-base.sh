@@ -88,7 +88,8 @@ install_additional_setup() {
     github-cli \
     glab \
     lazydocker \
-    nmap
+    nmap \
+    ttyd
 
 
   # Install nvim
@@ -132,20 +133,6 @@ install_additional_setup() {
     curl -fsSL -o /tmp/lazygit/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
     tar -xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
     sudo install /tmp/lazygit/lazygit /usr/local/bin
-  fi
-
-
-  # Install ttyd
-  if [ ! -x "$(command -v ttyd)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install ttyd\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=x86_64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=aarch64
-    fi
-    mkdir /tmp/ttyd
-    curl -fsSL -o /tmp/ttyd "https://github.com/charmbracelet/vhs/releases/latest/download/ttyd.${ARCH}"
-    sudo mv /tmp/ttyd /usr/local/bin
   fi
 
 
