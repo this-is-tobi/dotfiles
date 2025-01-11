@@ -88,6 +88,7 @@ install_additional_setup() {
     github-cli \
     glab \
     lazydocker \
+    lazygit \
     nmap \
     ttyd
 
@@ -117,22 +118,6 @@ install_additional_setup() {
         | jq -r --arg a $(dpkg --print-architecture) '.assets[] | select(.name | match("tldr_.*_linux_" + $a + "\\.tar\\.gz")) | .browser_download_url') \
       && tar -C /tmp -xzf /tmp/tldr.tar.gz \
       && sudo mv /tmp/tldr /usr/local/bin
-  fi
-
-
-  # Install lazygit
-  if [ ! -x "$(command -v lazygit)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install lazygit\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=x86_64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=arm64
-    fi
-    mkdir /tmp/lazygit
-    LAZYGIT_VERSION=$(curl -fsSL "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-    curl -fsSL -o /tmp/lazygit/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
-    tar -xf /tmp/lazygit/lazygit.tar.gz -C /tmp/lazygit
-    sudo install /tmp/lazygit/lazygit /usr/local/bin
   fi
 
 
