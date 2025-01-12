@@ -75,7 +75,8 @@ install_additional_setup() {
     lazydocker \
     lazygit \
     nmap \
-    ttyd
+    ttyd \
+    vhs
 
 
   # Install nvim
@@ -103,22 +104,6 @@ install_additional_setup() {
         | jq -r --arg a $(dpkg --print-architecture) '.assets[] | select(.name | match("tldr_.*_linux_" + $a + "\\.tar\\.gz")) | .browser_download_url') \
       && tar -C /tmp -xzf /tmp/tldr.tar.gz \
       && sudo mv /tmp/tldr /usr/local/bin
-  fi
-
-
-  # Install vhs
-  if [ ! -x "$(command -v vhs)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install vhs\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=x86_64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=arm64
-    fi
-    mkdir /tmp/vhs
-    VHS_VERSION=$(curl -fsSL "https://api.github.com/repos/charmbracelet/vhs/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/vhs.tar.gz "https://github.com/charmbracelet/vhs/releases/latest/download/vhs_${VHS_VERSION}_Linux_${ARCH}.tar.gz"
-    tar -xf /tmp/vhs.tar.gz -C /tmp
-    sudo mv /tmp/vhs/vhs /usr/local/bin
   fi
 
 
