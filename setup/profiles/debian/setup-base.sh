@@ -75,6 +75,7 @@ install_additional_setup() {
     lazydocker \
     lazygit \
     nmap \
+    pandoc \
     ttyd \
     vhs
 

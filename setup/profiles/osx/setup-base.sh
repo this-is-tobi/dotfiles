@@ -50,6 +50,7 @@ install_additional_setup() {
     lazygit \
     nmap \
     nvim \
+    pandoc \
     isacikgoz/taps/tldr \
     ttyd \
     vhs

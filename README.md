@@ -112,6 +112,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [lazygit](https://github.com/jesseduffield/lazygit)       | lazier way to manage everything git                  | -         | homebrew         | apt                 |
 | [nmap](https://nmap.org)                                  | port scanning utility                                | -         | homebrew         | apt                 |
 | [nvim](https://neovim.io)                                 | interactive cli ide (enhanced vim)                   | -         | homebrew         | shell               |
+| [pandoc](https://pandoc.org)                              | universal markup converter                           | -         | homebrew         | shell               |
 | [proto](https://moonrepo.dev/proto)                       | pluggable multi-language version manager             | x         | homebrew         | shell               |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | regex pattern search cli (usefull for bat-extras)    | x         | homebrew         | apt                 |
 | [rsync](https://rsync.samba.org)                          | file transfer tool                                   | x         | homebrew         | apt                 |
