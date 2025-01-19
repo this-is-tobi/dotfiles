@@ -66,7 +66,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 > *Packages can come from different sources such as homebrew, apt, npm, etc...*
 
-> *Apt come with [WakeMeOps](https://docs.wakemeops.com/) repository.*
+> *Apt come with [WakeMeOps](https://docs.wakemeops.com) repository.*
 
 
 ### Core
@@ -140,31 +140,32 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 #### Command line interfaces
 
-| Package                                                          | Description                                                     | Lite mode | OSX installation | Debian installation |
-| ---------------------------------------------------------------- | --------------------------------------------------------------- | --------- | ---------------- | ------------------- |
-| [act](https://github.com/nektos/act)                             | local github actions                                            | -         | homebrew         | apt                 |
-| [ansible](https://docs.ansible.com/)                             | automation tool                                                 | x         | homebrew         | pip                 |
-| [argo](https://argo-cd.readthedocs.io/en/stable/)                | argo-workflows cli                                              | -         | homebrew         | apt                 |
-| [argocd](https://argo-cd.readthedocs.io/en/stable/)              | argo-cd cli                                                     | -         | homebrew         | apt                 |
-| [aws](https://aws.amazon.com/fr/cli/)                            | aws cli                                                         | -         | homebrew         | shell               |
-| [coder](https://coder.com/)                                      | coder cli                                                       | -         | homebrew         | shell               |
-| [docker](https://www.docker.com)                                 | docker engine                                                   | x         | -                | shell               |
-| [helm](https://helm.sh/)                                         | kubernetes package manager                                      | x         | homebrew         | apt                 |
-| [helm-docs](https://github.com/norwoodj/helm-docs)               | tool for auto generating markdown docs for helm charts          | x         | homebrew         | apt                 |
-| [k6](https://k6.io/)                                             | modern load testing tool, using Go and javascript               | -         | homebrew         | apt                 |
-| [k9s](https://k9scli.io/)                                        | kubernetes cluster manager cli                                  | -         | homebrew         | apt                 |
-| [kind](https://kind.sigs.k8s.io/)                                | kubernetes cluster in docker                                    | -         | homebrew         | apt                 |
-| [krew](https://sigs.k8s.io/krew/)                                | kubectl plugin manager                                          | x         | homebrew         | apt                 |
-| [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) | kubernetes cli                                                  | x         | homebrew         | apt                 |
-| [kubectx](https://github.com/ahmetb/kubectx)                     | kubernetes context and namespace manager                        | x         | homebrew         | apt                 |
-| [mc](https://github.com/minio/mc)                                | commands replacement for object storage (minio cli)             | x         | homebrew         | apt                 |
-| [mkcert](https://github.com/FiloSottile/mkcert)                  | simple zero-config tool to make locally trusted certificates    | -         | homebrew         | shell               |
-| [oc](https://www.openshift.com/)                                 | openshift cli                                                   | -         | homebrew         | apt                 |
-| [scw](https://github.com/scaleway/scaleway-cli)                  | scaleway cli                                                    | -         | homebrew         | apt                 |
-| [sshpass](https://sourceforge.net/projects/sshpass/)             | non-interactive ssh password auth                               | x         | homebrew         | apt                 |
-| [teleport](https://goteleport.com/)                              | modern ssh server for teams managing distributed infrastructure | -         | homebrew         | apt                 |
-| [terraform](https://www.terraform.io/)                           | infrastructure automation tool                                  | x         | homebrew         | apt                 |
-| [velero](https://velero.io/)                                     | kubernetes backup and migration cli                             | -         | homebrew         | apt                 |
+| Package                                                         | Description                                                     | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------------------------- | --------------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [act](https://github.com/nektos/act)                            | local github actions                                            | -         | homebrew         | apt                 |
+| [ansible](https://docs.ansible.com)                             | automation tool                                                 | x         | homebrew         | pip                 |
+| [ansible-lint](https://ansible.readthedocs.io/projects/lint)    | cli tool for linting ansible playbooks, roles and collections   | -         | homebrew         | pip                 |
+| [argo](https://argo-cd.readthedocs.io/en/stable)                | argo-workflows cli                                              | -         | homebrew         | apt                 |
+| [argocd](https://argo-cd.readthedocs.io/en/stable)              | argo-cd cli                                                     | -         | homebrew         | apt                 |
+| [aws](https://aws.amazon.com/fr/cli)                            | aws cli                                                         | -         | homebrew         | shell               |
+| [coder](https://coder.com)                                      | coder cli                                                       | -         | homebrew         | shell               |
+| [docker](https://www.docker.com)                                | docker engine                                                   | x         | -                | shell               |
+| [helm](https://helm.sh)                                         | kubernetes package manager                                      | x         | homebrew         | apt                 |
+| [helm-docs](https://github.com/norwoodj/helm-docs)              | tool for auto generating markdown docs for helm charts          | x         | homebrew         | apt                 |
+| [k6](https://k6.io)                                             | modern load testing tool, using Go and javascript               | -         | homebrew         | apt                 |
+| [k9s](https://k9scli.io)                                        | kubernetes cluster manager cli                                  | -         | homebrew         | apt                 |
+| [kind](https://kind.sigs.k8s.io)                                | kubernetes cluster in docker                                    | -         | homebrew         | apt                 |
+| [krew](https://sigs.k8s.io/krew)                                | kubectl plugin manager                                          | x         | homebrew         | apt                 |
+| [kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl) | kubernetes cli                                                  | x         | homebrew         | apt                 |
+| [kubectx](https://github.com/ahmetb/kubectx)                    | kubernetes context and namespace manager                        | x         | homebrew         | apt                 |
+| [mc](https://github.com/minio/mc)                               | commands replacement for object storage (minio cli)             | x         | homebrew         | apt                 |
+| [mkcert](https://github.com/FiloSottile/mkcert)                 | simple zero-config tool to make locally trusted certificates    | -         | homebrew         | shell               |
+| [oc](https://www.openshift.com)                                 | openshift cli                                                   | -         | homebrew         | apt                 |
+| [scw](https://github.com/scaleway/scaleway-cli)                 | scaleway cli                                                    | -         | homebrew         | apt                 |
+| [sshpass](https://sourceforge.net/projects/sshpass)             | non-interactive ssh password auth                               | x         | homebrew         | apt                 |
+| [teleport](https://goteleport.com)                              | modern ssh server for teams managing distributed infrastructure | -         | homebrew         | apt                 |
+| [terraform](https://www.terraform.io)                           | infrastructure automation tool                                  | x         | homebrew         | apt                 |
+| [velero](https://velero.io)                                     | kubernetes backup and migration cli                             | -         | homebrew         | apt                 |
 
 #### Applications
 
@@ -174,14 +175,14 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 #### Kubectl plugins
 
-| Plugin                                                        | Description                                              | Lite mode | OSX installation | Debian installation |
-| ------------------------------------------------------------- | -------------------------------------------------------- | --------- | ---------------- | ------------------- |
-| [cert-manager](https://cert-manager.io/docs/reference/cmctl/) | cert-manager cli                                         | x         | krew             | krew                |
-| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | cloud native postgres cli                                | x         | krew             | krew                |
-| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)        | df utility for pv                                        | x         | krew             | krew                |
-| [ktop](https://github.com/vladimirvivien/ktop)                | top-like tool for Kubernetes clusters                    | x         | krew             | krew                |
-| [neat](https://github.com/itaysk/kubectl-neat)                | kubernetes yaml/json output clean up to make it readable | x         | krew             | krew                |
-| [stern](https://github.com/stern/stern)                       | multi pod and container log tailing for Kubernetes       | x         | krew             | krew                |
+| Plugin                                                       | Description                                              | Lite mode | OSX installation | Debian installation |
+| ------------------------------------------------------------ | -------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [cert-manager](https://cert-manager.io/docs/reference/cmctl) | cert-manager cli                                         | x         | krew             | krew                |
+| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)     | cloud native postgres cli                                | x         | krew             | krew                |
+| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)       | df utility for pv                                        | x         | krew             | krew                |
+| [ktop](https://github.com/vladimirvivien/ktop)               | top-like tool for Kubernetes clusters                    | x         | krew             | krew                |
+| [neat](https://github.com/itaysk/kubectl-neat)               | kubernetes yaml/json output clean up to make it readable | x         | krew             | krew                |
+| [stern](https://github.com/stern/stern)                      | multi pod and container log tailing for Kubernetes       | x         | krew             | krew                |
 
 ### Secops
 
@@ -223,7 +224,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | Package                                                       | Description                                     | Lite mode | OSX installation | Debian installation |
 | ------------------------------------------------------------- | ----------------------------------------------- | --------- | ---------------- | ------------------- |
 | [cobra-cli](https://github.com/spf13/cobra)                   | cli build tool                                  | -         | go               | go                  |
-| [go](https://go.dev/)                                         | programming language                            | x         | proto            | proto               |
+| [go](https://go.dev)                                          | programming language                            | x         | proto            | proto               |
 | [kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) | sdk for building Kubernetes APIs using CRDs     | -         | homebrew         | apt                 |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize)     | customization of kubernetes YAML configurations | -         | homebrew         | apt                 |
 | [operator-sdk](https://sdk.operatorframework.io)              | sdk for building Kubernetes applications        | -         | homebrew         | apt                 |
@@ -240,14 +241,14 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 #### Command line interfaces
 
-| Package                                                       | Description               | Lite mode | OSX installation  | Debian installation |
-| ------------------------------------------------------------- | ------------------------- | --------- | ----------------- | ------------------- |
-| [audacity](https://www.audacityteam.org/)                     | audio manipulation app    | -         | homebrew *- cask* | -                   |
-| [discord](https://discord.com/)                               | collaboration app         | -         | homebrew *- cask* | -                   |
-| [raspberry-pi-imager](https://www.raspberrypi.org/downloads/) | raspberrypi image manager | -         | homebrew *- cask* | -                   |
-| [soulseek](https://slsknet.org/)                              | file sharing app          | -         | homebrew *- cask* | -                   |
-| [transmission](https://transmissionbt.com/)                   | torrent client            | -         | homebrew *- cask* | -                   |
-| [vlc](https://videolan.org/)                                  | video player              | x         | homebrew *- cask* | -                   |
+| Package                                                      | Description               | Lite mode | OSX installation  | Debian installation |
+| ------------------------------------------------------------ | ------------------------- | --------- | ----------------- | ------------------- |
+| [audacity](https://www.audacityteam.org)                     | audio manipulation app    | -         | homebrew *- cask* | -                   |
+| [discord](https://discord.com)                               | collaboration app         | -         | homebrew *- cask* | -                   |
+| [raspberry-pi-imager](https://www.raspberrypi.org/downloads) | raspberrypi image manager | -         | homebrew *- cask* | -                   |
+| [soulseek](https://slsknet.org)                              | file sharing app          | -         | homebrew *- cask* | -                   |
+| [transmission](https://transmissionbt.com)                   | torrent client            | -         | homebrew *- cask* | -                   |
+| [vlc](https://videolan.org)                                  | video player              | x         | homebrew *- cask* | -                   |
 
 ## Oh-my-zsh
 

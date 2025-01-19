@@ -108,6 +108,13 @@ install_additional_setup() {
     curl -fsSL -o /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} "https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-v${MKCERT_VERSION}-linux-${ARCH}"
     sudo mv /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} /usr/local/bin/mkcert
   fi
+
+
+  # Install ansible
+  if [ ! -x "$(command -v ansible-lint)" ]; then
+    printf "\n\n${red}[devops] =>${no_color} Install ansible-lint\n\n"
+    python3 -m pip install --user ansible-dev-tools
+  fi
 }
 
 

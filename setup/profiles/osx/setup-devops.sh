@@ -35,6 +35,7 @@ install_additional_setup() {
   printf "\n\n${red}[devops] =>${no_color} Install homebrew packages (cli)\n\n"
   brew install --formula \
     act \
+    ansible-lint \
     argo \
     argocd \
     awscli \
