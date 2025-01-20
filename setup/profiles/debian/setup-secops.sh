@@ -19,14 +19,9 @@ install_additional_setup() {
   sudo apt update && sudo apt install -y \
     age \
     dive \
+    kubescape \
     sops \
     vault
-
-
-  # Install krew plugins
-  printf "\n\n${red}[secops] =>${no_color} Install krew plugins\n\n"
-  krew install \
-    kubescape
 }
 
 

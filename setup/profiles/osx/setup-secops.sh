@@ -19,6 +19,7 @@ install_additional_setup() {
   brew update && brew install --formula \
     age \
     dive \
+    kubescape \
     sops \
     vault
 
@@ -26,7 +27,6 @@ install_additional_setup() {
   # Install krew plugins
   printf "\n\n${red}[secops] =>${no_color} Install krew plugins\n\n"
   kubectl krew install \
-    kubescape \
     kyverno
 }
 

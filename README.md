@@ -188,21 +188,21 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 #### Command line interfaces
 
-| Package                                       | Description                                                 | Lite mode | OSX installation | Debian installation |
-| --------------------------------------------- | ----------------------------------------------------------- | --------- | ---------------- | ------------------- |
-| [age](https://github.com/FiloSottile/age)     | simple, modern and secure encryption tool                   | -         | homebrew         | apt                 |
-| [cosign](https://docs.sigstore.dev)           | code signing and transparency for containers and binaries   | x         | homebrew         | apt                 |
-| [dive](https://github.com/wagoodman/dive)     | tool for exploring each layer in a docker image             | -         | homebrew         | apt                 |
-| [sops](https://github.com/getsops/sops)       | simple and flexible tool for managing secrets               | -         | homebrew         | apt                 |
-| [trivy](https://aquasecurity.github.io/trivy) | vulnerability scanner for container images and file systems | x         | homebrew         | apt                 |
-| [vault](https://vaultproject.io)              | vault cli                                                   | -         | homebrew         | apt                 |
+| Package                                             | Description                                                 | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------------- | ----------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [age](https://github.com/FiloSottile/age)           | simple, modern and secure encryption tool                   | -         | homebrew         | apt                 |
+| [cosign](https://docs.sigstore.dev)                 | code signing and transparency for containers and binaries   | x         | homebrew         | apt                 |
+| [dive](https://github.com/wagoodman/dive)           | tool for exploring each layer in a docker image             | -         | homebrew         | apt                 |
+| [kubescape](https://github.com/kubescape/kubescape) | kubernetes security scan                                    | -         | homebrew         | apt                 |
+| [sops](https://github.com/getsops/sops)             | simple and flexible tool for managing secrets               | -         | homebrew         | apt                 |
+| [trivy](https://aquasecurity.github.io/trivy)       | vulnerability scanner for container images and file systems | x         | homebrew         | apt                 |
+| [vault](https://vaultproject.io)                    | vault cli                                                   | -         | homebrew         | apt                 |
 
 #### Kubectl plugins
 
-| Plugin                                              | Description                  | Lite mode | OSX installation | Debian installation |
-| --------------------------------------------------- | ---------------------------- | --------- | ---------------- | ------------------- |
-| [kubescape](https://github.com/kubescape/kubescape) | kubernetes security scan     | -         | krew             | krew                |
-| [kyverno](https://github.com/kyverno/kyverno)       | kubernetes policy management | -         | krew             | -                   |
+| Plugin                                        | Description                  | Lite mode | OSX installation | Debian installation |
+| --------------------------------------------- | ---------------------------- | --------- | ---------------- | ------------------- |
+| [kyverno](https://github.com/kyverno/kyverno) | kubernetes policy management | -         | krew             | -                   |
 
 ### Javascript
 
