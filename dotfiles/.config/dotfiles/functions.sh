@@ -5,7 +5,7 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e dks kbp tools urle)
+  fns=(b64d b64e browser dks kbp tools urle)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -38,6 +38,23 @@ b64e() {
 	*)
 		echo -n "$1" | base64
 		;;
+	esac
+}
+
+browser() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Start a browsh web browser using docker.\n"
+		printf "Usage:\n"
+		printf "  -- <utl>   (optional) launch the web browser on the given url.\n"
+		;;
+	*)
+		if ! docker info > /dev/null 2>&1; then
+			echo "This function uses docker, and it isn't running - please start docker and try again!"
+		else
+			docker run --rm -it browsh/browsh "$1"
+		fi
 	esac
 }
 
