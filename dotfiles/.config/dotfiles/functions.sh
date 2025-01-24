@@ -47,7 +47,8 @@ browser() {
 		printf "Description:\n"
 		printf "  Start a browsh web browser using docker.\n"
 		printf "Usage:\n"
-		printf "  -- <utl>   (optional) launch the web browser on the given url.\n"
+		printf "  browser   				launch the web browser.\n"
+		printf "  browser -- <url>  launch the web browser on the given url.\n"
 		;;
 	*)
 		if ! docker info > /dev/null 2>&1; then
