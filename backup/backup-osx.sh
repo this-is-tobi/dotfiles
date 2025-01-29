@@ -107,6 +107,7 @@ DOT_FILES=(
   $HOME/.mc
   $HOME/.npmrc
   $HOME/.ssh
+  $HOME/.tsh
   $HOME/.zshrc
 )
 mkdir -p "${BACKUP_DIR%/}/dotfiles"
