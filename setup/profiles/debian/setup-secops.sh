@@ -20,6 +20,7 @@ install_additional_setup() {
     age \
     dive \
     kubescape \
+    kyverno \
     sops \
     vault
 }
