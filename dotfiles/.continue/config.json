@@ -11,30 +11,35 @@
       "model": "deepseek-coder-v2:16b"
     },
     {
-      "title": "Qwen2.5-Coder 7B",
+      "title": "Codestral 22B",
       "provider": "ollama",
-      "model": "qwen2.5-coder:7b"
+      "model": "codestral:22b"
     },
     {
-      "title": "Qwen2.5-Coder 14B",
+      "title": "Mistral-small 24B",
       "provider": "ollama",
-      "model": "qwen2.5-coder:14b"
+      "model": "mistral-small:24b"
     },
     {
       "title": "Qwen2.5-Coder 32B",
       "provider": "ollama",
       "model": "qwen2.5-coder:32b"
+    },
+    {
+      "title": "Deepseek-r1 32B",
+      "provider": "ollama",
+      "model": "deepseek-r1:32b"
     }
   ],
   "tabAutocompleteModel": {
-    "title": "Qwen2.5-Coder 1.5B",
+    "title": "Deepseek-r1 1.5B",
     "provider": "ollama",
-    "model": "qwen2.5-coder:1.5b"
+    "model": "deepseek-r1:1.5b"
   },
   "embeddingsProvider": {
     "title": "Nomic-embed-text",
     "provider": "ollama",
-    "model": "nomic-embed-text"
+    "model": "nomic-embed-text:latest"
   },
   "customCommands": [
     {
