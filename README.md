@@ -115,6 +115,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [pandoc](https://pandoc.org)                              | universal markup converter                           | -         | homebrew         | apt                 |
 | [proto](https://moonrepo.dev/proto)                       | pluggable multi-language version manager             | x         | homebrew         | shell               |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | regex pattern search cli (usefull for bat-extras)    | x         | homebrew         | apt                 |
+| [rclone](https://rclone.org)                              | the swiss army knife of cloud storage                | -         | homebrew         | apt                 |
 | [rsync](https://rsync.samba.org)                          | file transfer tool                                   | x         | homebrew         | apt                 |
 | [sshs](https://github.com/quantumsheep/sshs)              | interactive cli ssh client                           | x         | homebrew         | shell               |
 | [tldr++](https://github.com/isacikgoz/tldr)               | cheatsheet interactive cli                           | -         | homebrew         | shell               |

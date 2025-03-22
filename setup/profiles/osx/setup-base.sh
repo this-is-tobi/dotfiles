@@ -51,6 +51,7 @@ install_additional_setup() {
     nmap \
     nvim \
     pandoc \
+    rclone \
     isacikgoz/taps/tldr \
     ttyd \
     vhs

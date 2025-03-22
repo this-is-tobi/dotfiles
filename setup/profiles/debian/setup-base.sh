@@ -76,6 +76,7 @@ install_additional_setup() {
     lazygit \
     nmap \
     pandoc \
+    rclone \
     ttyd \
     vhs
 
