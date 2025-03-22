@@ -5,7 +5,7 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e browser dks kbp tools urld urle)
+  fns=(b64d b64e browser dks kbp tools urld urle weather)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -193,6 +193,20 @@ urle() {
 		;;
 	*)
 		jq -rn --arg x "$1" '$x | @uri'
+		;;
+	esac
+}
+
+weather() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Get the weather for a given location.\n\n"
+		printf "Usage:\n"
+		printf "  weather <location>   get the weather.\n"
+		;;
+	*)
+		curl "wttr.in/$1"
 		;;
 	esac
 }

@@ -297,6 +297,7 @@ In addition, this installation script adds an [utility functions](https://github
 | `tools`   | *use personal shell tool scripts.*                                     |
 | `urld`    | *url decode the given string.*                                         |
 | `urle`    | *url encode the given string.*                                         |
+| `weather` | *check the weather for a current location.*                            |
 
 The `tools` function allows you to execute on-the-fly my list of [utility scripts](https://github.com/this-is-tobi/tools/tree/main/shell) available on Github. To use this function, type the following command :
 
