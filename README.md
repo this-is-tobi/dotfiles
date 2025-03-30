@@ -11,6 +11,9 @@ The `dotfiles/` folder provides the following dotfiles templates :
 ├── .config
 │   ├── cheat
 │   │   └── conf.yml
+│   ├── dotfiles
+│   │   ├── functions-completion.sh
+│   │   └── functions.sh
 │   ├── lazygit
 │   │   └── config.yml
 │   └── nvim
