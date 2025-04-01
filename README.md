@@ -120,6 +120,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | regex pattern search cli (usefull for bat-extras)    | x         | homebrew         | apt                 |
 | [rclone](https://rclone.org)                              | the swiss army knife of cloud storage                | -         | homebrew         | apt                 |
 | [rsync](https://rsync.samba.org)                          | file transfer tool                                   | x         | homebrew         | apt                 |
+| [skate](https://github.com/charmbracelet/skate)           | local key value store                                | -         | homebrew         | shell               |
 | [sshs](https://github.com/quantumsheep/sshs)              | interactive cli ssh client                           | x         | homebrew         | shell               |
 | [tldr++](https://github.com/isacikgoz/tldr)               | cheatsheet interactive cli                           | -         | homebrew         | shell               |
 | [tree](https://mama.indstate.edu/users/ice/tree)          | filesystem display as tree                           | x         | homebrew         | apt                 |

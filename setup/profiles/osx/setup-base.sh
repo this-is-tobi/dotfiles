@@ -52,6 +52,7 @@ install_additional_setup() {
     nvim \
     pandoc \
     rclone \
+    charmbracelet/tap/skate \
     isacikgoz/taps/tldr \
     ttyd \
     vhs

@@ -13,148 +13,189 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 
 # Install argo completion
-printf "\n${red}[completion] =>${no_color} Install argo completion\n"
-[ -x "$(command -v argo)" ] && argo completion zsh > $COMPLETION_DIR/_argo
+[ -x "$(command -v argo)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install argo completion\n" \
+  && argo completion zsh > $COMPLETION_DIR/_argo
 
 
 # Install argocd completion
-printf "\n${red}[completion] =>${no_color} Install argocd completion\n"
-[ -x "$(command -v argocd)" ] && argocd completion zsh > $COMPLETION_DIR/_argocd
+[ -x "$(command -v argocd)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install argocd completion\n" \
+  && argocd completion zsh > $COMPLETION_DIR/_argocd
 
 
 # Install cheat completion
-printf "\n${red}[completion] =>${no_color} Install cheat completion\n"
-[ -x "$(command -v cheat)" ] && curl -fsSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
+[ -x "$(command -v cheat)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install cheat completion\n" \
+  && curl -fsSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
 
 
 # Install cobra completion
-printf "\n${red}[completion] =>${no_color} Install cobra completion\n"
-[ -x "$(command -v cobra-cli)" ] && cobra-cli completion zsh > $COMPLETION_DIR/_cobra-cli
+[ -x "$(command -v cobra-cli)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install cobra completion\n" \
+  && cobra-cli completion zsh > $COMPLETION_DIR/_cobra-cli
 
 
 # Install docker completion
-printf "\n${red}[completion] =>${no_color} Install docker completion\n"
-[ -x "$(command -v docker)" ] && docker completion zsh > $COMPLETION_DIR/_docker
+[ -x "$(command -v docker)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install docker completion\n" \
+  && docker completion zsh > $COMPLETION_DIR/_docker
 
 
 # Install glow completion
-printf "\n${red}[completion] =>${no_color} Install glow completion\n"
-[ -x "$(command -v glow)" ] && glow completion zsh > $COMPLETION_DIR/_glow
+[ -x "$(command -v glow)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install glow completion\n" \
+  && glow completion zsh > $COMPLETION_DIR/_glow
 
 
 # Install helm completion
-printf "\n${red}[completion] =>${no_color} Install helm completion\n"
-[ -x "$(command -v helm)" ] && helm completion zsh > $COMPLETION_DIR/_helm
+[ -x "$(command -v helm)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install helm completion\n" \
+  && helm completion zsh > $COMPLETION_DIR/_helm
 
 
 # Install kind completion
-printf "\n${red}[completion] =>${no_color} Install kind completion\n"
-[ -x "$(command -v kind)" ] && kind completion zsh > $COMPLETION_DIR/_kind
+[ -x "$(command -v kind)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kind completion\n" \
+  && kind completion zsh > $COMPLETION_DIR/_kind
 
 
 # Install kubebuilder completion
-printf "\n${red}[completion] =>${no_color} Install kubebuilder completion\n"
-[ -x "$(command -v kubebuilder)" ] && kubebuilder completion zsh > $COMPLETION_DIR/_kubebuilder
+[ -x "$(command -v kubebuilder)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubebuilder completion\n" \
+  && kubebuilder completion zsh > $COMPLETION_DIR/_kubebuilder
 
 
 # Install kubectl completion
-printf "\n${red}[completion] =>${no_color} Install kubectl completion\n"
-[ -x "$(command -v kubectl)" ] && kubectl completion zsh > $COMPLETION_DIR/_kubectl
+[ -x "$(command -v kubectl)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubectl completion\n" \
+  && kubectl completion zsh > $COMPLETION_DIR/_kubectl
 
 
 # Install kubectl-cnpg completion
-printf "\n${red}[completion] =>${no_color} Install kubectl-cnpg completion\n"
-[ -x "$(command -v kubectl-cnpg)" ] && kubectl-cnpg completion zsh > $COMPLETION_DIR/_kubectl-cnpg
+[ -x "$(command -v kubectl-cnpg)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubectl-cnpg completion\n" \
+  && kubectl-cnpg completion zsh > $COMPLETION_DIR/_kubectl-cnpg
 
 
 # Install kubectl-kubescape completion
-printf "\n${red}[completion] =>${no_color} Install kubectl-kubescape completion\n"
-[ -x "$(command -v kubectl-kubescape)" ] && kubectl-kubescape completion zsh > $COMPLETION_DIR/_kubectl-kubescape
+[ -x "$(command -v kubectl-kubescape)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubectl-kubescape completion\n" \
+  && kubectl-kubescape completion zsh > $COMPLETION_DIR/_kubectl-kubescape
 
 
 # Install kubectl-stern completion
-printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n"
-[ -x "$(command -v kubectl-stern)" ] && kubectl-stern completion zsh > $COMPLETION_DIR/_kubectl-stern
+[ -x "$(command -v kubectl-stern)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n" \
+  && kubectl-stern completion zsh > $COMPLETION_DIR/_kubectl-stern
 
 
 # Install kubens completion
-printf "\n${red}[completion] =>${no_color} Install kubens completion\n"
-[ -x "$(command -v kubens)" ] && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubens.zsh > $COMPLETION_DIR/_kubens
+[ -x "$(command -v kubens)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubens completion\n" \
+  && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubens.zsh > $COMPLETION_DIR/_kubens
 
 
 # Install kubens completion
-printf "\n${red}[completion] =>${no_color} Install kubectx completion\n"
-[ -x "$(command -v kubectx)" ] && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
+[ -x "$(command -v kubectx)" \
+  && printf "\n${red}[completion] =>${no_color} Install kubectx completion\n" \
+  ] && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
 
 
 # Install kustomize completion
-printf "\n${red}[completion] =>${no_color} Install kustomize completion\n"
-[ -x "$(command -v kustomize)" ] && kustomize completion zsh > $COMPLETION_DIR/_kustomize
+[ -x "$(command -v kustomize)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kustomize completion\n" \
+  && kustomize completion zsh > $COMPLETION_DIR/_kustomize
 
 
 # Install kyverno completion
-printf "\n${red}[completion] =>${no_color} Install kyverno completion\n"
-[ -x "$(command -v kyverno)" ] && kyverno completion zsh > $COMPLETION_DIR/_kyverno
+[ -x "$(command -v kyverno)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kyverno completion\n" \
+  && kyverno completion zsh > $COMPLETION_DIR/_kyverno
 
 
 # Install minio completion
-printf "\n${red}[completion] =>${no_color} Install minio completion\n"
-[ -x "$(command -v mc)" ] && mc --autocompletion
+[ -x "$(command -v mc)" ] && \
+  && printf "\n${red}[completion] =>${no_color} Install minio completion\n" \
+  mc --autocompletion
 
 
 # Install ollama completion
-printf "\n${red}[completion] =>${no_color} Install ollama completion\n"
-[ -x "$(command -v ollama)" ] && curl -fsSL -o $COMPLETION_DIR/_ollama https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/_ollama.zsh
+[ -x "$(command -v ollama)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install ollama completion\n" \
+  && curl -fsSL -o $COMPLETION_DIR/_ollama https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/_ollama.zsh
 
 
 # Install operator-sdk completion
-printf "\n${red}[completion] =>${no_color} Install operator-sdk completion\n"
-[ -x "$(command -v operator-sdk)" ] && operator-sdk completion zsh > $COMPLETION_DIR/_operator-sdk
+[ -x "$(command -v operator-sdk)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install operator-sdk completion\n" \
+  && operator-sdk completion zsh > $COMPLETION_DIR/_operator-sdk
 
 
 # Install pnpm completion
-printf "\n${red}[completion] =>${no_color} Install pnpm completion\n"
-[ -x "$(command -v pnpm)" ] && pnpm completion zsh > $COMPLETION_DIR/_pnpm
+[ -x "$(command -v pnpm)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install pnpm completion\n" \
+  && pnpm completion zsh > $COMPLETION_DIR/_pnpm
 
 
 # Install proto completion
-printf "\n${red}[completion] =>${no_color} Install proto completion\n"
-[ -x "$(command -v proto)" ] && proto completions --shell zsh > $COMPLETION_DIR/_proto
+[ -x "$(command -v proto)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install proto completion\n" \
+  && proto completions --shell zsh > $COMPLETION_DIR/_proto
 
 
 # Install scw completion
-printf "\n${red}[completion] =>${no_color} Install scw completion\n"
-[ -x "$(command -v scw)" ] && scw autocomplete install
+[ -x "$(command -v scw)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install scw completion\n" \
+  && scw autocomplete install
+
+
+# Install skate completion
+[ -x "$(command -v skate)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install skate completion\n" \
+  && skate completion zsh > $COMPLETION_DIR/_skate
 
 
 # Install teleport completion
-printf "\n${red}[completion] =>${no_color} Install teleport completion\n"
-[ -x "$(command -v teleport)" ] && teleport --completion-script-zsh > $COMPLETION_DIR/_teleport
-[ -x "$(command -v tbot)" ] && tbot --completion-script-zsh > $COMPLETION_DIR/_tbot
-[ -x "$(command -v tctl)" ] && tctl --completion-script-zsh > $COMPLETION_DIR/_tctl
-[ -x "$(command -v tsh)" ] && tsh --completion-script-zsh > $COMPLETION_DIR/_tsh
+[ -x "$(command -v teleport)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install teleport completion\n" \
+  && teleport --completion-script-zsh > $COMPLETION_DIR/_teleport
+[ -x "$(command -v tbot)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install tbot completion\n" \
+  && tbot --completion-script-zsh > $COMPLETION_DIR/_tbot
+[ -x "$(command -v tctl)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install tctl completion\n" \
+  && tctl --completion-script-zsh > $COMPLETION_DIR/_tctl
+[ -x "$(command -v tsh)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install tsh completion\n" \
+  && tsh --completion-script-zsh > $COMPLETION_DIR/_tsh
 
 
 # Install terraform completion
-printf "\n${red}[completion] =>${no_color} Install terraform completion\n"
-[ -x "$(command -v terraform)" ] && terraform -install-autocomplete
+[ -x "$(command -v terraform)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install terraform completion\n" \
+  && terraform -install-autocomplete
 
 
 # Install trivy completion
-printf "\n${red}[completion] =>${no_color} Install trivy completion\n"
-[ -x "$(command -v trivy)" ] && trivy completion zsh > $COMPLETION_DIR/_trivy
+[ -x "$(command -v trivy)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install trivy completion\n" \
+  && trivy completion zsh > $COMPLETION_DIR/_trivy
 
 
 # Install vault completion
-printf "\n${red}[completion] =>${no_color} Install vault completion\n"
-[ -x "$(command -v vault)" ] && vault -autocomplete-install
+[ -x "$(command -v vault)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install vault completion\n" \
+  && vault -autocomplete-install
 
 
 # Install velero completion
-printf "\n${red}[completion] =>${no_color} Install velero completion\n"
-[ -x "$(command -v velero)" ] && velero completion zsh > $COMPLETION_DIR/_velero
+[ -x "$(command -v velero)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install velero completion\n" \
+  && velero completion zsh > $COMPLETION_DIR/_velero
 
 
 # Install yq completion
-printf "\n${red}[completion] =>${no_color} Install yq completion\n"
-[ -x "$(command -v yq)" ] && yq completion zsh > $COMPLETION_DIR/_yq
+[ -x "$(command -v yq)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install yq completion\n" \
+  && yq completion zsh > $COMPLETION_DIR/_yq

@@ -99,6 +99,21 @@ install_additional_setup() {
   fi
 
 
+  # Install skate
+  if [ ! -x "$(command -v skate)" ]; then
+    printf "\n\n${red}[base] =>${no_color} Install skate\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=x86_64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=arm64
+    fi
+    mkdir /tmp/skate
+    SKATE_VERSION=$(curl -fsSL "https://api.github.com/repos/charmbracelet/skate/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
+    curl -fsSL -o /tmp/skate/skate-v${SKATE_VERSION}-linux-${ARCH} "https://github.com/charmbracelet/skate/releases/latest/download/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz"
+    sudo mv /tmp/skate/skate-v${SKATE_VERSION}-linux-${ARCH}/skate /usr/local/bin/skate
+  fi
+
+
   # Install tldr++
   if [ ! -x "$(command -v tldr)" ]; then
     printf "\n\n${red}[base] =>${no_color} Install tldr++\n\n"
