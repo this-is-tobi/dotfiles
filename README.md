@@ -291,18 +291,19 @@ The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few
 
 In addition, this installation script adds an [utility functions](https://github.com/this-is-tobi/dotfiles/blob/main/dotfiles/.config/dotfiles/functions.sh) file and source it to use it locally, following functions are declared :
 
-| Name      | Description                                                            |
-| --------- | ---------------------------------------------------------------------- |
-| `lsfn`    | *list all available functions and their helpers.*                      |
-| `b64d`    | *decode base64 string.*                                                |
-| `b64e`    | *encode base64 string.*                                                |
-| `browser` | *start a browsh web browser (terminal browser) using docker.*          |
-| `dks`     | *decode a kubernetes secret by its name and optionally its namespace.* |
-| `kbp`     | *kill the process running on a given port.*                            |
-| `tools`   | *use personal shell tool scripts.*                                     |
-| `urld`    | *url decode the given string.*                                         |
-| `urle`    | *url encode the given string.*                                         |
-| `weather` | *check the weather for a current location.*                            |
+| Name       | Description                                                            |
+| ---------- | ---------------------------------------------------------------------- |
+| `lsfn`     | *list all available functions and their helpers.*                      |
+| `b64d`     | *decode base64 string.*                                                |
+| `b64e`     | *encode base64 string.*                                                |
+| `browser`  | *start a browsh web browser (terminal browser) using docker.*          |
+| `dks`      | *decode a kubernetes secret by its name and optionally its namespace.* |
+| `kbp`      | *kill the process running on a given port.*                            |
+| `tools`    | *use personal shell tool scripts.*                                     |
+| `urld`     | *url decode the given string.*                                         |
+| `urle`     | *url encode the given string.*                                         |
+| `vault-cp` | *copy a Vault secret from a path to another.*                          |
+| `weather`  | *check the weather for a current location.*                            |
 
 The `tools` function allows you to execute on-the-fly my list of [utility scripts](https://github.com/this-is-tobi/tools/tree/main/shell) available on Github. To use this function, type the following command :
 

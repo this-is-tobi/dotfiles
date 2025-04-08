@@ -5,7 +5,7 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e browser dks kbp tools urld urle weather)
+  fns=(b64d b64e browser dks kbp tools urld urle vault-cp weather)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -193,6 +193,26 @@ urle() {
 		;;
 	*)
 		jq -rn --arg x "$1" '$x | @uri'
+		;;
+	esac
+}
+
+vault-cp() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Copy Vault secret from a path to another.\n\n"
+		printf "Usage:\n"
+		printf "  vault-cp <old_location> <new_location>	copy a secret from a path to another.\n"
+		printf "  vault-cp -f <old_location> <new_location>	copy every version of a secret from a path to another.\n"
+		;;
+	-f | --full)
+		for i in $(vault kv metadata get -format=json $1 | jq '.data.versions|keys|join("\n")' -r); do
+			vault kv get -version=$i -format=json -field=data $1 | vault kv put $2 -
+		done
+		;;
+	*)
+		vault kv get -format=json -field=data $1 | vault kv put $2 -
 		;;
 	esac
 }
