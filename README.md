@@ -22,7 +22,7 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │           ├── config
 │           └── plugins
 ├── .continue
-│   └── config.json
+│   └── config.yaml
 ├── .mattermost
 │   └── theme-config.json
 ├── .oh-my-zsh

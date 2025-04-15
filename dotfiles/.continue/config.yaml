@@ -1,0 +1,90 @@
+name: continue-with-tobi
+version: 0.0.1
+schema: v1
+models:
+- name: Gemma3 12B
+  provider: ollama
+  model: gemma3:12b
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+- name: Gemma3 27B
+  provider: ollama
+  model: gemma3:27b
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+- name: Mistral-small3.1 24B
+  provider: ollama
+  model: mistral-small3.1:24b
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+- name: Codestral 22B
+  provider: ollama
+  model: codestral:22b
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+- name: Llama3.1 8B
+  provider: ollama
+  model: llama3.1:8b
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+- name: Qwen2.5-coder 1.5B
+  provider: ollama
+  model: qwen2.5-coder:1.5b
+  roles:
+  - autocomplete
+- name: Nomic-embed-text
+  provider: ollama
+  model: nomic-embed-text:latest
+  roles:
+  - embed
+prompts:
+- name: check
+  description: Check for mistakes in my code
+  prompt: |-
+    Please read the highlighted code and check for any mistakes. You should look for the following, and be extremely vigilant:
+      - Syntax errors
+      - Logic errors
+      - Security vulnerabilities
+      - Performance issues
+      - Anything else that looks wrong
+    Once you find an error, please explain it as clearly as possible, but without using extra words. For example, instead of saying 'I think there is a syntax error on line 5', you should say 'Syntax error on line 5'. Give your answer as one bullet point per mistake found.
+- name: test
+  description: Write unit tests for highlighted code
+  prompt: |-
+    Please read the highlighted code and generate unit tests. You should look for the following, and be extremely vigilant:
+      - Keep tests simple and clear
+      - Use descriptive variable names
+      - Use descriptive function names
+      - Use descriptive assertions
+      - Keep the tests self-contained and clear
+      - Ensure that the tests are complete and sophisticated
+rules:
+- Consider me as an IT expert
+- Always give concise responses without extra words or phrases(except when generate documentation)
+- Always provide clear explanations for your responses
+context:
+- provider: diff
+- provider: file
+- provider: codebase
+- provider: code
+- provider: docs
+docs:
+- name: Tobi
+  startUrl: https://this-is-tobi.com
+  faviconUrl: https://this-is-tobi.com/favicon.ico
+  maxDepth: 4
