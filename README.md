@@ -172,6 +172,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [teleport](https://goteleport.com)                              | modern ssh server for teams managing distributed infrastructure | -         | homebrew         | apt                 |
 | [terraform](https://www.terraform.io)                           | infrastructure automation tool                                  | x         | homebrew         | apt                 |
 | [velero](https://velero.io)                                     | kubernetes backup and migration cli                             | -         | homebrew         | apt                 |
+| [yamllint](https://yamllint.readthedocs.io)                     | a linter for yaml files                                         | -         | homebrew         | apt                 |
 
 #### Applications
 

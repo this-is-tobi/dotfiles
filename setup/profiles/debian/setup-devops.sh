@@ -72,7 +72,8 @@ install_additional_setup() {
     kind \
     oc \
     scw \
-    velero
+    velero \
+    yamllint
 
 
   # Install coder

@@ -48,7 +48,8 @@ install_additional_setup() {
     openshift-cli \
     scw \
     teleport \
-    velero
+    velero \
+    yamllint
 }
 
 
