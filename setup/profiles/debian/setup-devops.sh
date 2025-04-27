@@ -11,7 +11,6 @@ install_lite_setup() {
   sudo apt update && sudo apt install -y \
     helm \
     helm-docs \
-    k9s \
     krew \
     kubectx \
     kubectl \

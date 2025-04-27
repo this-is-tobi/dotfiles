@@ -109,8 +109,9 @@ install_additional_setup() {
     fi
     mkdir /tmp/skate
     SKATE_VERSION=$(curl -fsSL "https://api.github.com/repos/charmbracelet/skate/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/skate/skate-v${SKATE_VERSION}-linux-${ARCH} "https://github.com/charmbracelet/skate/releases/latest/download/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz"
-    sudo mv /tmp/skate/skate-v${SKATE_VERSION}-linux-${ARCH}/skate /usr/local/bin/skate
+    curl -fsSL -o /tmp/skate/skate_${SKATE_VERSION}_linux_${ARCH}.tar.gz "https://github.com/charmbracelet/skate/releases/latest/download/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz"
+    tar -xf /tmp/skate/skate_${SKATE_VERSION}_linux_${ARCH}.tar.gz -C /tmp/skate
+    sudo mv /tmp/skate/skate_${SKATE_VERSION}_linux_${ARCH}/skate /usr/local/bin/skate
   fi
 
 
@@ -118,7 +119,7 @@ install_additional_setup() {
   if [ ! -x "$(command -v tldr)" ]; then
     printf "\n\n${red}[base] =>${no_color} Install tldr++\n\n"
     curl -fsSL -o /tmp/tldr.tar.gz $(curl -s "https://api.github.com/repos/isacikgoz/tldr/releases/latest" \
-        | jq -r --arg a $(dpkg --print-architecture) '.assets[] | select(.name | match("tldr_.*_linux_" + $a + "\\.tar\\.gz")) | .browser_download_url') \
+      | jq -r --arg a $(dpkg --print-architecture) '.assets[] | select(.name | match("tldr_.*_linux_" + $a + "\\.tar\\.gz")) | .browser_download_url') \
       && tar -C /tmp -xzf /tmp/tldr.tar.gz \
       && sudo mv /tmp/tldr /usr/local/bin
   fi
