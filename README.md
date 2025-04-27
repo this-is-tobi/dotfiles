@@ -153,6 +153,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [argo](https://argo-cd.readthedocs.io/en/stable)                | argo-workflows cli                                              | -         | homebrew         | apt                 |
 | [argocd](https://argo-cd.readthedocs.io/en/stable)              | argo-cd cli                                                     | -         | homebrew         | apt                 |
 | [aws](https://aws.amazon.com/fr/cli)                            | aws cli                                                         | -         | homebrew         | apt                 |
+| [chart-testing](https://github.com/helm/chart-testing)          | cli tool for linting and testing Helm charts                    | -         | homebrew         | shell               |
 | [coder](https://coder.com)                                      | coder cli                                                       | -         | homebrew         | shell               |
 | [docker](https://www.docker.com)                                | docker engine                                                   | x         | -                | shell               |
 | [helm](https://helm.sh)                                         | kubernetes package manager                                      | x         | homebrew         | apt                 |

@@ -97,6 +97,22 @@ install_additional_setup() {
   fi
 
 
+  # Install chart-testing
+  if [ ! -x "$(command -v ct)" ]; then
+    printf "\n\n${red}[base] =>${no_color} Install chart-testing\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=amd64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=arm64
+    fi
+    mkdir /tmp/chart-testing
+    CT_VERSION=$(curl -fsSL "https://api.github.com/repos/helm/chart-testing/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
+    curl -fsSL -o /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/helm/chart-testing/releases/latest/download/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz"
+    tar -xf /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/chart-testing
+    sudo mv /tmp/chart-testing/ct /usr/local/bin/ct
+  fi
+
+
   # Install ansible
   if [ ! -x "$(command -v ansible-lint)" ]; then
     printf "\n\n${red}[devops] =>${no_color} Install ansible-lint\n\n"

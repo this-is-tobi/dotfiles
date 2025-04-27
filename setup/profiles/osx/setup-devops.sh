@@ -39,6 +39,7 @@ install_additional_setup() {
     argo \
     argocd \
     awscli \
+    chart-testing \
     coder/coder/coder \
     k6 \
     k9s \

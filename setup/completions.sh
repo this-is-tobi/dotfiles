@@ -24,6 +24,12 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
   && argocd completion zsh > $COMPLETION_DIR/_argocd
 
 
+# Install chart-testing completion
+[ -x "$(command -v ct)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install chart-testing completion\n" \
+  && ct completion zsh > $COMPLETION_DIR/_ct
+
+
 # Install cheat completion
 [ -x "$(command -v cheat)" ] \
   && printf "\n${red}[completion] =>${no_color} Install cheat completion\n" \
