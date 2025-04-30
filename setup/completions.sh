@@ -48,6 +48,12 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
   && docker completion zsh > $COMPLETION_DIR/_docker
 
 
+# Install gitleaks completion
+[ -x "$(command -v gitleaks)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install gitleaks completion\n" \
+  && gitleaks completion zsh > $COMPLETION_DIR/_gitleaks
+
+
 # Install glow completion
 [ -x "$(command -v glow)" ] \
   && printf "\n${red}[completion] =>${no_color} Install glow completion\n" \

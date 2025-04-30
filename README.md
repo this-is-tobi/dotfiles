@@ -200,6 +200,7 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [age](https://github.com/FiloSottile/age)           | simple, modern and secure encryption tool                   | -         | homebrew         | apt                 |
 | [cosign](https://docs.sigstore.dev)                 | code signing and transparency for containers and binaries   | x         | homebrew         | apt                 |
 | [dive](https://github.com/wagoodman/dive)           | tool for exploring each layer in a docker image             | -         | homebrew         | apt                 |
+| [gitleaks](https://github.com/gitleaks/gitleaks)    | tool for detecting secrets in git repos, files, etc...      | -         | homebrew         | shell               |
 | [kubescape](https://github.com/kubescape/kubescape) | kubernetes security scan                                    | -         | homebrew         | apt                 |
 | [kyverno](https://github.com/kyverno/kyverno)       | kubernetes policy managemen                                 | -         | homebrew         | apt                 |
 | [sops](https://github.com/getsops/sops)             | simple and flexible tool for managing secrets               | -         | homebrew         | apt                 |

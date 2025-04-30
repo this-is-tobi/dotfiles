@@ -10,6 +10,7 @@ install_lite_setup() {
   printf "\n\n${red}[secops] =>${no_color} Install homebrew packages (cli)\n\n"
   brew update && brew install --formula \
     cosign \
+    gitleaks \
     trivy
 }
 

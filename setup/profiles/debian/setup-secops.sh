@@ -11,6 +11,22 @@ install_lite_setup() {
   sudo apt update && sudo apt install -y \
     cosign \
     trivy
+
+
+  # Install gitleaks
+  if [ ! -x "$(command -v gitleaks)" ]; then
+    printf "\n\n${red}[base] =>${no_color} Install gitleaks\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=x64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=arm64
+    fi
+    mkdir /tmp/gitleaks
+    CT_VERSION=$(curl -fsSL "https://api.github.com/repos/gitleaks/gitleaks/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
+    curl -fsSL -o /tmp/gitleaks/gitleaks_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_${CT_VERSION}_linux_${ARCH}.tar.gz"
+    tar -xf /tmp/gitleaks/gitleaks_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/gitleaks
+    sudo mv /tmp/gitleaks/gitleaks /usr/local/bin/gitleaks
+  fi
 }
 
 install_additional_setup() {
