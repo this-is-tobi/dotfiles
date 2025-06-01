@@ -30,6 +30,16 @@ install_lite_setup() {
     stern
 
 
+  # Install proto packages
+  printf "\n\n${red}[js] =>${no_color} Install proto packages\n\n"
+  PACKAGES=(
+    uv
+  )
+  for pkg in ${PACKAGES[*]}; do
+    proto install $pkg
+  done
+
+
   # Install docker
   if [ ! -x "$(command -v docker)" ]; then
     printf "\n\n${red}[base] =>${no_color} Install docker\n\n"
@@ -55,7 +65,9 @@ install_lite_setup() {
   # Install ansible
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops] =>${no_color} Install ansible\n\n"
-    python3 -m pip install --user ansible
+    uv venv $HOME/.venv
+    source $HOME/.venv/bin/activate
+    uv pip install ansible
   fi
 }
 
@@ -70,7 +82,9 @@ install_additional_setup() {
     k6 \
     k9s \
     kind \
+    libonig-dev \
     oc \
+    python3-dev \
     scw \
     velero \
     yamllint
@@ -114,10 +128,12 @@ install_additional_setup() {
   fi
 
 
-  # Install ansible
+  # Install ansible-lint
   if [ ! -x "$(command -v ansible-lint)" ]; then
     printf "\n\n${red}[devops] =>${no_color} Install ansible-lint\n\n"
-    python3 -m pip install --user ansible-dev-tools
+    uv venv $HOME/.venv
+    source $HOME/.venv/bin/activate
+    uv pip install ansible-dev-tools
   fi
 }
 
