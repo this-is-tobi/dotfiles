@@ -109,9 +109,9 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 
 # Install kubens completion
-[ -x "$(command -v kubectx)" \
+[ -x "$(command -v kubectx)" ] \
   && printf "\n${red}[completion] =>${no_color} Install kubectx completion\n" \
-  ] && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
+  && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
 
 
 # Install kustomize completion
@@ -127,9 +127,9 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 
 # Install minio completion
-[ -x "$(command -v mc)" ] && \
+[ -x "$(command -v mc)" ] \
   && printf "\n${red}[completion] =>${no_color} Install minio completion\n" \
-  mc --autocompletion
+  && mc --autocompletion
 
 
 # Install ollama completion
