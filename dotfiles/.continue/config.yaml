@@ -2,17 +2,9 @@ name: continue-with-tobi
 version: 0.0.1
 schema: v1
 models:
-- name: Gemma3 12B
+- name: Devstral 24B
   provider: ollama
-  model: gemma3:12b
-  roles:
-  - chat
-  - edit
-  - apply
-  - summarize
-- name: Gemma3 27B
-  provider: ollama
-  model: gemma3:27b
+  model: devstral:24b
   roles:
   - chat
   - edit
@@ -26,9 +18,17 @@ models:
   - edit
   - apply
   - summarize
-- name: Codestral 22B
+- name: Gemma3 12B
   provider: ollama
-  model: codestral:22b
+  model: gemma3:12b
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+- name: Gemma3 27B
+  provider: ollama
+  model: gemma3:27b
   roles:
   - chat
   - edit
@@ -87,4 +87,3 @@ docs:
 - name: Tobi
   startUrl: https://this-is-tobi.com
   faviconUrl: https://this-is-tobi.com/favicon.ico
-  maxDepth: 4
