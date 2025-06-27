@@ -66,9 +66,17 @@ cheatpaths:
 
   # If you have personalized cheatsheets, list them last. They will take
   # precedence over the more global cheatsheets.
-  - name: personal
-    path: ~/.config/cheat/cheatsheets/personal
-    tags: [ personal ]
+  - name: commands
+    path: ~/.config/cheat/cheatsheets/personal/commands
+    tags:
+      - personal
+      - commands
+    readonly: false
+  - name: docs
+    path: ~/.config/cheat/cheatsheets/personal/notes
+    tags:
+      - personal
+      - notes
     readonly: false
 
   # While it requires no configuration here, it's also worth noting that
