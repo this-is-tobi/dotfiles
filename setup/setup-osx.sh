@@ -237,7 +237,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
 
 
-  # Install .vscode extensions
+  # Install .vscode configs
   if [ -x "$(command -v code)" ]; then
     cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
     VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \

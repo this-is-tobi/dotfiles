@@ -10,6 +10,9 @@ models:
   - edit
   - apply
   - summarize
+  defaultCompletionOptions:
+    contextLength: 128000
+    maxTokens: 40000
 - name: Mistral-small3.1 24B
   provider: ollama
   model: mistral-small3.1:24b
@@ -18,30 +21,32 @@ models:
   - edit
   - apply
   - summarize
-- name: Gemma3 12B
+  defaultCompletionOptions:
+    contextLength: 128000
+    maxTokens: 40000
+- name: Magistral 24B
   provider: ollama
-  model: gemma3:12b
+  model: magistral:24b
   roles:
   - chat
   - edit
   - apply
   - summarize
-- name: Gemma3 27B
+  defaultCompletionOptions:
+    contextLength: 128000
+    maxTokens: 40000
+- name: Qwen3 8B
   provider: ollama
-  model: gemma3:27b
+  model: qwen3:8b
   roles:
   - chat
   - edit
   - apply
   - summarize
-- name: Llama3.1 8B
-  provider: ollama
-  model: llama3.1:8b
-  roles:
-  - chat
-  - edit
-  - apply
-  - summarize
+  - autocomplete
+  defaultCompletionOptions:
+    contextLength: 40000
+    maxTokens: 20000
 - name: Qwen2.5-coder 1.5B
   provider: ollama
   model: qwen2.5-coder:1.5b
@@ -52,11 +57,21 @@ models:
   model: nomic-embed-text:latest
   roles:
   - embed
+- name: Mistral-small3.1 24B (Scaleway)
+  provider: openai
+  model: Mistral-small-3.1-24b-instruct-2503
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+  apiBase: https://api.scaleway.ai/v1
+  apiKey: ${{ secrets.SCALEWAY_API_KEY }}
 prompts:
 - name: check
-  description: Check for mistakes in my code
+  description: Check for mistakes for the given context
   prompt: |-
-    Please read the highlighted code and check for any mistakes. You should look for the following, and be extremely vigilant:
+    Please read the context and check for any mistakes. You should look for the following, and be extremely vigilant:
       - Syntax errors
       - Logic errors
       - Security vulnerabilities
@@ -64,26 +79,63 @@ prompts:
       - Anything else that looks wrong
     Once you find an error, please explain it as clearly as possible, but without using extra words. For example, instead of saying 'I think there is a syntax error on line 5', you should say 'Syntax error on line 5'. Give your answer as one bullet point per mistake found.
 - name: test
-  description: Write unit tests for highlighted code
+  description: Write unit tests for the given context
   prompt: |-
-    Please read the highlighted code and generate unit tests. You should look for the following, and be extremely vigilant:
+    Please read the context and generate unit tests. You should look for the following, and be extremely vigilant:
       - Keep tests simple and clear
       - Use descriptive variable names
       - Use descriptive function names
       - Use descriptive assertions
       - Keep the tests self-contained and clear
       - Ensure that the tests are complete and sophisticated
+- name: docs
+  description: Write documentation for the given context
+  prompt: |-
+    Please read the context and generate documentation. You should look for the following, and be extremely vigilant:
+      - Keep documentation simple and clear
+      - Use markdown format
 rules:
 - Consider me as an IT expert
 - Always give concise responses without extra words or phrases(except when generate documentation)
 - Always provide clear explanations for your responses
+- Always give your sources
 context:
-- provider: diff
-- provider: file
-- provider: codebase
 - provider: code
+- provider: codebase
+- provider: diff
 - provider: docs
+- provider: file
+- provider: os
+- provider: terminal
+- provider: web
+  params:
+    n: 5
 docs:
 - name: Tobi
   startUrl: https://this-is-tobi.com
   faviconUrl: https://this-is-tobi.com/favicon.ico
+mcpServers:
+- name: github
+  command: docker
+  args:
+  - run
+  - --name
+  - mcp-github
+  - --rm
+  - -i
+  - -e
+  - GITHUB_PERSONAL_ACCESS_TOKEN
+  - docker.io/mcp/github-mcp-server
+  env:
+    GITHUB_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
+- name: kubernetes
+  command: docker
+  args:
+  - run
+  - --name
+  - mcp-kubernetes
+  - --rm
+  - -i
+  - -v
+  - /Users/tobi/.kube:/home/appuser/.kube:ro
+  - docker.io/mcp/kubernetes

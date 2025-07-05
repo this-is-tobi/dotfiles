@@ -106,5 +106,28 @@
   "vscode-kubernetes.log-viewer.wrap": true,
   // markdown preview
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
-  "markdown-preview-enhanced.codeBlockTheme": "github-dark.css"
+  "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
+  // mcp
+  "mcp": {
+    "inputs": [],
+    "servers": {
+      "github": {
+        "type": "http",
+        "url": "https://api.githubcopilot.com/mcp/"
+      },
+      "kubernetes": {
+        "command": "docker",
+        "args": [
+          "run",
+          "--name",
+          "mcp-kubernetes",
+          "--rm",
+          "-i",
+          "-v",
+          "$HOME/.kube:/home/appuser/.kube:ro",
+          "docker.io/mcp/kubernetes"
+        ]
+      }
+    }
+  }
 }
