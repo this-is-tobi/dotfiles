@@ -84,13 +84,17 @@ install_additional_setup() {
   # Install nvim
   if [ ! -x "$(command -v nvim)" ]; then
     printf "\n\n${red}[base] =>${no_color} Install neovim\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=x86_64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=arm64
+    fi
     mkdir /tmp/nvim
-    curl -fsSL -o /tmp/nvim/nvim-linux64.tar.gz "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
-    tar -xf /tmp/nvim/nvim-linux64.tar.gz -C /tmp/nvim 
-    sudo mv /tmp/nvim/nvim-linux64/bin/* /usr/local/bin 
-    sudo mv /tmp/nvim/nvim-linux64/man/man1/* /usr/local/man/man1 
-    sudo mv /tmp/nvim/nvim-linux64/share/* /usr/local/share 
-    sudo mv /tmp/nvim/nvim-linux64/lib/* /usr/local/lib
+    curl -fsSL -o /tmp/nvim/nvim-linux-${ARCH}.tar.gz "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.tar.gz"
+    tar -xf /tmp/nvim/nvim-linux-${ARCH}.tar.gz -C /tmp/nvim 
+    sudo mv /tmp/nvim/nvim-linux-${ARCH}/bin/* /usr/local/bin 
+    sudo mv /tmp/nvim/nvim-linux-${ARCH}/share/* /usr/local/share 
+    sudo mv /tmp/nvim/nvim-linux-${ARCH}/lib/* /usr/local/lib
 
     mkdir ~/.fonts
     curl -fsSL -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
