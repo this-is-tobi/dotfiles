@@ -31,7 +31,7 @@ install_lite_setup() {
 
 
   # Install proto packages
-  printf "\n\n${red}[js] =>${no_color} Install proto packages\n\n"
+  printf "\n\n${red}[devops] =>${no_color} Install proto packages\n\n"
   PACKAGES=(
     uv
   )

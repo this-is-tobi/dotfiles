@@ -10,7 +10,7 @@ export PROTO_AUTO_CLEAN=true
 
 install_lite_setup() {
   # Install proto packages
-  printf "\n\n${red}[js] =>${no_color} Install proto packages\n\n"
+  printf "\n\n${red}[go] =>${no_color} Install proto packages\n\n"
   PACKAGES=(
     go
   )
