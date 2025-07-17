@@ -127,16 +127,6 @@ install_additional_setup() {
       && tar -C /tmp -xzf /tmp/tldr.tar.gz \
       && sudo mv /tmp/tldr /usr/local/bin
   fi
-
-
-  # Install teleport
-  if [ ! -x "$(command -v tsh)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install tsh\n\n"
-    TELEPORT_EDITION="oss"
-    TELEPORT_VERSION="$(curl -fsSL "https://api.github.com/repos/gravitational/teleport/releases/latest" | jq -r '.tag_name' | sed -E 's/v([0-9]+\.[0-9]+\.[0-9]+)/\1/g')"
-    # install script will use apt package manager
-    curl -fsSL https://goteleport.com/static/install.sh | bash -s ${TELEPORT_VERSION?} ${TELEPORT_EDITION?}
-  fi
 }
 
 

@@ -135,6 +135,27 @@ install_additional_setup() {
     source $HOME/.venv/bin/activate
     uv pip install ansible-dev-tools
   fi
+
+
+  # Install teleport
+  if [ ! -x "$(command -v tsh)" ]; then
+    printf "\n\n${red}[base] =>${no_color} Install tsh\n\n"
+    while true; do
+      read -p "Please specify the teleport version number you want to install: " teleport_version_user_input
+      if [[ "$teleport_version_user_input" =~ ^[0-9]+$ ]]; then
+        TELEPORT_VERSION="v${teleport_version_user_input}"
+        break
+      else
+        echo "Error: Please enter a valid version number."
+      fi
+    done
+    TELEPORT_CHANNEL=stable/${TELEPORT_VERSION?}
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://apt.releases.teleport.dev/gpg -o /etc/apt/keyrings/teleport-archive-keyring.asc
+    echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/debian \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" ${TELEPORT_CHANNEL?}" | sudo tee /etc/apt/sources.list.d/teleport.list > /dev/null
+    sudo apt update && sudo apt install -y teleport
+  fi
 }
 
 
