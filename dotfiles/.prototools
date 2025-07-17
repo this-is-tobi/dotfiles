@@ -1,6 +1,7 @@
 bun = "latest"
 node = "latest"
 npm = "bundled"
+pnpm = "latest"
 
 [tools.node]
 bundled-npm = true
