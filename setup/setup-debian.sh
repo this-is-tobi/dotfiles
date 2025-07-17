@@ -136,6 +136,9 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   $SCRIPT_PATH/profiles/debian/setup-base.sh
   export PROTO_HOME="$HOME/.proto"
   export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PATH"
+
+  # Configure proto proxies
+  $SCRIPT_PATH/helpers/proto.sh
 fi
 
 
@@ -196,6 +199,10 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
   cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
+
+
+  # Configure proto proxies
+  $SCRIPT_PATH/helpers/proto.sh
 
 
   # Install .vscode configs

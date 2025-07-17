@@ -166,6 +166,9 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   i=$(($i + 1))
 
   $SCRIPT_PATH/profiles/osx/setup-base.sh
+
+  # Configure proto proxies
+  $SCRIPT_PATH/helpers/proto.sh
 fi
 
 
@@ -235,6 +238,10 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
   cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
+
+
+  # Configure proto proxies
+  $SCRIPT_PATH/helpers/proto.sh
 
 
   # Install .vscode configs
