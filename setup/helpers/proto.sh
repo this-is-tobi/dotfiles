@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Add proxy configuration to proto
-if [ -n "$HTTP_PROXY" ] || [ -n "$HTTPS_PROXY" ]; then
+if ([ -n "$HTTP_PROXY" ] || [ -n "$HTTPS_PROXY" ]) && [ ! $(cat $HOME/.proto/.prototools | grep 'proxies =') ]; then
   PROXIES=()
   SECURE_PROXIES=()
   CUSTOM_HOSTS=()
