@@ -269,7 +269,7 @@ if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install cli completions\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/completions.sh
+  $SCRIPT_PATH/helpers/completions.sh
   git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions && gsed -i 's|^# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|g' "$HOME/.zshrc"
 fi
 
