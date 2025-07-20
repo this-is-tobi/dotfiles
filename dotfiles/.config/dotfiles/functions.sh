@@ -5,7 +5,7 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e browser dks kbp tools urld urle vault-cp weather)
+  fns=(b64d b64e browser dks kbp randompass tools urld urle vault-cp weather)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -101,8 +101,29 @@ kbp() {
 		printf "  kbp <port_number>   kill process using the given port.\n"
 		;;
 	*)
-		echo "Killing process running on port $1 ..."
 		kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
+		;;
+	esac
+}
+
+randompass() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Generate a password with the given length.\n\n"
+		printf "Usage:\n"
+		printf "  randompass <password_length>   generate a password with the given length.\n"
+		;;
+	*)
+		while true; do
+			local password=$(LC_ALL=C tr -dc 'A-Za-z0-9=!?%~_-' < /dev/urandom | head -c ${1:-24})
+			[[ $password != *[=\!?\%~_-]* ]] && continue
+			[[ $password != *[A-Z]* ]] && continue
+			[[ $password != *[a-z]* ]] && continue
+			[[ $password != *[0-9]* ]] && continue
+			echo "$password"
+			break
+		done
 		;;
 	esac
 }
