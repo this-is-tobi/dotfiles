@@ -99,7 +99,7 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 # Install kubectl-stern completion
 [ -x "$(command -v kubectl-stern)" ] \
   && printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n" \
-  && kubectl-stern completion zsh > $COMPLETION_DIR/_kubectl-stern
+  && kubectl-stern --completion zsh > $COMPLETION_DIR/_kubectl-stern
 
 
 # Install kubens completion
