@@ -12,8 +12,9 @@ install_lite_setup() {
     helm \
     helm-docs \
     krew \
-    kubectx \
     kubectl \
+    kubectx \
+    kubens \
     minio-client \
     sshpass \
     terraform
