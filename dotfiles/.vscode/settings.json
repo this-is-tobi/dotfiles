@@ -8,6 +8,7 @@
   "workbench.fontAliasing": "antialiased",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.editor.showTabs": "multiple",
+  "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
   "editor.fontFamily": "Input Mono, Fira Code, monospace",
   "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss06', 'zero'",
   "editor.cursorBlinking": "phase",

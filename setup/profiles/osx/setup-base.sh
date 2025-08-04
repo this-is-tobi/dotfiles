@@ -72,7 +72,7 @@ install_additional_setup() {
   # Install neovim fonts
   printf "\n\n${red}[base] =>${no_color} Install neovim fonts\n\n"
   mkdir ~/.fonts
-  curl -fsSL -o /tmp/Ubuntu.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip && unzip /tmp/Ubuntu.zip -d ~/.fonts 
+  curl -fsSL -o /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip && unzip /tmp/Hack.zip -d ~/.fonts 
   curl -fsSL -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts
   cp ~/.fonts/*.ttf ~/Library/Fonts/
   fc-cache -fv
