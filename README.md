@@ -132,9 +132,10 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 #### Gh extensions
 
-| Plugin                                       | Description    | Lite mode | OSX installation | Debian installation |
-| -------------------------------------------- | -------------- | --------- | ---------------- | ------------------- |
-| [gh-dash](https://github.com/dlvhdr/gh-dash) | github cli tui | -         | gh               | gh                  |
+| Plugin                                             | Description             | Lite mode | OSX installation | Debian installation |
+| -------------------------------------------------- | ----------------------- | --------- | ---------------- | ------------------- |
+| [gh-dash](https://github.com/dlvhdr/gh-dash)       | github cli tui          | -         | gh               | gh                  |
+| [gh-notify](https://github.com/meiji163/gh-notify) | github notification tui | -         | gh               | gh                  |
 
 #### Applications
 

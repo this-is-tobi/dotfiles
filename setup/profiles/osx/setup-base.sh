@@ -60,7 +60,9 @@ install_additional_setup() {
 
   # Install gh extensions
   printf "\n\n${red}[base] =>${no_color} Install gh extensions\n\n"
-  gh extension install dlvhdr/gh-dash
+  gh extension install \
+    dlvhdr/gh-dash \
+    meiji163/gh-notify
 
 
   # Install homebrew graphic app packages
