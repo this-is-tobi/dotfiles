@@ -58,6 +58,11 @@ install_additional_setup() {
     vhs
 
 
+  # Install gh extensions
+  printf "\n\n${red}[base] =>${no_color} Install gh extensions\n\n"
+  gh extension install dlvhdr/gh-dash
+
+
   # Install homebrew graphic app packages
   printf "\n\n${red}[base] =>${no_color} Install homebrew packages (graphic)\n\n"
   brew install --cask \

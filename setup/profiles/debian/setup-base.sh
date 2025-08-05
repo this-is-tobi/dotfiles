@@ -81,6 +81,11 @@ install_additional_setup() {
     vhs
 
 
+  # Install gh extensions
+  printf "\n\n${red}[base] =>${no_color} Install gh extensions\n\n"
+  gh extension install dlvhdr/gh-dash
+
+
   # Install nvim
   if [ ! -x "$(command -v nvim)" ]; then
     printf "\n\n${red}[base] =>${no_color} Install neovim\n\n"

@@ -130,6 +130,12 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 | [watch](https://en.wikipedia.org/wiki/Watch_(command))    | cli tool that runs the specified command repeatedly  | x         | homebrew         | apt                 |
 | [yq](https://github.com/mikefarah/yq)                     | yaml processor tool                                  | x         | homebrew         | apt                 |
 
+#### Gh extensions
+
+| Plugin                                       | Description    | Lite mode | OSX installation | Debian installation |
+| -------------------------------------------- | -------------- | --------- | ---------------- | ------------------- |
+| [gh-dash](https://github.com/dlvhdr/gh-dash) | github cli tui | -         | gh               | gh                  |
+
 #### Applications
 
 | Package                                                              | Description                   | Lite mode | OSX installation  | Debian installation |
