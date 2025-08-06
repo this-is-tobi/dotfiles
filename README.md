@@ -14,6 +14,8 @@ The `dotfiles/` folder provides the following dotfiles templates :
 │   ├── dotfiles
 │   │   ├── functions-completion.sh
 │   │   └── functions.sh
+│   ├── gh-dash
+│   │   └── config.yml
 │   ├── lazygit
 │   │   └── config.yml
 │   └── nvim
