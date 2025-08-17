@@ -4,7 +4,7 @@ This project aims to provide dotfiles templates and common scripts for backup & 
 
 ## Dotfiles
 
-The `dotfiles/` folder provides the following dotfiles templates :
+The `dotfiles/` folder provides the following dotfiles templates:
 
 ```sh
 ./dotfiles
@@ -41,7 +41,7 @@ The `dotfiles/` folder provides the following dotfiles templates :
 
 ## Backup
 
-These scripts are intended to backup common files to another directory (local or remote) :
+These scripts are intended to backup common files to another directory (local or remote):
 - [backup-osx.sh](./backup/backup-osx.sh)
 - [backup-debian.sh](./backup/backup-osx.sh)
 
@@ -49,7 +49,7 @@ These scripts are intended to backup common files to another directory (local or
 
 ## Setup
 
-These scripts are intended to install common packages on proper os :
+These scripts are intended to install common packages on proper os:
 - [setup-osx.sh](./setup/setup-osx.sh)
 - [setup-debian.sh](./setup/setup-debian.sh)
 
@@ -301,7 +301,7 @@ The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few
 
 ## Functions
 
-In addition, this installation script adds an [utility functions](https://github.com/this-is-tobi/dotfiles/blob/main/dotfiles/.config/dotfiles/functions.sh) file and source it to use it locally, following functions are declared :
+In addition, this installation script adds an [utility functions](https://github.com/this-is-tobi/dotfiles/blob/main/dotfiles/.config/dotfiles/functions.sh) file and source it to use it locally, following functions are declared:
 
 | Name         | Description                                                            |
 | ------------ | ---------------------------------------------------------------------- |
@@ -318,7 +318,7 @@ In addition, this installation script adds an [utility functions](https://github
 | `vault-cp`   | *copy a Vault secret from a path to another.*                          |
 | `weather`    | *check the weather for a current location.*                            |
 
-The `tools` function allows you to execute on-the-fly my list of [utility scripts](https://github.com/this-is-tobi/tools/tree/main/shell) available on Github. To use this function, type the following command :
+The `tools` function allows you to execute on-the-fly my list of [utility scripts](https://github.com/this-is-tobi/tools/tree/main/shell) available on Github. To use this function, type the following command:
 
 ```sh
 # To list all available scripts

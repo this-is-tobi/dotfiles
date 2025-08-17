@@ -71,7 +71,6 @@ cheat_glow() {
 		cheat "$@" | glow --width=150
 		;;
 	esac
-	cheat "$@" | glow --width=150
 }
 
 dks() {
