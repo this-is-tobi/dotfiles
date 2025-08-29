@@ -5,7 +5,7 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e browser dks kbp randompass timestampd tools urld urle vault-cp weather)
+  fns=(b64d b64e browser dks kbp randompass timestampd timestampe tools urld urle vault-cp weather)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -140,6 +140,26 @@ timestampd() {
 			date -r "$1"
 		elif [ "$(uname)" = "Linux" ]; then
 			date -d @"$1"
+		else
+			echo "Error: unsupported OS"
+		fi
+		;;
+	esac
+}
+
+timestampe() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Show timestamp from a human readable date.\n\n"
+		printf "Usage:\n"
+		printf "  timestampe <date>   print the timestamp of a date (date in format 'YYYY-mm-ddTHH:MM:ss').\n"
+		;;
+	*)
+		if [ "$(uname)" = "Darwin" ]; then
+			date -j -f "%Y-%m-%dT%H:%M:%S" "$1" "+%s" 2>/dev/null || date -j -f "%Y-%m-%d" "$1" "+%s"
+		elif [ "$(uname)" = "Linux" ]; then
+			date -d "$1" "+%s"
 		else
 			echo "Error: unsupported OS"
 		fi

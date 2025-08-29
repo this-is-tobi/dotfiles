@@ -314,6 +314,7 @@ In addition, this installation script adds an [utility functions](https://github
 | `randompass` | *generate random password with a given length.*                        |
 | `tools`      | *use personal shell tool scripts.*                                     |
 | `timestampd` | *convert timestamp to human readable date.*                            |
+| `timestampe` | *convert human readable date to timestamp.*                            |
 | `urld`       | *url decode the given string.*                                         |
 | `urle`       | *url encode the given string.*                                         |
 | `vault-cp`   | *copy a Vault secret from a path to another.*                          |
