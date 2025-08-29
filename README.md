@@ -313,6 +313,7 @@ In addition, this installation script adds an [utility functions](https://github
 | `kbp`        | *kill the process running on a given port.*                            |
 | `randompass` | *generate random password with a given length.*                        |
 | `tools`      | *use personal shell tool scripts.*                                     |
+| `timestampd` | *convert timestamp to human readable date.*                            |
 | `urld`       | *url decode the given string.*                                         |
 | `urle`       | *url encode the given string.*                                         |
 | `vault-cp`   | *copy a Vault secret from a path to another.*                          |

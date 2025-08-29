@@ -5,7 +5,7 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e browser dks kbp randompass tools urld urle vault-cp weather)
+  fns=(b64d b64e browser dks kbp randompass timestampd tools urld urle vault-cp weather)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -123,6 +123,26 @@ randompass() {
 			echo "$password"
 			break
 		done
+		;;
+	esac
+}
+
+timestampd() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Show human readable version of a timestamp date.\n\n"
+		printf "Usage:\n"
+		printf "  timestampd <timestamp>   print a human readable date.\n"
+		;;
+	*)
+		if [ "$(uname)" = "Darwin" ]; then
+			date -r "$1"
+		elif [ "$(uname)" = "Linux" ]; then
+			date -d @"$1"
+		else
+			echo "Error: unsupported OS"
+		fi
 		;;
 	esac
 }
