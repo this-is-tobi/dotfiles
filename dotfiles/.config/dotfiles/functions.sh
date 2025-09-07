@@ -184,7 +184,7 @@ tools() {
 		printf "  tools <script_name> [script_arguments...]   execute the script with given arguments (<script_name> should include '.sh').\n"
 		printf "  tools                                       print available scripts.\n\n"
 		printf "Scripts:"
-		curl -s "$base_url/README.md" |
+		curl -s "$base_url/docs/07-shell.md" |
 			grep -B 3 '.sh]' |
 			sed "s|\\./|$base_url/|g" |
 			glow --width=200
