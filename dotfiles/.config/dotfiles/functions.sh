@@ -5,7 +5,23 @@ local COLOR_GREEN='\033[0;32m'
 local COLOR_YELLOW='\033[0;33m'
 
 lsfn() {
-  fns=(b64d b64e browser dks kbp randompass timestampd timestampe tools urld urle vault-cp weather)
+  fns=(
+		b64d
+		b64e
+		browser
+		cheat_glow
+		check_cert
+		dks
+		kbp
+		randompass
+		timestampd
+		timestampe
+		tools
+		urld
+		urle
+		vault-cp
+		weather
+	)
 	for fn in ${fns[@]}; do
 		echo "${COLOR_BLUE}[$fn]${COLOR_OFF}\n"
 		$fn -h
@@ -69,6 +85,20 @@ cheat_glow() {
 		;;
 	*)
 		cheat "$@" | glow --width=150
+		;;
+	esac
+}
+
+check_cert() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Print certificate infos for the given domain.\n\n"
+		printf "Usage:\n"
+		printf "  check_cert <url>   Print cert infos.\n"
+		;;
+	*)
+		curl -w '%{certs}' -k "$1"
 		;;
 	esac
 }

@@ -309,6 +309,8 @@ In addition, this installation script adds an [utility functions](https://github
 | `b64d`       | *decode base64 string.*                                                |
 | `b64e`       | *encode base64 string.*                                                |
 | `browser`    | *start a browsh web browser (terminal browser) using docker.*          |
+| `cheat_glow` | *improve cheat sheet lisibility by piping it to glow.*                 |
+| `check_cert` | *print certificate infos for the given domain.*                        |
 | `dks`        | *decode a kubernetes secret by its name and optionally its namespace.* |
 | `kbp`        | *kill the process running on a given port.*                            |
 | `randompass` | *generate random password with a given length.*                        |
