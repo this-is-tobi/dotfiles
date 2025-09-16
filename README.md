@@ -31,6 +31,7 @@ The `dotfiles/` folder provides the following dotfiles templates:
 │   └── this-is-tobi.zsh-theme
 ├── .vscode
 │   ├── extensions.json
+│   ├── mcp.json
 │   └── settings.json
 ├── .gitconfig
 ├── .prototools

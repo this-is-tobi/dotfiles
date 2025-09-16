@@ -68,6 +68,13 @@
     "*.hcl": "terraform"
   },
   // languages
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.suggest.completeJSDocs": true,
+  "typescript.suggest.jsdoc.generateReturns": true,
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
@@ -75,7 +82,6 @@
   "javascript.preferences.importModuleSpecifierEnding": "js",
   "javascript.suggest.completeJSDocs": true,
   "javascript.suggest.jsdoc.generateReturns": true,
-  "typescript.preferences.importModuleSpecifierEnding": "js",
   "[html]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
@@ -93,6 +99,10 @@
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true
   },
+  "[yaml]": {
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
   // conventional commits
   "conventionalCommits.showNewVersionNotes": false,
   // kubernetes
@@ -108,27 +118,128 @@
   // markdown preview
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
-  // mcp
-  "mcp": {
-    "inputs": [],
-    "servers": {
-      "github": {
-        "type": "http",
-        "url": "https://api.githubcopilot.com/mcp/"
-      },
-      "kubernetes": {
-        "command": "docker",
-        "args": [
-          "run",
-          "--name",
-          "mcp-kubernetes",
-          "--rm",
-          "-i",
-          "-v",
-          "$HOME/.kube:/home/appuser/.kube:ro",
-          "docker.io/mcp/kubernetes"
-        ]
-      }
-    }
-  }
+  // copilot
+  "github.copilot.chat.agent.thinkingTool": true,
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "github.copilot.chat.edits.temporalContext.enabled": true,
+  "github.copilot.chat.languageContext.fix.typescript.enabled": true,
+  "github.copilot.chat.languageContext.inline.typescript.enabled": true,
+  "github.copilot.chat.languageContext.typescript.enabled": true,
+  "github.copilot.editor.enableCodeActions": false,
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "plaintext": false,
+    "scminput": false
+  },
+  "chat.agent.maxRequests": 100,
+  "chat.tools.edits.autoApprove": {
+    "**/*": true,
+    "**/.vscode/*.json": false,
+    "**/.git/**": false,
+    "**/{package.json,package-lock.json,server.xml,build.rs,web.config,.gitattributes,.env}": false,
+    "**/*.{csproj,fsproj,vbproj}": false
+  },
+  "chat.tools.terminal.autoApprove": {
+    "cd": true,
+    "echo": true,
+    "ls": true,
+    "pwd": true,
+    "cat": true,
+    "head": true,
+    "tail": true,
+    "findstr": true,
+    "wc": true,
+    "tr": true,
+    "cut": true,
+    "cmp": true,
+    "which": true,
+    "basename": true,
+    "dirname": true,
+    "realpath": true,
+    "readlink": true,
+    "stat": true,
+    "file": true,
+    "du": true,
+    "df": true,
+    "sleep": true,
+    "git status": true,
+    "git log": true,
+    "git show": true,
+    "git diff": true,
+    "Get-ChildItem": true,
+    "Get-Content": true,
+    "Get-Date": true,
+    "Get-Random": true,
+    "Get-Location": true,
+    "Write-Host": true,
+    "Write-Output": true,
+    "Split-Path": true,
+    "Join-Path": true,
+    "Start-Sleep": true,
+    "Where-Object": true,
+    "/^Select-[a-z0-9]/i": true,
+    "/^Measure-[a-z0-9]/i": true,
+    "/^Compare-[a-z0-9]/i": true,
+    "/^Format-[a-z0-9]/i": true,
+    "/^Sort-[a-z0-9]/i": true,
+    "column": true,
+    "/^column\\b.*-c\\s+[0-9]{4,}/": false,
+    "date": true,
+    "/^date\\b.*(-s|--set)\\b/": false,
+    "find": true,
+    "/^find\\b.*-(delete|exec|execdir|fprint|fprintf|fls|ok|okdir)\\b/": false,
+    "grep": true,
+    "/^grep\\b.*-(f|P)\\b/": false,
+    "sort": true,
+    "/^sort\\b.*-(o|S)\\b/": false,
+    "tree": true,
+    "/^tree\\b.*-o\\b/": false,
+    "/\\(.+\\)/": {
+      "approve": false,
+      "matchCommandLine": true
+    },
+    "/\\{.+\\}/": {
+      "approve": false,
+      "matchCommandLine": true
+    },
+    "/`.+`/": {
+      "approve": false,
+      "matchCommandLine": true
+    },
+    "rm": false,
+    "rmdir": false,
+    "del": false,
+    "Remove-Item": false,
+    "ri": false,
+    "rd": false,
+    "erase": false,
+    "dd": false,
+    "kill": false,
+    "ps": false,
+    "top": false,
+    "Stop-Process": false,
+    "spps": false,
+    "taskkill": false,
+    "taskkill.exe": false,
+    "curl": false,
+    "wget": false,
+    "Invoke-RestMethod": false,
+    "Invoke-WebRequest": false,
+    "irm": false,
+    "iwr": false,
+    "chmod": false,
+    "chown": false,
+    "Set-ItemProperty": false,
+    "sp": false,
+    "Set-Acl": false,
+    "jq": false,
+    "xargs": false,
+    "eval": false,
+    "Invoke-Expression": false,
+    "iex": false
+  },
+  "chat.tools.global.autoApprove": false,
+  "chat.useAgentsMdFile": true,
+  "chat.mcp.autostart": "newAndOutdated",
 }

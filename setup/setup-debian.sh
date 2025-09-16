@@ -209,6 +209,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ -x "$(command -v code)" ]; then
     mkdir -p "$HOME/.config/Code/User"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.config/Code/User/settings.json"
+    cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/.config/Code/User/mcp.json"
     VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
       | grep -v '//' \
       | grep -E '\S' \
@@ -220,6 +221,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ -x "$(command -v code-server)" ]; then
     mkdir -p "$HOME/.local/share/code-server/User"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.local/share/code-server/User/settings.json"
+    cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/.local/share/code-server/User/mcp.json"
     VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
       | grep -v '//' \
       | grep -E '\S' \
