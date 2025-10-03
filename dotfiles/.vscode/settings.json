@@ -237,7 +237,15 @@
     "xargs": false,
     "eval": false,
     "Invoke-Expression": false,
-    "iex": false
+    "iex": false,
+    "helm": true,
+    "npm": true,
+    "npx": true,
+    "bun": true,
+    "bunx": true,
+    "pnpm": true,
+    "pnpx": true,
+    "timeout": true
   },
   "chat.tools.global.autoApprove": false,
   "chat.useAgentsMdFile": true,
