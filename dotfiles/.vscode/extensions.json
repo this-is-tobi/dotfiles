@@ -27,6 +27,7 @@
     "wmaurer.change-case",
     "coder.coder-remote",
     "rangav.vscode-thunder-client",
+    "gruntfuggly.todo-tree",
 
     // github actions
     "github.vscode-github-actions",
