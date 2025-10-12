@@ -28,7 +28,8 @@ install_lite_setup() {
     df-pv \
     ktop \
     neat \
-    stern
+    stern \
+    view-secret
 
 
   # Install proto packages

@@ -192,14 +192,15 @@ CLI completions are referenced and installed via the [zsh-completions](https://g
 
 #### Kubectl plugins
 
-| Plugin                                                       | Description                                              | Lite mode | OSX installation | Debian installation |
-| ------------------------------------------------------------ | -------------------------------------------------------- | --------- | ---------------- | ------------------- |
-| [cert-manager](https://cert-manager.io/docs/reference/cmctl) | cert-manager cli                                         | x         | krew             | krew                |
-| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)     | cloud native postgres cli                                | x         | krew             | krew                |
-| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)       | df utility for pv                                        | x         | krew             | krew                |
-| [ktop](https://github.com/vladimirvivien/ktop)               | top-like tool for Kubernetes clusters                    | x         | krew             | krew                |
-| [neat](https://github.com/itaysk/kubectl-neat)               | kubernetes yaml/json output clean up to make it readable | x         | krew             | krew                |
-| [stern](https://github.com/stern/stern)                      | multi pod and container log tailing for Kubernetes       | x         | krew             | krew                |
+| Plugin                                                        | Description                                              | Lite mode | OSX installation | Debian installation |
+| ------------------------------------------------------------- | -------------------------------------------------------- | --------- | ---------------- | ------------------- |
+| [cert-manager](https://cert-manager.io/docs/reference/cmctl)  | cert-manager cli                                         | x         | krew             | krew                |
+| [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | cloud native postgres cli                                | x         | krew             | krew                |
+| [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)        | df utility for pv                                        | x         | krew             | krew                |
+| [ktop](https://github.com/vladimirvivien/ktop)                | top-like tool for Kubernetes clusters                    | x         | krew             | krew                |
+| [neat](https://github.com/itaysk/kubectl-neat)                | kubernetes yaml/json output clean up to make it readable | x         | krew             | krew                |
+| [stern](https://github.com/stern/stern)                       | multi pod and container log tailing for Kubernetes       | x         | krew             | krew                |
+| [view-secret](https://github.com/elsesiy/kubectl-view-secret) | kubernetes secret viewer                                 | x         | krew             | krew                |
 
 ### Secops
 

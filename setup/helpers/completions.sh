@@ -4,7 +4,10 @@
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Get current script path
+REPO_ROOT=$(git rev-parse --show-toplevel)
 
+# Set completion directory
 export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
 
@@ -100,6 +103,12 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 [ -x "$(command -v kubectl-stern)" ] \
   && printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n" \
   && kubectl-stern --completion zsh > $COMPLETION_DIR/_kubectl-stern
+
+
+# Install kubectl-view_secret completion
+[ -x "$(command -v kubectl-view_secret)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install kubectl-view_secret completion\n" \
+  && cp $REPO_ROOT/dotfiles/.oh-my-zsh/completions/_kubectl-view_secret $COMPLETION_DIR/_kubectl-view_secret
 
 
 # Install kubens completion

@@ -100,9 +100,12 @@ alias kgpw="watch 'kubectl get pod'"
 alias kgr="kubectl get pod -o custom-columns='NAME:.metadata.name,CPU_REQ:spec.containers[].resources.requests.cpu,CPU_LIM:spec.containers[].resources.limits.cpu,MEM_REQ:spec.containers[].resources.requests.memory,MEM_LIM:spec.containers[].resources.limits.memory'"
 alias kkrew="kubectl-krew"
 alias kktop="kubectl-ktop"
+alias kkyverno="kubectl-kyverno"
 alias kl="kubectl logs"
 alias kn="kubens"
 alias kneat="kubectl-neat"
+alias kstern="kubectl-stern"
+alias kvs="kubectl-view_secret"
 alias lad="lazydocker"
 alias lag="lazygit"
 alias pubip="dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '\"'"
@@ -117,6 +120,7 @@ fi
 # utility functions
 [ -f "$HOME/.config/dotfiles/functions.sh" ] && source "$HOME/.config/dotfiles/functions.sh"
 [ -f "$HOME/.config/dotfiles/functions-completion.sh" ] && source "$HOME/.config/dotfiles/functions-completion.sh"
+[ -f "$HOME/.config/dotfiles/functions-dso.sh" ] && source "$HOME/.config/dotfiles/functions-dso.sh"
 
 # gpg
 export GPG_TTY=$(tty)
