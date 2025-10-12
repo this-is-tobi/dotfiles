@@ -62,6 +62,33 @@ install_lite_setup() {
     sudo install -m 555 "/tmp/sshs-linux-$ARCH" /usr/local/bin/sshs
     rm "/tmp/sshs-linux-$ARCH"
   fi
+
+
+  # Install docker
+  if [ ! -x "$(command -v docker)" ]; then
+    printf "\n\n${red}[base] =>${no_color} Install docker\n\n"
+    sudo mkdir -m 0755 -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  fi
+
+  if [ ! -z $(grep -q -E "^docker:" /etc/group)]; then
+    printf "\n\n${red}[base] =>${no_color} Add docker group\n\n"
+    sudo groupadd docker
+  fi
+
+  if [ -z "$(groups $USER | grep 'docker')" ]; then
+    printf "\n\n${red}[base] =>${no_color} Add user to docker group\n\n"
+    sudo usermod -aG docker $USER
+  fi
+
+
+  # Install addition cheatsheets
+  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/clone-subdir.sh | bash -s -- \
+    -u "https://github.com/this-is-tobi/cheatsheets" -s "sheets" -o "$HOME/.config/cheat/cheatsheets/personal" -d
 }
 
 install_additional_setup() {

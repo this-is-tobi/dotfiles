@@ -15,7 +15,7 @@ install_lite_setup() {
 
   # Install gitleaks
   if [ ! -x "$(command -v gitleaks)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install gitleaks\n\n"
+    printf "\n\n${red}[secops] =>${no_color} Install gitleaks\n\n"
     if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
       ARCH=x64
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then

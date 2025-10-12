@@ -37,7 +37,7 @@ install_additional_setup() {
 
 # Add wakemeops debian repo
 if [ -z "$(find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb) | grep wakemeops" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
+  printf "\n\n${red}[go] =>${no_color} Add wakemeops apt repository\n\n"
   curl -fsSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
 fi
 

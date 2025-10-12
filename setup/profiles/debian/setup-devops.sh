@@ -41,28 +41,6 @@ install_lite_setup() {
   done
 
 
-  # Install docker
-  if [ ! -x "$(command -v docker)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install docker\n\n"
-    sudo mkdir -m 0755 -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
-    sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-  fi
-
-  if [ ! -z $(grep -q -E "^docker:" /etc/group)]; then
-    printf "\n\n${red}[base] =>${no_color} Add docker group\n\n"
-    sudo groupadd docker
-  fi
-
-  if [ -z "$(groups $USER | grep 'docker')" ]; then
-    printf "\n\n${red}[base] =>${no_color} Add user to docker group\n\n"
-    sudo usermod -aG docker $USER
-  fi
-
-
   # Install ansible
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops] =>${no_color} Install ansible\n\n"
@@ -116,7 +94,7 @@ install_additional_setup() {
 
   # Install chart-testing
   if [ ! -x "$(command -v ct)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install chart-testing\n\n"
+    printf "\n\n${red}[devops] =>${no_color} Install chart-testing\n\n"
     if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
       ARCH=amd64
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
@@ -141,7 +119,7 @@ install_additional_setup() {
 
   # Install teleport
   if [ ! -x "$(command -v tsh)" ]; then
-    printf "\n\n${red}[base] =>${no_color} Install tsh\n\n"
+    printf "\n\n${red}[devops] =>${no_color} Install tsh\n\n"
     while true; do
       read -p "Please specify the teleport version number you want to install: " teleport_version_user_input
       if [[ "$teleport_version_user_input" =~ ^[0-9]+$ ]]; then
