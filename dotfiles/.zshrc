@@ -117,6 +117,9 @@ if [ "$(uname)" = "Darwin" ]; then
   alias intel="env /usr/bin/arch -x86_64 /bin/zsh --login"
 fi
 
+# load custom env vars
+[ -f "$HOME/.config/dotfiles/env.sh" ] && source "$HOME/.config/dotfiles/env.sh"
+
 # utility functions
 [ -f "$HOME/.config/dotfiles/functions.sh" ] && source "$HOME/.config/dotfiles/functions.sh"
 [ -f "$HOME/.config/dotfiles/functions-completion.sh" ] && source "$HOME/.config/dotfiles/functions-completion.sh"
