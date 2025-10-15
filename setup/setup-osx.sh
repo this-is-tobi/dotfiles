@@ -258,6 +258,15 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   fi
 
 
+  # Install copilot instructions
+  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/clone-subdir.sh | bash -s -- \
+    -u "https://github.com/this-is-tobi/tools" \
+    -b "main" \
+    -s "copilot/instructions" \
+    -o "$HOME/.config/copilot" \
+    -d
+
+
   # Update brew links if architecture is arm64
   if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     gsed -i 's/\/usr\/local/\/opt\/homebrew/g' "$HOME/.zshrc"

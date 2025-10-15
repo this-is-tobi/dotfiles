@@ -297,6 +297,17 @@ Zsh is used as the default shell and is supplied with [oh-my-zsh](https://ohmyz.
 
 This configuration uses a [custom oh-my-zsh theme](./dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme) that blends [gnzh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#gnzh) with the [kube-ps1 plugin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kube-ps1).
 
+## GitHub Copilot Instructions
+
+The setup scripts can install [GitHub Copilot instructions](https://github.com/this-is-tobi/tools/tree/main/copilot/instructions) from the tools repository. These instructions provide best practices for:
+- Code review guidelines
+- Conventional commit messages
+- Pull request descriptions
+- Language-specific development (JavaScript/TypeScript, Go, Shell, etc.)
+- Platform-specific guidelines (Docker, Kubernetes, GitHub Actions)
+
+The instructions are cloned to `~/.config/copilot/instructions/` and can be referenced in VS Code settings with absolute paths. See the [tools repository documentation](https://github.com/this-is-tobi/tools/blob/main/docs/02-copilot.md) for detailed configuration examples.
+
 ## Cheatsheets
 
 The setup scripts install [cheat](https://github.com/cheat/cheat) and add [a few extra sheets](https://github.com/this-is-tobi/cheatsheets) which can be listed with the command `cheat -l -p personal`.

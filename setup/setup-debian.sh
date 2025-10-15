@@ -230,6 +230,15 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
       echo "$extension" | xargs -L 1 code-server --install-extension
     done
   fi
+
+
+  # Install copilot instructions
+  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/clone-subdir.sh | bash -s -- \
+    -u "https://github.com/this-is-tobi/tools" \
+    -b "main" \
+    -s "copilot/instructions" \
+    -o "$HOME/.config/copilot" \
+    -d
 fi
 
 

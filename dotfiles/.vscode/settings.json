@@ -119,6 +119,8 @@
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
   // copilot
+  "github.copilot.chat.agent.autoFix": true,
+  "github.copilot.chat.reviewAgent.enabled": true,
   "github.copilot.chat.agent.thinkingTool": true,
   "github.copilot.chat.editor.temporalContext.enabled": true,
   "github.copilot.chat.edits.temporalContext.enabled": true,
@@ -126,6 +128,21 @@
   "github.copilot.chat.languageContext.inline.typescript.enabled": true,
   "github.copilot.chat.languageContext.typescript.enabled": true,
   "github.copilot.editor.enableCodeActions": false,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": "/Users/tobi/.config/dotfiles/copilot/instructions/commit-message.md"
+    },
+  ],
+  "github.copilot.chat.pullRequestDescriptionGeneration.instructions":[
+    {
+      "file": "/Users/tobi/.config/dotfiles/copilot/instructions/pull-request.md"
+    },
+  ],
+  "github.copilot.chat.reviewSelection.instructions": [
+    {
+      "file": "/Users/tobi/.config/dotfiles/copilot/instructions/code-review.md"
+    },
+  ],
   "github.copilot.enable": {
     "*": true,
     "markdown": true,
@@ -239,15 +256,23 @@
     "Invoke-Expression": false,
     "iex": false,
     "helm": true,
-    "npm": true,
-    "npx": true,
     "bun": true,
+    "npx": true,
     "bunx": true,
+    "timeout": true,
     "pnpm": true,
-    "pnpx": true,
-    "timeout": true
+    "docker": true,
+    "kubectl": true,
   },
   "chat.tools.global.autoApprove": false,
   "chat.useAgentsMdFile": true,
   "chat.mcp.autostart": "newAndOutdated",
+  "yaml.schemas": {
+    "file:///Users/tobi/.vscode/extensions/continue.continue-1.2.3-darwin-arm64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ]
+  },
+  // extensions
+  "database-client.autoSync": true,
+  "docker.extension.enableComposeLanguageServer": false,
 }
