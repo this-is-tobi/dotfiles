@@ -98,6 +98,47 @@ Display all available options:
 ./setup/setup-debian.sh -h
 ```
 
+### Non-Interactive Mode
+
+The setup scripts are designed to run non-interactively by default, making them safe for automation and CI/CD pipelines.
+
+#### Teleport Version (DevOps Profile)
+
+When installing the DevOps profile on Debian/Ubuntu, Teleport defaults to **v18** if not specified:
+
+```sh
+# Uses default v18
+./setup/setup-debian.sh -p devops
+
+# Override with specific version
+TELEPORT_VERSION=v17 ./setup/setup-debian.sh -p devops
+
+# Works with lite mode too
+TELEPORT_VERSION=v16 ./setup/setup-debian.sh -l -p devops
+```
+
+#### Use Cases
+
+Non-interactive mode is particularly useful for:
+- **CI/CD pipelines** - Automated environment setup
+- **Docker builds** - Installing dotfiles in containers
+- **Configuration management** - Ansible, Terraform provisioning
+- **Scripted deployments** - Batch server setup
+
+#### Example: Docker
+
+```dockerfile
+FROM debian:bookworm
+
+# Optional: override default Teleport version
+ENV TELEPORT_VERSION=v17
+
+RUN apt update && apt install -y curl git sudo && \
+    git clone https://github.com/this-is-tobi/dotfiles.git /root/dotfiles && \
+    cd /root/dotfiles && \
+    ./setup/setup-debian.sh -l -p devops
+```
+
 ## What Gets Installed
 
 ### Core Components
