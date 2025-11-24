@@ -168,7 +168,7 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 # Install scw completion
 [ -x "$(command -v scw)" ] \
   && printf "\n${red}[completion] =>${no_color} Install scw completion\n" \
-  && scw autocomplete install
+  && scw autocomplete install shell=zsh
 
 
 # Install skate completion
