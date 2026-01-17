@@ -58,7 +58,6 @@ install_additional_setup() {
     act \
     argo \
     argocd \
-    awscli \
     k6 \
     k9s \
     kind \
@@ -68,6 +67,22 @@ install_additional_setup() {
     scw \
     velero \
     yamllint
+
+
+  # Install awscli
+  if [ ! -x "$(command -v aws)" ]; then
+    printf "\n\n${red}[devops] =>${no_color} Install awscli\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=x86_64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=aarch64
+    fi
+    mkdir -p /tmp/awscli
+    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" -o /tmp/awscli/awscliv2.zip
+    cd /tmp/awscli && unzip -q awscliv2.zip
+    sudo /tmp/awscli/aws/install
+    rm -rf /tmp/awscli
+  fi
 
 
   # Install coder
