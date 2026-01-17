@@ -96,11 +96,11 @@ IaC and configuration management (DevOps profile):
 
 Cloud provider tools (DevOps profile):
 
-| Tool | Platform            | Source       |
-| ---- | ------------------- | ------------ |
-| aws  | Amazon Web Services | homebrew/apt |
-| scw  | Scaleway            | homebrew/apt |
-| oc   | OpenShift/OKD       | homebrew/apt |
+| Tool | Platform            | Source         |
+| ---- | ------------------- | -------------- |
+| aws  | Amazon Web Services | homebrew/shell |
+| scw  | Scaleway            | homebrew/apt   |
+| oc   | OpenShift/OKD       | homebrew/apt   |
 
 ### Security Tools
 
@@ -141,6 +141,12 @@ Runtime and toolchain management:
 | cobra-cli    | CLI framework           | go install   |
 | kubebuilder  | Kubernetes API SDK      | homebrew/apt |
 | operator-sdk | Kubernetes operator SDK | homebrew/apt |
+
+#### Python (DevOps profile)
+
+| Tool | Purpose               | Source |
+| ---- | --------------------- | ------ |
+| uv   | Fast Python installer | proto  |
 
 #### Version Manager
 
