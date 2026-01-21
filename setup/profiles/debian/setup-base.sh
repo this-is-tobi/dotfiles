@@ -147,9 +147,9 @@ install_additional_setup() {
     fi
     mkdir /tmp/skate
     SKATE_VERSION=$(curl -fsSL "https://api.github.com/repos/charmbracelet/skate/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz "https://github.com/charmbracelet/skate/releases/latest/download/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz"
-    tar -xf /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz -C /tmp/skate
-    sudo mv /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}/skate_1.0.1_Linux_arm64 /usr/local/bin/skate
+    curl -fsSL -o /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz "https://github.com/charmbracelet/skate/releases/latest/download/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz" \
+      && tar -xf /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz -C /tmp/skate \
+      && sudo mv /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}/skate /usr/local/bin/skate
   fi
 
 
