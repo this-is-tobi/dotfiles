@@ -3,11 +3,11 @@
 This project provides comprehensive dotfiles templates, automation scripts, and development environment configurations for macOS and Debian-based systems.
 It offers profile-based installation, automated setup, backup and restore capabilities, custom shell utilities, and GitHub Copilot integration with MCP servers.
 
-## Documentation## Documentation
+## Documentation
 
 Comprehensive documentation is available:
 
-1. [Introduction](./docs/01-introduction.md) - Overview and key features
+1. [Introduction](./docs/01-readme.md) - Overview and key features
 2. [Installation](./docs/02-installation.md) - Detailed installation guide
 3. [Dotfiles Structure](./docs/03-dotfiles.md) - Configuration files explained
 4. [Profiles](./docs/04-profiles.md) - Available installation profiles
@@ -32,13 +32,13 @@ Comprehensive documentation is available:
 ### macOS
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-osx.sh | bashcurl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-osx.sh | bash
+curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-osx.sh | bash
 ```
 
 ### Debian/Ubuntu
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-debian.sh | bashcurl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-debian.sh | bash
+curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-debian.sh | bash
 ```
 
 ### Installation Options
@@ -64,19 +64,6 @@ For detailed installation instructions and profile descriptions, see the [Instal
 - [Awesome Dotfiles](https://github.com/webpro/awesome-dotfiles) - Curated dotfiles list
 - [oh-my-zsh Plugins](https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins) - Available plugins
 - [Homebrew Packages](https://formulae.brew.sh/) - Browse Homebrew catalog
-
-## Related Project
-
-- [tools](https://github.com/this-is-tobi/tools) - Shell scripts and GitHub Copilot instructions
-- [cheatsheets](https://github.com/this-is-tobi/cheatsheets) - Personal cheat sheets collection
-
-## Contributing
-
-This is a personal dotfiles repository, but feel free to fork and adapt to your needs.
-
-## License
-
-This project is open source and available for personal use.
 
 ## Related Projects
 

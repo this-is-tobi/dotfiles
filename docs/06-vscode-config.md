@@ -104,7 +104,7 @@ Model Context Protocol server configuration: `.vscode/mcp.json`
 {
   "github": {
     "type": "http",
-    "serverUrl": "https://mcp-github.vercel.app/mcp"
+    "url": "https://api.githubcopilot.com/mcp/"
   }
 }
 ```
@@ -118,10 +118,10 @@ Provides GitHub API integration for:
 ```json
 {
   "context7": {
-    "type": "sse",
-    "serverUrl": "https://mcp.context7.io/sse",
+    "type": "http",
+    "url": "https://mcp.context7.com/mcp",
     "headers": {
-      "x-api-key": "${CONTEXT7_API_KEY}"
+      "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
     }
   }
 }
@@ -134,36 +134,22 @@ Provides up-to-date documentation access for libraries and frameworks.
 ```json
 {
   "kubernetes": {
-    "type": "docker",
-    "args": {
-      "image": "ghcr.io/stophobia/mcp-k8s:latest",
-      "volumes": [
-        "/Users/tobi/.kube/config:/root/.kube/config:ro"
-      ]
-    }
+    "command": "docker",
+    "args": [
+      "run",
+      "--name",
+      "mcp-kubernetes",
+      "--rm",
+      "-i",
+      "-v",
+      "${userHome}/.kube:/home/appuser/.kube:ro",
+      "docker.io/mcp/kubernetes"
+    ],
+    "type": "stdio"
   }
 }
 ```
 Provides Kubernetes cluster management through Docker container.
-
-**GitKraken MCP Server:**
-```json
-{
-  "gitkraken": {
-    "type": "stdio",
-    "command": "docker",
-    "args": [
-      "run",
-      "--rm",
-      "-i",
-      "-v",
-      "/Users/tobi/.gitkraken:/root/.gitkraken:ro",
-      "gitkraken/mcp-server-gk"
-    ]
-  }
-}
-```
-Provides advanced Git workflow features.
 
 ### extensions.json
 
