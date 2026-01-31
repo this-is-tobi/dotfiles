@@ -20,7 +20,7 @@
 				"--rm",
 				"-i",
 				"-v",
-				"/Users/tobi/.kube:/home/appuser/.kube:ro",
+				"${userHome}/.kube:/home/appuser/.kube:ro",
 				"docker.io/mcp/kubernetes"
 			],
 			"type": "stdio"

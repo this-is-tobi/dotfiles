@@ -75,7 +75,7 @@ install_lite_setup() {
     sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   fi
 
-  if [ ! -z $(grep -q -E "^docker:" /etc/group)]; then
+  if ! grep -q -E "^docker:" /etc/group; then
     printf "\n\n${red}[base] =>${no_color} Add docker group\n\n"
     sudo groupadd docker
   fi

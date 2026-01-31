@@ -96,19 +96,19 @@ printf "\n${red}${i}.${no_color} Export gpg keys\n\n"
 i=$(($i + 1))
 
 EMAIL="this-is-tobi@proton.me"
-BACKUP_DIR="$HOME/.gnupg/backup"
-mkdir -p "$BACKUP_DIR"
+GPG_BACKUP_DIR="$HOME/.gnupg/backup"
+mkdir -p "$GPG_BACKUP_DIR"
 
 KEY_ID=$(gpg --list-secret-keys --keyid-format=long "$EMAIL" | grep 'sec' | awk '{print $2}' | cut -d'/' -f2)
 
 if [ -z "$KEY_ID" ]; then
   echo "No GPG key found for email: $EMAIL"
 else
-  gpg --export --armor "$KEY_ID" > "$BACKUP_DIR/public-key-$KEY_ID.asc"
-  echo "Public gpg key saved to $BACKUP_DIR/public-key-$KEY_ID.asc"
+  gpg --export --armor "$KEY_ID" > "$GPG_BACKUP_DIR/public-key-$KEY_ID.asc"
+  echo "Public gpg key saved to $GPG_BACKUP_DIR/public-key-$KEY_ID.asc"
 
-  gpg --export-secret-keys --armor "$KEY_ID" > "$BACKUP_DIR/private-key-$KEY_ID.asc"
-  echo "Private gpg key saved to $BACKUP_DIR/private-key-$KEY_ID.asc"
+  gpg --export-secret-keys --armor "$KEY_ID" > "$GPG_BACKUP_DIR/private-key-$KEY_ID.asc"
+  echo "Private gpg key saved to $GPG_BACKUP_DIR/private-key-$KEY_ID.asc"
 
   echo "Backup completed for GPG key: $KEY_ID"
 fi
@@ -120,11 +120,11 @@ i=$(($i + 1))
 
 mkdir "${BACKUP_DIR%/}/home"
 if [ "$BACKUP_FULL" = "true" ]; then
-  HOME_DIR=(
+  HOME_DIRS=(
     $HOME
   )
 else 
-  HOME_DIR=(
+  HOME_DIRS=(
     $HOME/dev
   )
 fi

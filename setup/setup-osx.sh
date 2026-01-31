@@ -93,7 +93,7 @@ install_homebrew() {
   printf "\n\n${red}Optional.${no_color} Installs homebrew...\n\n"
   export NONINTERACTIVE=1 
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  printf "\nhomebrew version installed :\n$(homebrew --version)\n\n"
+  printf "\nhomebrew version installed :\n$(brew --version)\n\n"
 }
 
 if [ -z "$(xcode-select -p)" ]; then
