@@ -209,9 +209,10 @@ The **AI** profile provides tools for running large language models locally.
 
 ### Applications
 
-| Application                  | Description      | Lite | macOS         | Debian |
-| ---------------------------- | ---------------- | ---- | ------------- | ------ |
-| [Ollama](https://ollama.com) | Run LLMs locally | -    | homebrew cask | shell  |
+| Application                                      | Description        | Lite | macOS         | Debian |
+| ------------------------------------------------ | ------------------ | ---- | ------------- | ------ |
+| [Ollama](https://ollama.com)                     | Run LLMs locally   | -    | homebrew cask | shell  |
+| [Copilot](https://github.com/github/copilot-cli) | GitHub Copilot CLI | -    | homebrew cask | shell  |
 
 ---
 
