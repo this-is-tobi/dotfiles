@@ -33,6 +33,7 @@
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
   },
+  "diffEditor.ignoreTrimWhitespace": false,
   // general
   "editor.unicodeHighlight.invisibleCharacters": false,
   "security.workspace.trust.untrustedFiles": "open",
@@ -40,6 +41,7 @@
   // git
   "git.autofetch": true,
   "git.untrackedChanges": "separate",
+  "git.addAICoAuthor": "off",
   // github
   "githubPullRequests.pullBranch": "never",
   // eslint
@@ -116,6 +118,7 @@
   "[helm-template]": {
     "editor.formatOnSave": false
   },
+  "go.toolsManagement.autoUpdate": true,
   // conventional commits
   "conventionalCommits.showNewVersionNotes": false,
   // kubernetes
@@ -131,6 +134,8 @@
   // markdown preview
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
+  // extensions
+  "database-client.autoSync": true,
   // copilot
   "github.copilot.chat.agent.autoFix": true,
   "github.copilot.chat.reviewAgent.enabled": true,
@@ -172,13 +177,17 @@
     "~/.copilot/skills": true,
     "~/.claude/skills": true
   },
+  "chat.useHooks": true,
+  "chat.hookFilesLocations": {
+    "~/.copilot/hooks": true
+  },
   // agents
   "chat.agentFilesLocations": {
     ".github/agents": true,
     "~/.copilot/agents": true
   },
-  // memory — persists notes across conversations (Preview)
   "github.copilot.chat.tools.memory.enabled": true,
+  "github.copilot.chat.backgroundAgent.enabled": true,
   "chat.agent.maxRequests": 100,
   "chat.tools.edits.autoApprove": {
     "**/*": true,
@@ -341,10 +350,10 @@
   "chat.tools.global.autoApprove": false,
   "chat.mcp.autostart": "newAndOutdated",
   "chat.mcp.gallery.enabled": true,
-  "chat.viewSessions.orientation": "stacked",
-  // extensions
-  "database-client.autoSync": true,
-  "docker.extension.enableComposeLanguageServer": false,
-  "go.toolsManagement.autoUpdate": true,
-  "diffEditor.ignoreTrimWhitespace": false,
+  "chat.mcp.serverSampling": {},
+  "chat.tools.urls.autoApprove": {
+    "https://code.visualstudio.com": true,
+    "https://github.com/microsoft/vscode/wiki/*": true,
+    "https://artifacthub.io": true,
+  },
 }
