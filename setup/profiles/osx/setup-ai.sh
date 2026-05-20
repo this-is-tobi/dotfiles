@@ -9,7 +9,8 @@ install_additional_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cli)\n\n"
   brew update && brew install --formula \
-    copilot-cli
+    copilot-cli \
+    rtk-ai/tap/rtk
 
   # Install homebrew graphic app packages
   printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (graphic)\n\n"

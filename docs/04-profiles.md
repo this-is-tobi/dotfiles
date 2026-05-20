@@ -205,14 +205,21 @@ The **Go** profile provides Go language development tools and Kubernetes operato
 
 ## AI Profile
 
-The **AI** profile provides tools for running large language models locally.
+The **AI** profile provides tools for running large language models locally.$
+
+### Command Line Interfaces
+
+| Package                                              | Description                            | Lite | macOS    | Debian |
+| ---------------------------------------------------- | -------------------------------------- | ---- | -------- | ------ |
+| [copilot-cli](https://github.com/github/copilot-cli) | GitHub Copilot CLI                     | -    | homebrew | shell  |
+| [rtk](https://github.com/rtk-ai/rtk)                 | CLI proxy that reduces LLM token usage | -    | homebrew | shell  |
 
 ### Applications
 
-| Application                                      | Description        | Lite | macOS         | Debian |
-| ------------------------------------------------ | ------------------ | ---- | ------------- | ------ |
-| [Ollama](https://ollama.com)                     | Run LLMs locally   | -    | homebrew cask | shell  |
-| [Copilot](https://github.com/github/copilot-cli) | GitHub Copilot CLI | -    | homebrew cask | shell  |
+| Application                  | Description      | Lite | macOS         | Debian |
+| ---------------------------- | ---------------- | ---- | ------------- | ------ |
+| [Ollama](https://ollama.com) | Run LLMs locally | -    | homebrew cask | shell  |
+
 
 ---
 

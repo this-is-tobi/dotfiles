@@ -12,6 +12,11 @@ install_additional_setup() {
     curl -fsSL https://gh.io/copilot-install | bash
   fi
 
+  if [ ! -x "$(command -v rtk)" ]; then
+    printf "\n\n${red}[ai] =>${no_color} Install rtk CLI\n\n"
+    curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/master/install.sh | sh
+  fi
+
   # Install ollama
   if [ ! -x "$(command -v ollama)" ]; then
     printf "\n\n${red}[ai] =>${no_color} Install ollama\n\n"
