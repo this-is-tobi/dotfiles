@@ -114,7 +114,7 @@ Personal Claude Code settings, copied to `~/.claude/settings.json` during setup:
 - `effortLevel` model reasoning effort
 - `attribution.commit` set to `""` to disable the `Co-Authored-By: Claude` commit trailer
 
-Instructions (`~/.claude/CLAUDE.md`, `~/.claude/general-instructions.md`) and MCP servers (`context7`, `kubernetes`, `argocd`, `playwright`, via `claude mcp add ... -s user`) are not stored as static dotfiles — they're installed at setup time from the [tools repository](https://github.com/this-is-tobi/tools/blob/main/docs/02-ai.md), so this repo doesn't duplicate content that's already canonically maintained there. See [docs/07-ai.md](./07-ai.md) for details.
+Instructions (`~/.claude/CLAUDE.md`, `~/.claude/general-instructions.md`) and MCP servers (`context7`, `kubernetes`, `argocd`, `playwright`, via `claude mcp add ... -s user`) are not stored as static dotfiles — they're installed at setup time from the [tools repository](https://github.com/this-is-tobi/tools/blob/main/docs/02-ai.md), so this repo doesn't duplicate content that's already canonically maintained there. See ai documentation section for details.
 
 ### Application Configurations
 
