@@ -23,28 +23,23 @@ The configuration references GitHub Copilot instruction files for AI-assisted de
 
 ```json
 {
-  "github.copilot.chat.codeGeneration.instructions": [
-    {
-      "file": "~/.config/copilot/instructions/copilot-instructions.md"
-    }
-  ],
+  "chat.instructionsFilesLocations": {
+    ".github/instructions": true,
+    "~/.copilot/instructions": true
+  },
   "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "file": "~/.config/copilot/instructions/commit-message.md"
-    }
+    { "file": "~/.copilot/instructions/commit-message.instructions.md" }
   ],
   "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
-    {
-      "file": "~/.config/copilot/instructions/pull-request.md"
-    }
+    { "file": "~/.copilot/instructions/pull-request.instructions.md" }
   ],
   "github.copilot.chat.reviewSelection.instructions": [
-    {
-      "file": "~/.config/copilot/instructions/code-review.md"
-    }
+    { "file": "~/.copilot/instructions/code-review.instructions.md" }
   ]
 }
 ```
+
+> `codeGeneration.instructions` is deprecated since VS Code 1.102 — general guidance now lives in `~/.copilot/instructions/general.instructions.md`, loaded automatically via `chat.instructionsFilesLocations` above.
 
 These instruction files provide:
 - Code generation best practices
@@ -244,30 +239,17 @@ MCP server types:
 
 ### Customizing Copilot Instructions
 
-Edit instruction files in `~/.config/copilot/instructions/`:
+Edit instruction files in `~/.copilot/instructions/`:
 
 ```sh
 # Edit commit message instructions
-vim ~/.config/copilot/instructions/commit-message.md
+vim ~/.copilot/instructions/commit-message.instructions.md
 
 # Edit code review instructions
-vim ~/.config/copilot/instructions/code-review.md
+vim ~/.copilot/instructions/code-review.instructions.md
 ```
 
-Or create project-specific instructions:
-
-```json
-{
-  "github.copilot.chat.codeGeneration.instructions": [
-    {
-      "file": "~/.config/copilot/instructions/copilot-instructions.md"
-    },
-    {
-      "file": ".copilot/project-specific.md"
-    }
-  ]
-}
-```
+Or add project-specific scoped instructions in `.github/instructions/*.instructions.md` (repo-level, takes precedence over personal).
 
 ### Adjusting Auto-Approve Commands
 
@@ -390,7 +372,7 @@ Verify file paths:
 
 ```sh
 # Check files exist
-ls ~/.config/copilot/instructions/
+ls ~/.copilot/instructions/
 
 # Verify settings reference correct paths
 code ~/.vscode/settings.json

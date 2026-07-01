@@ -209,10 +209,11 @@ The **AI** profile provides tools for running large language models locally.$
 
 ### Command Line Interfaces
 
-| Package                                              | Description                            | Lite | macOS    | Debian |
-| ---------------------------------------------------- | -------------------------------------- | ---- | -------- | ------ |
-| [copilot-cli](https://github.com/github/copilot-cli) | GitHub Copilot CLI                     | -    | homebrew | shell  |
-| [rtk](https://github.com/rtk-ai/rtk)                 | CLI proxy that reduces LLM token usage | -    | homebrew | shell  |
+| Package                                                  | Description                            | Lite | macOS    | Debian |
+| -------------------------------------------------------- | -------------------------------------- | ---- | -------- | ------ |
+| [claude-code](https://github.com/anthropics/claude-code) | Claude Code CLI                        | -    | homebrew | shell  |
+| [copilot-cli](https://github.com/github/copilot-cli)     | GitHub Copilot CLI                     | -    | homebrew | shell  |
+| [rtk](https://github.com/rtk-ai/rtk)                     | CLI proxy that reduces LLM token usage | -    | homebrew | shell  |
 
 ### Applications
 

@@ -13,7 +13,7 @@ Comprehensive documentation is available:
 4. [Profiles](./docs/04-profiles.md) - Available installation profiles
 5. [Shell Customization](./docs/05-shell-customization.md) - oh-my-zsh, plugins, and functions
 6. [VS Code Configuration](./docs/06-vscode-config.md) - Editor setup and integration
-7. [GitHub Copilot & MCP](./docs/07-copilot-mcp.md) - AI-assisted development
+7. [AI Assistants (Claude Code & Copilot) & MCP](./docs/07-ai.md) - AI-assisted development
 8. [Tools & Packages](./docs/08-tools-packages.md) - Complete package reference
 9. [Backup & Restore](./docs/09-backup-restore.md) - Configuration backup strategies
 10. [Troubleshooting](./docs/10-troubleshooting.md) - Common issues and solutions

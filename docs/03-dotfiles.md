@@ -10,6 +10,8 @@ The `dotfiles/` directory contains template configuration files for various appl
 
 ```sh
 ./dotfiles
+├── .claude/             # Claude Code personal settings
+│   └── settings.json    # Hooks (rtk), effort level, commit attribution
 ├── .config/
 │   ├── cheat/           # Cheat sheet configuration
 │   ├── dotfiles/        # Custom functions and completions
@@ -98,10 +100,21 @@ Model Context Protocol server configurations:
 - **GitHub MCP** - GitHub API integration
 - **Context7 MCP** - Documentation access (requires API key)
 - **Kubernetes MCP** - Kubernetes cluster management
-- **GitKraken MCP** - Git workflow enhancements
+- **ArgoCD MCP** - ArgoCD application management (requires API token)
+- **Playwright MCP** - Browser automation
 
 #### `.vscode/extensions.json`
 Recommended VS Code extensions for this environment.
+
+### Claude Code Configuration
+
+#### `.claude/settings.json`
+Personal Claude Code settings, copied to `~/.claude/settings.json` during setup:
+- `rtk hook claude` PreToolUse hook for token-optimized shell output
+- `effortLevel` model reasoning effort
+- `attribution.commit` set to `""` to disable the `Co-Authored-By: Claude` commit trailer
+
+Instructions (`~/.claude/CLAUDE.md`, `~/.claude/general-instructions.md`) and MCP servers (`context7`, `kubernetes`, `argocd`, `playwright`, via `claude mcp add ... -s user`) are not stored as static dotfiles — they're installed at setup time from the [tools repository](https://github.com/this-is-tobi/tools/blob/main/docs/02-ai.md), so this repo doesn't duplicate content that's already canonically maintained there. See [docs/07-ai.md](./07-ai.md) for details.
 
 ### Application Configurations
 

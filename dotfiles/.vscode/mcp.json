@@ -1,9 +1,12 @@
 {
-	"servers": {
-		"github": {
-			"type": "http",
-			"url": "https://api.githubcopilot.com/mcp/"
-		},
+  "servers": {
+    // GitHub Copilot MCP — remote HTTP, no auth needed (handled by VS Code session)
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    // Context7 — up-to-date library docs fetched on demand
+    // Requires CONTEXT7_API_KEY env var (get one at https://context7.com)
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp",
@@ -11,20 +14,29 @@
         "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
       }
     },
-		"kubernetes": {
-			"command": "docker",
-			"args": [
-				"run",
-				"--name",
-				"mcp-kubernetes",
-				"--rm",
-				"-i",
-				"-v",
-				"${userHome}/.kube:/home/appuser/.kube:ro",
-				"docker.io/mcp/kubernetes"
-			],
-			"type": "stdio"
-		}
-	},
-	"inputs": []
+    // Kubernetes MCP — reads ~/.kube/config, gives Copilot cluster access
+    "kubernetes": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "kubernetes-mcp-server@latest"]
+    },
+    // Argo CD MCP — lets Copilot list/sync/inspect ArgoCD apps
+    // Requires an ArgoCD API token: Settings > Accounts > Generate Token
+    "argocd": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "argocd-mcp@latest", "stdio"],
+      "env": {
+        "ARGOCD_BASE_URL": "https://gitops.ohmlab.fr",
+        "ARGOCD_API_TOKEN": "${env:ARGOCD_API_TOKEN}"
+      }
+    },
+    // Playwright MCP — browser automation for Copilot (screenshots, clicks, forms)
+    "microsoft/playwright-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  },
+  "inputs": []
 }

@@ -252,7 +252,7 @@ exec zsh
 
 1. **Verify file paths:**
 ```sh
-ls -la ~/.config/copilot/instructions/
+ls -la ~/.copilot/instructions/
 ```
 
 2. **Check settings.json:**
