@@ -15,7 +15,7 @@ install_lite_setup() {
     go
   )
   for pkg in ${PACKAGES[*]}; do
-    proto install $pkg
+    proto install $pkg --pin global
   done
 }
 

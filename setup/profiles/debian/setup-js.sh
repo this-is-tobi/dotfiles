@@ -16,7 +16,7 @@ install_lite_setup() {
     npm
   )
   for pkg in ${PACKAGES[*]}; do
-    proto install $pkg
+    proto install $pkg --pin global
   done
 }
 
@@ -29,7 +29,7 @@ install_additional_setup() {
     yarn
   )
   for pkg in ${PACKAGES[*]}; do
-    proto install $pkg
+    proto install $pkg --pin global
   done
 
   # Install npm packages

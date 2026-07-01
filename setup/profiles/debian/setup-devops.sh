@@ -38,7 +38,7 @@ install_lite_setup() {
     uv
   )
   for pkg in ${PACKAGES[*]}; do
-    proto install $pkg
+    proto install $pkg --pin global
   done
 
 
