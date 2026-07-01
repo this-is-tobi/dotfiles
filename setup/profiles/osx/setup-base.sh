@@ -17,8 +17,8 @@ install_lite_setup() {
     fzf \
     glow \
     proto \
+    rclone \
     ripgrep \
-    rsync \
     sshs \
     tree \
     vim \
@@ -51,7 +51,6 @@ install_additional_setup() {
     nmap \
     nvim \
     pandoc \
-    rclone \
     charmbracelet/tap/skate \
     isacikgoz/taps/tldr \
     ttyd \

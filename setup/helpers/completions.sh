@@ -135,12 +135,6 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
   && kyverno completion zsh > $COMPLETION_DIR/_kyverno
 
 
-# Install minio completion
-[ -x "$(command -v mc)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install minio completion\n" \
-  && mc --autocompletion
-
-
 # Install ollama completion
 [ -x "$(command -v ollama)" ] \
   && printf "\n${red}[completion] =>${no_color} Install ollama completion\n" \

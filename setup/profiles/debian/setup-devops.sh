@@ -15,7 +15,7 @@ install_lite_setup() {
     kubectl \
     kubectx \
     kubens \
-    minio-client \
+    oc \
     sshpass \
     terraform
 
@@ -62,7 +62,6 @@ install_additional_setup() {
     k9s \
     kind \
     libonig-dev \
-    oc \
     python3-dev \
     scw \
     velero \

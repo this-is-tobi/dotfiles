@@ -62,9 +62,8 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [nvim](https://neovim.io)                                 | Hyperextensible Vim-based text editor                 | -    | homebrew | shell  |
 | [pandoc](https://pandoc.org)                              | Universal markup converter                            | -    | homebrew | apt    |
 | [proto](https://moonrepo.dev/proto)                       | Pluggable multi-language version manager              | ✓    | homebrew | shell  |
+| [rclone](https://rclone.org)                              | Swiss army knife of cloud storage                     | ✓    | homebrew | apt    |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | Recursively search directories for regex patterns     | ✓    | homebrew | apt    |
-| [rclone](https://rclone.org)                              | Swiss army knife of cloud storage                     | -    | homebrew | apt    |
-| [rsync](https://rsync.samba.org)                          | Fast incremental file transfer tool                   | ✓    | homebrew | apt    |
 | [skate](https://github.com/charmbracelet/skate)           | Personal key-value store                              | -    | homebrew | shell  |
 | [sshs](https://github.com/quantumsheep/sshs)              | Interactive SSH client                                | ✓    | homebrew | shell  |
 | [tldr++](https://github.com/isacikgoz/tldr)               | Interactive cheatsheet tool                           | -    | homebrew | shell  |
@@ -120,9 +119,8 @@ The **DevOps** profile provides container orchestration, infrastructure as code,
 | [krew](https://sigs.k8s.io/krew)                             | kubectl plugin manager                 | ✓    | homebrew | apt    |
 | [kubectl](https://kubernetes.io/docs/reference/kubectl)      | Kubernetes command-line tool           | ✓    | homebrew | apt    |
 | [kubectx](https://github.com/ahmetb/kubectx)                 | Kubernetes context/namespace switcher  | ✓    | homebrew | apt    |
-| [mc](https://github.com/minio/mc)                            | MinIO client for object storage        | ✓    | homebrew | apt    |
 | [mkcert](https://github.com/FiloSottile/mkcert)              | Make locally trusted certificates      | -    | homebrew | shell  |
-| [oc](https://www.openshift.com)                              | OpenShift CLI                          | -    | homebrew | apt    |
+| [oc](https://www.openshift.com)                              | OpenShift CLI                          | ✓    | homebrew | apt    |
 | [scw](https://github.com/scaleway/scaleway-cli)              | Scaleway CLI                           | -    | homebrew | apt    |
 | [sshpass](https://sourceforge.net/projects/sshpass)          | Non-interactive SSH password auth      | ✓    | homebrew | apt    |
 | [teleport](https://goteleport.com)                           | Modern SSH server for clusters         | -    | homebrew | apt    |

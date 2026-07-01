@@ -15,7 +15,7 @@ install_lite_setup() {
     krew \
     kubectx \
     kubernetes-cli \
-    minio-mc \
+    openshift-cli \
     sshpass \
     terraform
 
@@ -46,7 +46,6 @@ install_additional_setup() {
     k9s \
     kind \
     mkcert \
-    openshift-cli \
     scw \
     teleport \
     velero \

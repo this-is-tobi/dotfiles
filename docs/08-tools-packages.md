@@ -193,11 +193,9 @@ Network tools and SSH (Base/DevOps profiles):
 
 File transfer and cloud storage (Base profile):
 
-| Tool   | Purpose               | Providers                | Source       |
-| ------ | --------------------- | ------------------------ | ------------ |
-| rclone | Cloud storage CLI     | AWS S3, GCS, Azure, etc. | homebrew/apt |
-| rsync  | Incremental file sync | -                        | homebrew/apt |
-| mc     | MinIO/S3 client       | S3-compatible            | homebrew/apt |
+| Tool   | Purpose           | Providers                | Source       |
+| ------ | ----------------- | ------------------------ | ------------ |
+| rclone | Cloud storage CLI | AWS S3, GCS, Azure, etc. | homebrew/apt |
 
 ### Monitoring & Diagnostics
 

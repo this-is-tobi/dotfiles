@@ -19,8 +19,8 @@ install_lite_setup() {
     man \
     man-db \
     manpages-dev \
+    rclone \
     ripgrep \
-    rsync \
     tree \
     vim \
     watch \
@@ -103,7 +103,6 @@ install_additional_setup() {
     lazygit \
     nmap \
     pandoc \
-    rclone \
     ttyd \
     vhs
 
