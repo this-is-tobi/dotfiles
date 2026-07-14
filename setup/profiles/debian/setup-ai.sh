@@ -5,6 +5,14 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
+install_lite_setup() {
+  # Install direnv
+  if [ ! -x "$(command -v direnv)" ]; then
+    printf "\n\n${red}[ai] =>${no_color} Install direnv\n\n"
+    sudo apt update && sudo apt install -y direnv
+  fi
+}
+
 install_additional_setup() {
   # Install claude-code cli
   if [ ! -x "$(command -v claude-code)" ]; then
@@ -31,6 +39,9 @@ install_additional_setup() {
   fi
 }
 
+
+# Install lite setup
+install_lite_setup
 
 # Install full setup
 if [ "$FULL_MODE_SETUP" = "true" ]; then
