@@ -247,9 +247,9 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   # Configure Claude Code MCP servers
   if [ -x "$(command -v claude)" ]; then
-    claude mcp add --transport http context7 https://mcp.context7.com/mcp -H "CONTEXT7_API_KEY: ${CONTEXT7_API_KEY}" -s user
+    claude mcp add --transport http context7 https://mcp.context7.com/mcp -H 'CONTEXT7_API_KEY: ${CONTEXT7_API_KEY}' -s user
     claude mcp add kubernetes -s user -- npx -y kubernetes-mcp-server@latest
-    claude mcp add argocd -s user -e ARGOCD_BASE_URL=https://gitops.ohmlab.fr -e ARGOCD_API_TOKEN="${ARGOCD_API_TOKEN}" -- npx -y argocd-mcp@latest stdio
+    claude mcp add argocd -s user -e ARGOCD_BASE_URL=https://gitops.ohmlab.fr -e ARGOCD_API_TOKEN='${ARGOCD_API_TOKEN}' -- npx -y argocd-mcp@latest stdio
     claude mcp add playwright -s user -- npx -y @playwright/mcp@latest
   fi
 fi

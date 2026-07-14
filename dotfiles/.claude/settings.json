@@ -15,5 +15,20 @@
   "effortLevel": "high",
   "attribution": {
     "commit": ""
+  },
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/secrets/**)",
+      "Edit(.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/*.pem)",
+      "Edit(**/*.key)",
+      "Edit(**/secrets/**)",
+      "Bash(skate list *)"
+    ]
   }
 }
