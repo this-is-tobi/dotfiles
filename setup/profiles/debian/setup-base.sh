@@ -115,13 +115,30 @@ install_additional_setup() {
     libimage-exiftool-perl \
     ffmpeg \
     github-cli \
-    glab \
     lazydocker \
     lazygit \
     nmap \
     pandoc \
     ttyd \
     vhs
+
+
+  # Install glab
+  # (installed from GitLab's own release packages rather than WakeMeOps:
+  # WakeMeOps' Packages index has repeatedly advertised a glab version whose
+  # .deb 404s on their mirror, e.g. this-is-tobi/tools#actions run 29404306736)
+  if [ ! -x "$(command -v glab)" ]; then
+    printf "\n\n${red}[base] =>${no_color} Install glab\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=amd64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=arm64
+    fi
+    GLAB_VERSION=$(curl -fsSL "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/releases" | jq -r '.[0].tag_name' | sed 's/v//g')
+    curl -fsSL -o /tmp/glab.deb "https://gitlab.com/gitlab-org/cli/-/releases/v${GLAB_VERSION}/downloads/glab_${GLAB_VERSION}_linux_${ARCH}.deb"
+    sudo apt install -y /tmp/glab.deb
+    rm /tmp/glab.deb
+  fi
 
 
   # Install gh extensions
