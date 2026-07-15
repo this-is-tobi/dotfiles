@@ -244,9 +244,16 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   $SCRIPT_PATH/helpers/proto.sh
 
 
+  # Install nvim eslint fallback config dependencies
+  if [ -x "$(command -v npm)" ]; then
+    (cd "$HOME/.config/eslint-fallback" && npm install)
+  fi
+
+
   # Install .vscode configs
   if [ -x "$(command -v code)" ]; then
     cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+    gsed -i "s|__HOME__|$HOME|g" "$HOME/Library/Application Support/Code/User/settings.json"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/Library/Application Support/Code/User/mcp.json"
     VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
       | grep -v '//' \

@@ -1,0 +1,13 @@
+{
+  "name": "eslint-fallback",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Fallback ESLint flat config used by Neovim and VS Code when a project has no local ESLint config",
+  "dependencies": {
+    "@antfu/eslint-config": "^9.1.0",
+    "eslint": "^10.7.0",
+    "eslint-flat-config-utils": "^3.2.0",
+    "jiti": "^2.7.0"
+  }
+}

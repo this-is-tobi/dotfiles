@@ -205,10 +205,17 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   $SCRIPT_PATH/helpers/proto.sh
 
 
+  # Install nvim eslint fallback config dependencies
+  if [ -x "$(command -v npm)" ]; then
+    (cd "$HOME/.config/eslint-fallback" && npm install)
+  fi
+
+
   # Install .vscode configs
   if [ -x "$(command -v code)" ]; then
     mkdir -p "$HOME/.config/Code/User"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.config/Code/User/settings.json"
+    sed -i "s|__HOME__|$HOME|g" "$HOME/.config/Code/User/settings.json"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/.config/Code/User/mcp.json"
     VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
       | grep -v '//' \
@@ -221,6 +228,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ -x "$(command -v code-server)" ]; then
     mkdir -p "$HOME/.local/share/code-server/User"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.local/share/code-server/User/settings.json"
+    sed -i "s|__HOME__|$HOME|g" "$HOME/.local/share/code-server/User/settings.json"
     cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/.local/share/code-server/User/mcp.json"
     VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
       | grep -v '//' \
