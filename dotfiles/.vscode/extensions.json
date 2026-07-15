@@ -1,24 +1,38 @@
 {
   "recommendations": [
     // ai
+    "anthropic.claude-code",
     "continue.continue",
 
     // ansible
     "redhat.ansible",
-    
+
     // csv
     "mechatroner.rainbow-csv",
 
     // css
     "csstools.postcss",
     "stylelint.vscode-stylelint",
-    "voorjaar.windicss-intellisense",
+
+    // database
+    "cweijan.vscode-database-client2",
+    "cweijan.dbclient-jdbc",
+
+    // docker
+    "docker.docker",
+    "ms-azuretools.vscode-containers",
+    "ms-azuretools.vscode-docker",
 
     // eslint
     "dbaeumer.vscode-eslint",
 
     // general
+    "editorconfig.editorconfig",
     "ms-vscode-remote.remote-containers",
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.remote-ssh-edit",
+    "ms-vscode.makefile-tools",
+    "ms-vscode.remote-explorer",
     "ms-vsliveshare.vsliveshare",
     "oderwat.indent-rainbow",
     "pflannery.vscode-versionlens",
@@ -35,6 +49,7 @@
     // git
     "eamodio.gitlens",
     "GitHub.vscode-pull-request-github",
+    "gitlab.gitlab-workflow",
     "mhutchie.git-graph",
     "vivaxy.vscode-conventional-commits",
 
@@ -54,8 +69,17 @@
     // prisma ORM
     "prisma.prisma",
 
+    // python
+    "ms-python.debugpy",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.vscode-python-envs",
+
     // terraform
     "hashicorp.terraform",
+
+    // testing
+    "ms-playwright.playwright",
 
     // themes & icons
     "GitHub.github-vscode-theme",
@@ -67,6 +91,7 @@
 
     // vue
     "hollowtree.vue-snippets",
+    "stormier.vue-dsfr-snippets",
     "Vue.volar",
 
     // yaml

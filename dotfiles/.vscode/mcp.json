@@ -27,7 +27,7 @@
       "command": "npx",
       "args": ["-y", "argocd-mcp@latest", "stdio"],
       "env": {
-        "ARGOCD_BASE_URL": "https://gitops.ohmlab.fr",
+        "ARGOCD_BASE_URL": "https://gitops.core.ohmlab.fr",
         "ARGOCD_API_TOKEN": "${env:ARGOCD_API_TOKEN}"
       }
     },

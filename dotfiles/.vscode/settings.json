@@ -8,7 +8,6 @@
   "workbench.fontAliasing": "antialiased",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.editor.showTabs": "multiple",
-  "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
   "editor.fontFamily": "Input Mono, Fira Code, monospace",
   "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss06', 'zero'",
   "editor.cursorBlinking": "phase",
@@ -33,7 +32,8 @@
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
   },
-  "diffEditor.ignoreTrimWhitespace": false,
+  "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
+  "terminal.integrated.gpuAcceleration": "off",
   // general
   "editor.unicodeHighlight.invisibleCharacters": false,
   "security.workspace.trust.untrustedFiles": "open",
@@ -128,6 +128,14 @@
   "[helm-template]": {
     "editor.formatOnSave": false
   },
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ],
   "go.toolsManagement.autoUpdate": true,
   // conventional commits
   "conventionalCommits.showNewVersionNotes": false,
@@ -144,8 +152,13 @@
   // markdown preview
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
+  "markdown-preview-enhanced.enablePreviewZenMode": false,
   // extensions
   "database-client.autoSync": true,
+  "docker.extension.enableComposeLanguageServer": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "gitlens.ai.model": "vscode",
+  "claudeCode.preferredLocation": "sidebar",
   // copilot
   "github.copilot.chat.agent.autoFix": true,
   "github.copilot.chat.reviewAgent.enabled": true,
@@ -188,6 +201,7 @@
     "~/.claude/skills": true
   },
   "chat.useHooks": true,
+  "chat.useClaudeHooks": true,
   "chat.hookFilesLocations": {
     "~/.copilot/hooks": true
   },
@@ -242,7 +256,7 @@
     // ── text processing ───────────────────────────────────────────────────
     "awk": true,
     "sed": true,
-    "/^sed\\b.*-i\\b/": false,            // block in-place edits
+    "/^sed\\b.*-i\\b/": false, // block in-place edits
     "jq": true,
     "yq": true,
     "column": true,
@@ -287,7 +301,7 @@
     "pnpm": true,
     // ── go ───────────────────────────────────────────────────────────────
     "go": true,
-    "/^go\\b.*(install|get)\\b/": false,  // block fetching/installing packages
+    "/^go\\b.*(install|get)\\b/": false, // block fetching/installing packages
     // ── PowerShell read-only ─────────────────────────────────────────────
     "Get-ChildItem": true,
     "Get-Content": true,
@@ -355,15 +369,14 @@
     "sp": false,
     "Set-Acl": false,
     "Invoke-Expression": false,
-    "iex": false,
+    "iex": false
   },
   "chat.tools.global.autoApprove": false,
   "chat.mcp.autostart": "newAndOutdated",
   "chat.mcp.gallery.enabled": true,
   "chat.mcp.serverSampling": {},
   "chat.tools.urls.autoApprove": {
-    "https://code.visualstudio.com": true,
-    "https://github.com/microsoft/vscode/wiki/*": true,
-    "https://artifacthub.io": true,
+    "https://artifacthub.io": true
   },
+  "chat.viewSessions.orientation": "stacked"
 }
