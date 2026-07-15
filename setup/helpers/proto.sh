@@ -1,7 +1,11 @@
 #!/bin/bash
+set -eo pipefail
+# Note: deliberately no `set -u` — macOS ships bash 3.2, where an empty array
+# (e.g. SECURE_PROXIES when no proxy matches below) combined with nounset
+# makes "${arr[@]}" a hard "unbound variable" error (fixed only in bash 4.4+).
 
 # Add proxy configuration to proto
-if ([ -n "$HTTP_PROXY" ] || [ -n "$HTTPS_PROXY" ]) && [ ! $(cat $HOME/.proto/.prototools | grep 'proxies =') ]; then
+if ([ -n "$HTTP_PROXY" ] || [ -n "$HTTPS_PROXY" ]) && ! grep -q 'proxies =' "$HOME/.proto/.prototools" 2>/dev/null; then
   PROXIES=()
   SECURE_PROXIES=()
   CUSTOM_HOSTS=()
@@ -32,7 +36,7 @@ if ([ -n "$HTTP_PROXY" ] || [ -n "$HTTPS_PROXY" ]) && [ ! $(cat $HOME/.proto/.pr
     fi
   fi
 
-  if [ -n "$(quote_and_join ${SECURE_PROXIES[@]})" ]; then
+  if [ -n "$(quote_and_join "${SECURE_PROXIES[@]}")" ]; then
     PROTO_ADDITIONAL_CONF="
       [settings.offline]
       custom-hosts = [ $(quote_and_join "${CUSTOM_HOSTS[@]}") ]
