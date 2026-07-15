@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
 # Colorize terminal
 red='\e[0;31m'
@@ -24,6 +24,7 @@ INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
 REMOVE_TMP_CONTENT="false"
 FULL_MODE_SETUP="true"
+DRY_RUN="false"
 
 # Declare script helper
 TEXT_HELPER="\nThis script aims to install a full setup for osx.
@@ -35,6 +36,8 @@ Following flags are available:
 
   -l    Run with lite mode, only major tools will be installed.
 
+  -n    Dry run: print resolved settings and exit without installing anything.
+
   -p    Install additional packages according to the given profile, available profiles are :
           -> 'ai'
           -> 'base'
@@ -43,7 +46,7 @@ Following flags are available:
           -> 'go'
           -> 'js'
           -> 'secops'
-        Default is no profile, this flag can be used with a CSV list (ex: -p "base,js").
+        Default is no profile, this flag can be used with a CSV list (ex: -p \"base,js\").
 
   -r    Remove all tmp files after installation.
 
@@ -54,7 +57,7 @@ print_help() {
 }
 
 # Parse options
-while getopts hcdlp:r flag; do
+while getopts hcdlnp:r flag; do
   case "${flag}" in
     c)
       INSTALL_COMPLETIONS="true";;
@@ -62,14 +65,24 @@ while getopts hcdlp:r flag; do
       COPY_DOTFILES="true";;
     l)
       FULL_MODE_SETUP="false";;
+    n)
+      DRY_RUN="true";;
     p)
-      [[ "$OPTARG" =~ "ai" ]] && INSTALL_AI="true"
-      [[ "$OPTARG" =~ "base" ]] && INSTALL_BASE="true"
-      [[ "$OPTARG" =~ "devops" ]] && INSTALL_DEVOPS="true"
-      [[ "$OPTARG" =~ "extras" ]] && INSTALL_EXTRAS="true"
-      [[ "$OPTARG" =~ "go" ]] && INSTALL_GO="true"
-      [[ "$OPTARG" =~ "js" ]] && INSTALL_JS="true"
-      [[ "$OPTARG" =~ "secops" ]] && INSTALL_SECOPS="true";;
+      IFS=',' read -ra PROFILES <<< "$OPTARG"
+      for profile in "${PROFILES[@]}"; do
+        case "$profile" in
+          ai) INSTALL_AI="true";;
+          base) INSTALL_BASE="true";;
+          devops) INSTALL_DEVOPS="true";;
+          extras) INSTALL_EXTRAS="true";;
+          go) INSTALL_GO="true";;
+          js) INSTALL_JS="true";;
+          secops) INSTALL_SECOPS="true";;
+          *)
+            printf "Error: unknown profile '%s'. Valid profiles: ai, base, devops, extras, go, js, secops\n" "$profile" >&2
+            exit 1;;
+        esac
+      done;;
     r)
       REMOVE_TMP_CONTENT="true";;
     h | *)
@@ -77,6 +90,25 @@ while getopts hcdlp:r flag; do
       exit 0;;
   esac
 done
+
+
+# Settings
+printf "\nScript settings:
+  -> install ${red}full setup${no_color}: ${red}$FULL_MODE_SETUP${no_color}
+  -> install ${red}[ai]${no_color} profile: ${red}$INSTALL_AI${no_color}
+  -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
+  -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
+  -> install ${red}[extras]${no_color} profile: ${red}$INSTALL_EXTRAS${no_color}
+  -> install ${red}[go]${no_color} profile: ${red}$INSTALL_GO${no_color}
+  -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}
+  -> install ${red}[secops]${no_color} profile: ${red}$INSTALL_SECOPS${no_color}
+  -> copy ${red}dotfiles${no_color}: ${red}$COPY_DOTFILES${no_color}
+  -> install ${red}cli completions${no_color}: ${red}$INSTALL_COMPLETIONS${no_color}\n"
+
+if [[ "$DRY_RUN" = "true" ]]; then
+  printf "\n${red}Dry run:${no_color} exiting without installing anything.\n"
+  exit 0
+fi
 
 
 # utils
@@ -124,17 +156,6 @@ if [ -z "$(brew --version)" ]; then
   done
 fi
 
-
-# Settings
-printf "\nScript settings:
-  -> install ${red}full setup${no_color}: ${red}$FULL_MODE_SETUP${no_color}
-  -> install ${red}[ai]${no_color} profile: ${red}$INSTALL_AI${no_color}
-  -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
-  -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
-  -> install ${red}[extras]${no_color} profile: ${red}$INSTALL_EXTRAS${no_color}
-  -> install ${red}[go]${no_color} profile: ${red}$INSTALL_GO${no_color}
-  -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}
-  -> install ${red}[secops]${no_color} profile: ${red}$INSTALL_SECOPS${no_color}\n"
 
 export FULL_MODE_SETUP=$FULL_MODE_SETUP
 
