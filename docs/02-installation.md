@@ -78,6 +78,8 @@ Available profiles:
 - `secops` - Security tools (scanners, secret management, etc.)
 - `extras` - Extra personal packages (macOS only)
 
+An unknown profile name (e.g. a typo) is rejected immediately with an error listing the valid profiles, rather than being silently ignored.
+
 ### Lite Mode
 
 For minimal installations with only essential tools, use the `-l` flag:
@@ -88,6 +90,17 @@ For minimal installations with only essential tools, use the `-l` flag:
 ```
 
 Lite mode installs only packages marked with an "x" in the "Lite mode" column of the package tables.
+
+### Dry Run
+
+To preview which profiles and options would be applied without installing anything, use the `-n` flag:
+
+```sh
+./setup/setup-osx.sh -n -p 'devops,secops,js'
+./setup/setup-debian.sh -n -p 'devops,secops,js'
+```
+
+This prints the resolved settings and exits before any package installation, dotfile copying, or interactive prompts.
 
 ### Help
 
@@ -104,7 +117,7 @@ The setup scripts are designed to run non-interactively by default, making them 
 
 #### Teleport Version (DevOps Profile)
 
-When installing the DevOps profile on Debian/Ubuntu, Teleport defaults to **v18** if not specified:
+Teleport is a Debian/Ubuntu-only, **full-mode-only** install (it's part of the `misc` [category](04-profiles.md#devops-profile) within the DevOps profile, installed by `install_additional_setup`, which `-l`/lite mode skips entirely). It defaults to **v18** if not specified:
 
 ```sh
 # Uses default v18
@@ -112,10 +125,9 @@ When installing the DevOps profile on Debian/Ubuntu, Teleport defaults to **v18*
 
 # Override with specific version
 TELEPORT_VERSION=v17 ./setup/setup-debian.sh -p devops
-
-# Works with lite mode too
-TELEPORT_VERSION=v16 ./setup/setup-debian.sh -l -p devops
 ```
+
+`-l` (lite mode) or `DEVOPS_CATEGORIES` set to anything excluding `misc` (e.g. `DEVOPS_CATEGORIES=k8s`) will skip Teleport entirely — in either case, `TELEPORT_VERSION` has no effect since the install step never runs.
 
 #### Use Cases
 
@@ -130,13 +142,20 @@ Non-interactive mode is particularly useful for:
 ```dockerfile
 FROM debian:bookworm
 
-# Optional: override default Teleport version
+# Optional: override default Teleport version (only takes effect in full
+# mode, i.e. without -l — see the note above)
 ENV TELEPORT_VERSION=v17
 
 RUN apt update && apt install -y curl git sudo && \
     git clone https://github.com/this-is-tobi/dotfiles.git /root/dotfiles && \
     cd /root/dotfiles && \
-    ./setup/setup-debian.sh -l -p devops
+    ./setup/setup-debian.sh -p devops
+```
+
+For a leaner image that only needs Kubernetes tooling (skipping Teleport, Terraform, Ansible, cloud CLIs, etc. entirely), combine `-l` with `DEVOPS_CATEGORIES` instead — see [DevOps Profile](04-profiles.md#devops-profile):
+
+```dockerfile
+RUN ... && DEVOPS_CATEGORIES=k8s ./setup/setup-debian.sh -l -p devops
 ```
 
 ## What Gets Installed

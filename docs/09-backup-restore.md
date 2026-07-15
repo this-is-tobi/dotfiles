@@ -25,8 +25,12 @@ The backup scripts save your dotfiles, configurations, and important system file
 
 **Options:**
 ```
--d, --destination DIR   Backup destination directory (default: ./backup-<timestamp>)
--h, --help             Display help message
+-f          Full backup: also include the entire home directory (Desktop, Documents,
+            Downloads, Movies, Music, Pictures, dev), not just ~/dev. For personal use.
+-n          Dry run: show what would be copied without copying anything.
+-o DIR      Output directory (default: current directory). The backup itself is
+            written to DIR/backup_<timestamp>.
+-h          Display help message
 ```
 
 **Examples:**
@@ -34,14 +38,17 @@ The backup scripts save your dotfiles, configurations, and important system file
 # Backup to default location
 ./backup/backup-osx.sh
 
-# Backup to specific directory
-./backup/backup-osx.sh -d ~/Dropbox/dotfiles-backup
+# Preview what a backup would copy, without copying anything
+./backup/backup-osx.sh -n
 
-# Backup to external drive
-./backup/backup-osx.sh -d /Volumes/Backup/dotfiles
+# Backup to specific directory
+./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
+
+# Full backup (entire home directory) to an external drive
+./backup/backup-osx.sh -f -o /Volumes/Backup/dotfiles
 
 # Backup to remote mount
-./backup/backup-osx.sh -d ~/mnt/nas/dotfiles
+./backup/backup-osx.sh -o ~/mnt/nas/dotfiles
 ```
 
 ### Debian/Ubuntu: backup-debian.sh
@@ -57,8 +64,12 @@ The backup scripts save your dotfiles, configurations, and important system file
 
 **Options:**
 ```
--d, --destination DIR   Backup destination directory (default: ./backup-<timestamp>)
--h, --help             Display help message
+-f          Full backup: also include the entire home directory, not just ~/dev.
+            For personal use.
+-n          Dry run: show what would be copied without copying anything.
+-o DIR      Output directory (default: current directory). The backup itself is
+            written to DIR/backup_<timestamp>.
+-h          Display help message
 ```
 
 **Examples:**
@@ -66,11 +77,14 @@ The backup scripts save your dotfiles, configurations, and important system file
 # Backup to default location
 ./backup/backup-debian.sh
 
+# Preview what a backup would copy, without copying anything
+./backup/backup-debian.sh -n
+
 # Backup to specific directory
-./backup/backup-debian.sh -d ~/backup/dotfiles
+./backup/backup-debian.sh -o ~/backup/dotfiles
 
 # Backup to mounted network share
-./backup/backup-debian.sh -d /mnt/backup/dotfiles
+./backup/backup-debian.sh -o /mnt/backup/dotfiles
 ```
 
 ## What Gets Backed Up
@@ -88,6 +102,10 @@ The backup scripts save your dotfiles, configurations, and important system file
 - `.config/gh-dash/` - GitHub Dashboard config
 - `.config/lazygit/` - Lazygit configuration
 - `.config/nvim/` - Neovim configuration
+
+### AI Agent Configs
+- `.claude/` - Claude Code settings, instructions, agents, skills, and memory/conversation history (caches, plugin installs, and other regenerable state are excluded)
+- `.copilot/` - Copilot CLI settings, instructions, agents, skills, and hooks (downloaded packages and session state are excluded)
 
 ### Application Configs
 - `.config/cheat/` - Cheat configuration
@@ -156,14 +174,14 @@ backup-2023-10-15-143022/
 ### Regular Backups
 ```sh
 # Weekly backup
-./backup/backup-osx.sh -d ~/Dropbox/dotfiles-backup
+./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
 
 # Use cron for automation (macOS/Linux)
 # Edit crontab
 crontab -e
 
 # Add weekly backup (Sunday at 2 AM)
-0 2 * * 0 /path/to/dotfiles/backup/backup-osx.sh -d ~/Dropbox/dotfiles-backup
+0 2 * * 0 /path/to/dotfiles/backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
 ```
 
 ### Version Control
@@ -182,16 +200,16 @@ git push -u origin main
 ### Multiple Destinations
 ```sh
 # Local backup
-./backup/backup-osx.sh -d ~/backups/dotfiles
+./backup/backup-osx.sh -o ~/backups/dotfiles
 
 # Cloud backup (Dropbox)
-./backup/backup-osx.sh -d ~/Dropbox/dotfiles-backup
+./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
 
 # Network backup
-./backup/backup-osx.sh -d /Volumes/NAS/backups/dotfiles
+./backup/backup-osx.sh -o /Volumes/NAS/backups/dotfiles
 
 # External drive
-./backup/backup-osx.sh -d /Volumes/Backup/dotfiles
+./backup/backup-osx.sh -o /Volumes/Backup/dotfiles
 ```
 
 ### Encryption
@@ -199,7 +217,7 @@ For sensitive data:
 
 ```sh
 # Backup first
-./backup/backup-osx.sh -d ~/backup-temp
+./backup/backup-osx.sh -o ~/backup-temp
 
 # Encrypt with gpg
 tar czf - ~/backup-temp | gpg -c > dotfiles-backup.tar.gz.gpg
@@ -309,7 +327,7 @@ Setup rclone for cloud storage:
 rclone config
 
 # Backup to cloud
-./backup/backup-osx.sh -d /tmp/dotfiles-backup
+./backup/backup-osx.sh -o /tmp/dotfiles-backup
 rclone sync /tmp/dotfiles-backup remote:dotfiles-backup
 
 # Restore from cloud
@@ -330,7 +348,7 @@ Backup to remote server:
 
 ```sh
 # Initial backup
-./backup/backup-osx.sh -d /tmp/dotfiles-backup
+./backup/backup-osx.sh -o /tmp/dotfiles-backup
 rsync -avz /tmp/dotfiles-backup user@server:/backups/
 
 # Restore from remote
@@ -343,7 +361,7 @@ Backup to private Git repository:
 
 ```sh
 # Create backup
-./backup/backup-osx.sh -d ~/dotfiles-backup
+./backup/backup-osx.sh -o ~/dotfiles-backup
 
 # Initialize git
 cd ~/dotfiles-backup
@@ -365,10 +383,10 @@ git push -u origin main
 crontab -e
 
 # Daily backup at 2 AM
-0 2 * * * /Users/you/dotfiles/backup/backup-osx.sh -d ~/Dropbox/dotfiles-backup
+0 2 * * * /Users/you/dotfiles/backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
 
 # Weekly backup on Sunday at 3 AM with cloud sync
-0 3 * * 0 /Users/you/dotfiles/backup/backup-osx.sh -d /tmp/backup && rclone sync /tmp/backup remote:dotfiles
+0 3 * * 0 /Users/you/dotfiles/backup/backup-osx.sh -o /tmp/backup && rclone sync /tmp/backup remote:dotfiles
 ```
 
 ### launchd (macOS)
@@ -385,7 +403,7 @@ Create `~/Library/LaunchAgents/com.user.dotfiles-backup.plist`:
     <key>ProgramArguments</key>
     <array>
         <string>/Users/you/dotfiles/backup/backup-osx.sh</string>
-        <string>-d</string>
+        <string>-o</string>
         <string>/Users/you/Dropbox/dotfiles-backup</string>
     </array>
     <key>StartCalendarInterval</key>
@@ -415,7 +433,7 @@ Description=Dotfiles Backup
 [Service]
 Type=oneshot
 User=you
-ExecStart=/home/you/dotfiles/backup/backup-debian.sh -d /home/you/backups/dotfiles
+ExecStart=/home/you/dotfiles/backup/backup-debian.sh -o /home/you/backups/dotfiles
 ```
 
 Create `/etc/systemd/system/dotfiles-backup.timer`:
@@ -457,7 +475,7 @@ Use time-stamped backups:
 
 ```sh
 # Create dated backup
-./backup/backup-osx.sh -d ~/backups/dotfiles-$(date +%Y-%m-%d)
+./backup/backup-osx.sh -o ~/backups/dotfiles-$(date +%Y-%m-%d)
 
 # Keep last 7 days, delete older
 find ~/backups -name 'dotfiles-*' -mtime +7 -exec rm -rf {} \;
@@ -469,7 +487,7 @@ Only backup changed files:
 
 ```sh
 # First full backup
-./backup/backup-osx.sh -d ~/backups/full
+./backup/backup-osx.sh -o ~/backups/full
 
 # Subsequent differential backups
 rsync -av --compare-dest=~/backups/full ~ ~/backups/diff-$(date +%Y-%m-%d)

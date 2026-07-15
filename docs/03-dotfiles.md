@@ -15,6 +15,7 @@ The `dotfiles/` directory contains template configuration files for various appl
 ├── .config/
 │   ├── cheat/           # Cheat sheet configuration
 │   ├── dotfiles/        # Custom functions and completions
+│   ├── eslint-fallback/ # Shared ESLint config used when a project has none of its own
 │   ├── gh-dash/         # GitHub Dashboard configuration
 │   ├── lazygit/         # Lazygit TUI configuration
 │   └── nvim/            # Neovim configuration
@@ -123,6 +124,9 @@ Configuration for the [cheat](https://github.com/cheat/cheat) command:
 - Cheatsheet paths
 - Syntax highlighting
 - Editor preferences
+
+#### `.config/eslint-fallback/`
+Shared [`@antfu/eslint-config`](https://github.com/antfu/eslint-config)-based flat config (`eslint.config.mjs` + `package.json`), used by both Neovim and VS Code as a fallback when the project being edited has no ESLint config of its own. The config dispatches to a project's own `eslint.config.*` if one is found, so it's safe to reference unconditionally. Requires `npm install` in this directory once (done automatically by the setup scripts).
 
 #### `.config/gh-dash/config.yml`
 GitHub Dashboard TUI configuration:
