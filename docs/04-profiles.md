@@ -55,7 +55,7 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [ffmpeg](https://ffmpeg.org)                              | Audio video manipulation tool                                                                              | -    | homebrew | apt    |
 | [fzf](https://github.com/junegunn/fzf)                    | Command-line fuzzy finder                                                                                  | ✓    | homebrew | apt    |
 | [gh](https://cli.github.com)                              | GitHub official CLI                                                                                        | -    | homebrew | apt    |
-| [glab](https://gitlab.com/gitlab-org/cli)                 | GitLab official CLI                                                                                        | -    | homebrew | apt    |
+| [glab](https://gitlab.com/gitlab-org/cli)                 | GitLab official CLI                                                                                        | -    | homebrew | shell  |
 | [glow](https://github.com/charmbracelet/glow)             | Render markdown in the CLI with pizzazz                                                                    | ✓    | homebrew | apt    |
 | [lazydocker](https://github.com/jesseduffield/lazydocker) | Simple terminal UI for docker commands                                                                     | -    | homebrew | apt    |
 | [lazygit](https://github.com/jesseduffield/lazygit)       | Simple terminal UI for git commands                                                                        | -    | homebrew | apt    |
