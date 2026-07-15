@@ -168,8 +168,12 @@ install_additional_setup() {
     sudo cp -a /tmp/nvim/nvim-linux-${ARCH}/lib/. /usr/local/lib/
 
     mkdir -p ~/.fonts
-    curl -fsSL -o /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip && unzip /tmp/Hack.zip -d ~/.fonts
-    curl -fsSL -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
+    # -o: force overwrite. Both zips ship a README.md/LICENSE, so the second
+    # unzip always hits an overwrite prompt; on non-interactive stdin that
+    # prompt reads EOF and unzip exits 1 (a "warning" exit code) even though
+    # it correctly skips the file and continues - which set -e still aborts on.
+    curl -fsSL -o /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip && unzip -o /tmp/Hack.zip -d ~/.fonts
+    curl -fsSL -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip -o /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts
     fc-cache -fv
   fi
 

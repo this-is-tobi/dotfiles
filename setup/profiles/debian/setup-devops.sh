@@ -84,7 +84,7 @@ install_iac_lite() {
 
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible\n\n"
-    uv venv $HOME/.venv
+    [ -d "$HOME/.venv" ] || uv venv $HOME/.venv
     source $HOME/.venv/bin/activate
     uv pip install ansible
   fi
@@ -136,7 +136,10 @@ install_iac_full() {
 
   if [ ! -x "$(command -v ansible-lint)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible-lint\n\n"
-    uv venv $HOME/.venv
+    # Same venv as ansible (install_iac_lite), which always runs first: `uv
+    # venv` refuses to recreate an existing venv, so only create it here if
+    # install_iac_lite's "iac" category wasn't selected.
+    [ -d "$HOME/.venv" ] || uv venv $HOME/.venv
     source $HOME/.venv/bin/activate
     uv pip install ansible-dev-tools
   fi
@@ -156,7 +159,7 @@ install_cloud_full() {
     fi
     mkdir -p /tmp/awscli
     curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" -o /tmp/awscli/awscliv2.zip
-    cd /tmp/awscli && unzip -q awscliv2.zip
+    cd /tmp/awscli && unzip -oq awscliv2.zip
     sudo /tmp/awscli/aws/install
     rm -rf /tmp/awscli
   fi
