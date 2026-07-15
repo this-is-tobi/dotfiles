@@ -5,11 +5,27 @@ set -euo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
+# WakeMeOps' mirror occasionally 404s on a package version that's listed in
+# the Packages index but not yet synced to the CDN edge node serving the
+# request; retrying (which re-fetches the index and may hit a different
+# edge) typically clears it within a few tries.
+apt_install() {
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    if sudo apt update && sudo apt install -y "$@"; then
+      return 0
+    fi
+    printf "\n${red}[base] =>${no_color} apt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
+    sleep 10
+  done
+  return 1
+}
+
 
 install_lite_setup() {
   # Install apt packages
   printf "\n\n${red}[base] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     bat \
     cheat \
     coreutils \
@@ -73,7 +89,7 @@ install_lite_setup() {
     echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
       "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
-    sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   fi
 
   if ! grep -q -E "^docker:" /etc/group; then
@@ -94,7 +110,7 @@ install_lite_setup() {
 
 install_additional_setup() {
   # Install apt packages
-  sudo apt update && sudo apt install -y \
+  apt_install \
     chafa \
     libimage-exiftool-perl \
     ffmpeg \

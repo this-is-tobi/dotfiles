@@ -6,6 +6,21 @@ set -eo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Retry apt install a few times; apt mirrors (WakeMeOps in particular)
+# occasionally 404 on a package version that's listed in the index but not
+# yet synced to the CDN edge node serving the request.
+apt_install() {
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    if sudo apt update && sudo apt install -y "$@"; then
+      return 0
+    fi
+    printf "\napt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
+    sleep 10
+  done
+  return 1
+}
+
 # Console step increment
 i=1
 
@@ -110,7 +125,7 @@ export FULL_MODE_SETUP=$FULL_MODE_SETUP
 
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
-sudo apt update && sudo apt install -y \
+apt_install \
   build-essential \
   ca-certificates \
   curl \
@@ -130,7 +145,7 @@ sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen && locale-gen
 # Install zsh
 if [ ! -x "$(command -v zsh)" ]; then
   printf "\n${red}${i}.${no_color} Install zsh\n\n"
-  sudo apt install -y zsh
+  apt_install zsh
 fi
 
 # Make zsh the default shell

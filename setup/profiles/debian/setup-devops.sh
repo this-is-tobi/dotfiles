@@ -5,6 +5,22 @@ set -euo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
+# WakeMeOps' mirror occasionally 404s on a package version that's listed in
+# the Packages index but not yet synced to the CDN edge node serving the
+# request; retrying (which re-fetches the index and may hit a different
+# edge) typically clears it within a few tries.
+apt_install() {
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    if sudo apt update && sudo apt install -y "$@"; then
+      return 0
+    fi
+    printf "\n${red}[devops] =>${no_color} apt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
+    sleep 10
+  done
+  return 1
+}
+
 # Optionally restrict which tool categories get installed, e.g. for a
 # container image that only needs Kubernetes tooling:
 #   DEVOPS_CATEGORIES=k8s ./setup-debian.sh -p devops -l
@@ -23,7 +39,7 @@ devops_wants() {
 
 install_k8s_lite() {
   printf "\n\n${red}[devops/k8s] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     helm \
     helm-docs \
     krew \
@@ -45,7 +61,7 @@ install_k8s_lite() {
 
 install_iac_lite() {
   printf "\n\n${red}[devops/iac] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     terraform
 
   printf "\n\n${red}[devops/iac] =>${no_color} Install proto packages\n\n"
@@ -66,7 +82,7 @@ install_iac_lite() {
 
 install_misc_lite() {
   printf "\n\n${red}[devops/misc] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     sshpass
 }
 
@@ -80,7 +96,7 @@ install_lite_setup() {
 
 install_k8s_full() {
   printf "\n\n${red}[devops/k8s] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     argo \
     argocd \
     k9s \
@@ -104,7 +120,7 @@ install_k8s_full() {
 
 install_iac_full() {
   printf "\n\n${red}[devops/iac] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     libonig-dev \
     python3-dev
 
@@ -118,7 +134,7 @@ install_iac_full() {
 
 install_cloud_full() {
   printf "\n\n${red}[devops/cloud] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     scw
 
   if [ ! -x "$(command -v aws)" ]; then
@@ -138,7 +154,7 @@ install_cloud_full() {
 
 install_misc_full() {
   printf "\n\n${red}[devops/misc] =>${no_color} Install apt packages\n\n"
-  sudo apt update && sudo apt install -y \
+  apt_install \
     act \
     k6 \
     yamllint
@@ -173,7 +189,7 @@ install_misc_full() {
     . /etc/os-release
     echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/${ID?} ${VERSION_CODENAME?} ${TELEPORT_CHANNEL?}" \
       | sudo tee /etc/apt/sources.list.d/teleport.list > /dev/null
-    sudo apt update && sudo apt install -y teleport
+    apt_install teleport
   fi
 }
 
