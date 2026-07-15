@@ -1,13 +1,28 @@
 #!/bin/bash
+set -euo pipefail
 
 # Colorize terminal
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Optionally restrict which tool categories get installed, e.g. for a
+# container image that only needs Kubernetes tooling:
+#   DEVOPS_CATEGORIES=k8s ./setup-debian.sh -p devops -l
+# Categories: k8s, iac, cloud, misc. Default 'all' installs everything,
+# identical to the pre-existing behavior.
+DEVOPS_CATEGORIES="${DEVOPS_CATEGORIES:-all}"
 
-install_lite_setup() {
-  # Install apt packages
-  printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
+devops_wants() {
+  [ "$DEVOPS_CATEGORIES" = "all" ] && return 0
+  case ",$DEVOPS_CATEGORIES," in
+    *",$1,"*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+
+install_k8s_lite() {
+  printf "\n\n${red}[devops/k8s] =>${no_color} Install apt packages\n\n"
   sudo apt update && sudo apt install -y \
     helm \
     helm-docs \
@@ -15,13 +30,9 @@ install_lite_setup() {
     kubectl \
     kubectx \
     kubens \
-    oc \
-    sshpass \
-    terraform
+    oc
 
-
-  # Install krew plugins
-  printf "\n\n${red}[devops] =>${no_color} Install krew plugins\n\n"
+  printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
   krew install \
     cert-manager \
     cnpg \
@@ -30,10 +41,14 @@ install_lite_setup() {
     neat \
     stern \
     view-secret
+}
 
+install_iac_lite() {
+  printf "\n\n${red}[devops/iac] =>${no_color} Install apt packages\n\n"
+  sudo apt update && sudo apt install -y \
+    terraform
 
-  # Install proto packages
-  printf "\n\n${red}[devops] =>${no_color} Install proto packages\n\n"
+  printf "\n\n${red}[devops/iac] =>${no_color} Install proto packages\n\n"
   PACKAGES=(
     uv
   )
@@ -41,36 +56,73 @@ install_lite_setup() {
     proto install $pkg --pin global
   done
 
-
-  # Install ansible
   if [ ! -x "$(command -v ansible)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install ansible\n\n"
+    printf "\n\n${red}[devops/iac] =>${no_color} Install ansible\n\n"
     uv venv $HOME/.venv
     source $HOME/.venv/bin/activate
     uv pip install ansible
   fi
 }
 
-install_additional_setup() {
-  # Install apt packages
-  printf "\n\n${red}[devops] =>${no_color} Install apt packages\n\n"
+install_misc_lite() {
+  printf "\n\n${red}[devops/misc] =>${no_color} Install apt packages\n\n"
   sudo apt update && sudo apt install -y \
-    act \
+    sshpass
+}
+
+install_lite_setup() {
+  devops_wants k8s && install_k8s_lite
+  devops_wants iac && install_iac_lite
+  devops_wants misc && install_misc_lite
+  return 0
+}
+
+
+install_k8s_full() {
+  printf "\n\n${red}[devops/k8s] =>${no_color} Install apt packages\n\n"
+  sudo apt update && sudo apt install -y \
     argo \
     argocd \
-    k6 \
     k9s \
     kind \
+    velero
+
+  if [ ! -x "$(command -v ct)" ]; then
+    printf "\n\n${red}[devops/k8s] =>${no_color} Install chart-testing\n\n"
+    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
+      ARCH=amd64
+    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
+      ARCH=arm64
+    fi
+    mkdir /tmp/chart-testing
+    CT_VERSION=$(curl -fsSL "https://api.github.com/repos/helm/chart-testing/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
+    curl -fsSL -o /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/helm/chart-testing/releases/latest/download/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz"
+    tar -xf /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/chart-testing
+    sudo mv /tmp/chart-testing/ct /usr/local/bin/ct
+  fi
+}
+
+install_iac_full() {
+  printf "\n\n${red}[devops/iac] =>${no_color} Install apt packages\n\n"
+  sudo apt update && sudo apt install -y \
     libonig-dev \
-    python3-dev \
-    scw \
-    velero \
-    yamllint
+    python3-dev
 
+  if [ ! -x "$(command -v ansible-lint)" ]; then
+    printf "\n\n${red}[devops/iac] =>${no_color} Install ansible-lint\n\n"
+    uv venv $HOME/.venv
+    source $HOME/.venv/bin/activate
+    uv pip install ansible-dev-tools
+  fi
+}
 
-  # Install awscli
+install_cloud_full() {
+  printf "\n\n${red}[devops/cloud] =>${no_color} Install apt packages\n\n"
+  sudo apt update && sudo apt install -y \
+    scw
+
   if [ ! -x "$(command -v aws)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install awscli\n\n"
+    printf "\n\n${red}[devops/cloud] =>${no_color} Install awscli\n\n"
     if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
       ARCH=x86_64
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
@@ -82,18 +134,22 @@ install_additional_setup() {
     sudo /tmp/awscli/aws/install
     rm -rf /tmp/awscli
   fi
+}
 
+install_misc_full() {
+  printf "\n\n${red}[devops/misc] =>${no_color} Install apt packages\n\n"
+  sudo apt update && sudo apt install -y \
+    act \
+    k6 \
+    yamllint
 
-  # Install coder
   if [ ! -x "$(command -v coder)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install coder\n\n"
+    printf "\n\n${red}[devops/misc] =>${no_color} Install coder\n\n"
     curl -fsSL https://coder.com/install.sh | sh
   fi
 
-
-  # Install mkcert
   if [ ! -x "$(command -v mkcert)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install mkcert\n\n"
+    printf "\n\n${red}[devops/misc] =>${no_color} Install mkcert\n\n"
     if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
       ARCH=amd64
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
@@ -106,35 +162,8 @@ install_additional_setup() {
     sudo mv /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} /usr/local/bin/mkcert
   fi
 
-
-  # Install chart-testing
-  if [ ! -x "$(command -v ct)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install chart-testing\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=amd64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=arm64
-    fi
-    mkdir /tmp/chart-testing
-    CT_VERSION=$(curl -fsSL "https://api.github.com/repos/helm/chart-testing/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/helm/chart-testing/releases/latest/download/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz"
-    tar -xf /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/chart-testing
-    sudo mv /tmp/chart-testing/ct /usr/local/bin/ct
-  fi
-
-
-  # Install ansible-lint
-  if [ ! -x "$(command -v ansible-lint)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install ansible-lint\n\n"
-    uv venv $HOME/.venv
-    source $HOME/.venv/bin/activate
-    uv pip install ansible-dev-tools
-  fi
-
-
-  # Install teleport
   if [ ! -x "$(command -v tsh)" ]; then
-    printf "\n\n${red}[devops] =>${no_color} Install tsh\n\n"
+    printf "\n\n${red}[devops/misc] =>${no_color} Install tsh\n\n"
     # Default to v18 if not set
     TELEPORT_VERSION=${TELEPORT_VERSION:-v18}
     TELEPORT_CHANNEL=stable/${TELEPORT_VERSION?}
@@ -146,6 +175,14 @@ install_additional_setup() {
       | sudo tee /etc/apt/sources.list.d/teleport.list > /dev/null
     sudo apt update && sudo apt install -y teleport
   fi
+}
+
+install_additional_setup() {
+  devops_wants k8s && install_k8s_full
+  devops_wants iac && install_iac_full
+  devops_wants cloud && install_cloud_full
+  devops_wants misc && install_misc_full
+  return 0
 }
 
 
