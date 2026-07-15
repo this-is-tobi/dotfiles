@@ -25,9 +25,11 @@ ZSH_THEME="this-is-tobi" # gnzh
 plugins=(
   aliases
   ansible
+  argocd
   brew
   bun
   colored-man-pages
+  direnv
   docker
   docker-compose
   gh
@@ -35,17 +37,17 @@ plugins=(
   gitignore
   golang
   helm
+  k9s
   kind
   kubectl
   kubectx
-  microk8s
-  minikube
   nmap
   node
   npm
   oc
-  rsync
+  rclone
   scw
+  ssh
   sudo
   systemadmin
   terraform
