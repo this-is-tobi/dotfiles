@@ -156,14 +156,18 @@ install_additional_setup() {
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
       ARCH=arm64
     fi
-    mkdir /tmp/nvim
+    mkdir -p /tmp/nvim
     curl -fsSL -o /tmp/nvim/nvim-linux-${ARCH}.tar.gz "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.tar.gz"
-    tar -xf /tmp/nvim/nvim-linux-${ARCH}.tar.gz -C /tmp/nvim 
-    sudo mv /tmp/nvim/nvim-linux-${ARCH}/bin/* /usr/local/bin 
-    sudo mv /tmp/nvim/nvim-linux-${ARCH}/share/* /usr/local/share 
-    sudo mv /tmp/nvim/nvim-linux-${ARCH}/lib/* /usr/local/lib
+    tar -xf /tmp/nvim/nvim-linux-${ARCH}.tar.gz -C /tmp/nvim
+    # cp -a merges into existing directories (e.g. /usr/local/share/man,
+    # already created non-empty by bat-extras' man pages); a plain
+    # `mv .../share/* /usr/local/share` fails with "Directory not empty"
+    # since mv can't atomically rename a dir over an existing non-empty one.
+    sudo cp -a /tmp/nvim/nvim-linux-${ARCH}/bin/. /usr/local/bin/
+    sudo cp -a /tmp/nvim/nvim-linux-${ARCH}/share/. /usr/local/share/
+    sudo cp -a /tmp/nvim/nvim-linux-${ARCH}/lib/. /usr/local/lib/
 
-    mkdir ~/.fonts
+    mkdir -p ~/.fonts
     curl -fsSL -o /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip && unzip /tmp/Hack.zip -d ~/.fonts
     curl -fsSL -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts 
     fc-cache -fv
@@ -178,7 +182,7 @@ install_additional_setup() {
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
       ARCH=arm64
     fi
-    mkdir /tmp/skate
+    mkdir -p /tmp/skate
     SKATE_VERSION=$(curl -fsSL "https://api.github.com/repos/charmbracelet/skate/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
     curl -fsSL -o /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz "https://github.com/charmbracelet/skate/releases/latest/download/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz" \
       && tar -xf /tmp/skate/skate_${SKATE_VERSION}_Linux_${ARCH}.tar.gz -C /tmp/skate \

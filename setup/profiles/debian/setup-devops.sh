@@ -45,8 +45,18 @@ install_k8s_lite() {
     krew \
     kubectl \
     kubectx \
-    kubens \
     oc
+
+  # kubens: on amd64, Debian's native kubectx package wins apt's version
+  # resolution and already ships /usr/bin/kubens itself, so installing
+  # WakeMeOps' separate kubens package on top conflicts (dpkg won't let two
+  # unrelated packages own the same file, this-is-tobi/tools#actions run
+  # 29407034378). On arm64, WakeMeOps' newer kubectx wins instead and does
+  # NOT bundle kubens, so it's still needed there. Only install it if the
+  # kubectx package we ended up with didn't already provide it.
+  if [ ! -x "$(command -v kubens)" ]; then
+    apt_install kubens
+  fi
 
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
   krew install \
@@ -110,7 +120,7 @@ install_k8s_full() {
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
       ARCH=arm64
     fi
-    mkdir /tmp/chart-testing
+    mkdir -p /tmp/chart-testing
     CT_VERSION=$(curl -fsSL "https://api.github.com/repos/helm/chart-testing/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
     curl -fsSL -o /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/helm/chart-testing/releases/latest/download/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz"
     tar -xf /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/chart-testing
@@ -171,7 +181,7 @@ install_misc_full() {
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
       ARCH=arm64
     fi
-    mkdir /tmp/mkcert
+    mkdir -p /tmp/mkcert
     MKCERT_VERSION=$(curl -fsSL "https://api.github.com/repos/FiloSottile/mkcert/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
     curl -fsSL -o /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} "https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-v${MKCERT_VERSION}-linux-${ARCH}"
     chmod 755 /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH}

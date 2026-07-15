@@ -4,8 +4,11 @@
 red='\e[0;31m'
 no_color='\033[0m'
 
-# Get current script path
-REPO_ROOT=$(git rev-parse --show-toplevel)
+# Get current script path (relative to this file, not $PWD - this script is
+# invoked as an absolute path from a caller whose cwd may be the repo's
+# parent directory rather than inside the repo, where `git rev-parse
+# --show-toplevel` would fail)
+REPO_ROOT="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 
 # Set completion directory
 export COMPLETION_DIR=$HOME/.oh-my-zsh/completions

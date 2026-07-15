@@ -129,6 +129,10 @@ install_homebrew() {
 }
 
 if [ -z "$(xcode-select -p)" ]; then
+  if [ ! -t 0 ]; then
+    printf "Error: Command Line Tools are required but not installed, and this shell is non-interactive so the install prompt can't be answered. Install them first (xcode-select --install) or run this script from an interactive terminal.\n" >&2
+    exit 1
+  fi
   while true; do
     read -p "\nYou need Command Line Tools to run this script. Do you wish to install Command Line Tools?\n" yn
     case $yn in
@@ -143,6 +147,10 @@ if [ -z "$(xcode-select -p)" ]; then
 fi
 
 if [ -z "$(brew --version)" ]; then
+  if [ ! -t 0 ]; then
+    printf "Error: Homebrew is required but not installed, and this shell is non-interactive so the install prompt can't be answered. Install it first (see https://brew.sh) or run this script from an interactive terminal.\n" >&2
+    exit 1
+  fi
   while true; do
     read -p "You need homebrew to run this script. Do you wish to install homebrew?" yn
     case $yn in
@@ -303,7 +311,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ -x "$(command -v claude)" ]; then
     claude mcp add --transport http context7 https://mcp.context7.com/mcp -H 'CONTEXT7_API_KEY: ${CONTEXT7_API_KEY}' -s user
     claude mcp add kubernetes -s user -- npx -y kubernetes-mcp-server@latest
-    claude mcp add argocd -s user -e ARGOCD_BASE_URL=https://gitops.ohmlab.fr -e ARGOCD_API_TOKEN='${ARGOCD_API_TOKEN}' -- npx -y argocd-mcp@latest stdio
+    claude mcp add argocd -s user -e ARGOCD_BASE_URL=https://gitops.core.ohmlab.fr -e ARGOCD_API_TOKEN='${ARGOCD_API_TOKEN}' -- npx -y argocd-mcp@latest stdio
     claude mcp add playwright -s user -- npx -y @playwright/mcp@latest
   fi
 

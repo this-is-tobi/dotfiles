@@ -38,7 +38,7 @@ install_lite_setup() {
     elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
       ARCH=arm64
     fi
-    mkdir /tmp/gitleaks
+    mkdir -p /tmp/gitleaks
     CT_VERSION=$(curl -fsSL "https://api.github.com/repos/gitleaks/gitleaks/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
     curl -fsSL -o /tmp/gitleaks/gitleaks_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_${CT_VERSION}_linux_${ARCH}.tar.gz"
     tar -xf /tmp/gitleaks/gitleaks_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/gitleaks
