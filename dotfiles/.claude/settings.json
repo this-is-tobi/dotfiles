@@ -16,6 +16,17 @@
   "attribution": {
     "commit": ""
   },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "claude-security@claude-plugins-official": true
+  },
   "permissions": {
     "deny": [
       "Read(.env)",

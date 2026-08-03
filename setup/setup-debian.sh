@@ -284,7 +284,9 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
 
   # Install AI agent instructions & skills (Copilot + Claude Code personal setup)
-  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t claude -g
+  # -P installs Claude Code plugins at user scope; it runs after the settings.json copy above, which
+  # would otherwise drop the enabledPlugins/extraKnownMarketplaces keys the plugin registers there.
+  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t claude -g -P
   curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t copilot -g -c
 
 
