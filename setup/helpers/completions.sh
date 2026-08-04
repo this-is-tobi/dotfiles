@@ -13,6 +13,10 @@ REPO_ROOT="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 # Set completion directory
 export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
 
+# Most tools below are mise-managed, so their shims must be resolvable when
+# this runs standalone (e.g. `setup-debian.sh -c` without a profile).
+export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+
 
 # Create completion directory if not exists
 [ ! -d "$COMPLETION_DIR" ] && mkdir -p "$COMPLETION_DIR"
@@ -156,10 +160,10 @@ export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
   && pnpm completion zsh > $COMPLETION_DIR/_pnpm
 
 
-# Install proto completion
-[ -x "$(command -v proto)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install proto completion\n" \
-  && proto completions --shell zsh > $COMPLETION_DIR/_proto
+# Install mise completion
+[ -x "$(command -v mise)" ] \
+  && printf "\n${red}[completion] =>${no_color} Install mise completion\n" \
+  && mise completion zsh > $COMPLETION_DIR/_mise
 
 
 # Install scw completion

@@ -1,0 +1,37 @@
+# Global mise settings.
+#
+# Deliberately kept in conf.d/ rather than in config.toml: the setup profiles
+# install tools with `mise use --global`, which rewrites config.toml wholesale.
+# conf.d/*.toml is merged on top of it and therefore survives every profile run
+# and every re-run of the dotfiles copy step.
+#
+# There are deliberately no proxy settings: mise reads HTTP_PROXY, HTTPS_PROXY
+# and ALL_PROXY from the environment.
+#
+# setup/helpers/mise.sh exports the pin/disable_backends equivalents so that a
+# first-ever run, which installs tools before this file is copied into place,
+# behaves identically. Keep the two in sync.
+
+[settings]
+# Record resolved versions in mise.lock so a machine rebuilt from these dotfiles
+# gets the exact toolchain, not merely "latest at the time".
+lockfile = true
+
+# `mise use` writes the exact resolved version rather than a fuzzy range.
+pin = true
+
+# Install a missing tool on demand instead of failing.
+auto_install = true
+
+# asdf plugins are arbitrary shell scripts fetched from third-party repos; aqua
+# and ubi resolve release assets with checksum verification instead. Disabling
+# asdf keeps the supply chain to backends that verify what they download.
+# Note: this only affects NEW installs, it does not disable already-installed
+# asdf tools.
+disable_backends = ["asdf"]
+
+# Verify GitHub artifact attestations wherever upstream publishes them.
+github_attestations = true
+
+# Read .node-version / .go-version so repos that predate mise still resolve.
+idiomatic_version_file_enable_tools = ["node", "go"]
