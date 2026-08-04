@@ -98,7 +98,6 @@ Cloud provider tools (DevOps profile):
 
 | Tool | Platform            | Source         |
 | ---- | ------------------- | -------------- |
-| aws  | Amazon Web Services | homebrew/shell |
 | scw  | Scaleway            | homebrew/mise  |
 | oc   | OpenShift/OKD       | homebrew/mise  |
 
@@ -153,8 +152,13 @@ callable after `mise reshim`.
 | ---- | --------------------- | ------ |
 | uv   | Fast Python installer | mise   |
 
-Ansible and ansible-lint are installed into a `uv` virtualenv at `~/.venv` on
-Debian, and via Homebrew on macOS.
+On Debian, ansible and ansible-dev-tools are installed with
+`uv tool install --python`, which pins an explicit self-contained interpreter
+and exposes the entry points in `~/.local/bin`. They are **not** installed via
+mise: its pipx backend uses whichever `python3` it finds on the machine, which
+cannot be pinned and breaks when the distro or Homebrew moves that interpreter
+(ansible-core requires Python >= 3.12). Override with `ANSIBLE_PYTHON`.
+On macOS both come from Homebrew.
 
 #### Version Manager
 
@@ -387,7 +391,7 @@ Understanding the sources:
 | apt      | Debian/Ubuntu | System packages                  | ✓              |
 | mise     | All           | Language runtimes; CLI binaries on Debian | ✓     |
 | npm      | All           | Node.js packages                 | via mise       |
-| uv       | All           | Python packages (ansible venv)   | via mise       |
+| uv       | All           | Python packages (ansible)        | via mise       |
 | go       | All           | Go packages                      | via mise       |
 | Krew     | All           | kubectl plugins                  | via kubectl    |
 | gh       | All           | GitHub CLI extensions            | via gh         |

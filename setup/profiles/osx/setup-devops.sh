@@ -83,7 +83,6 @@ install_iac_full() {
 install_cloud_full() {
   printf "\n\n${red}[devops/cloud] =>${no_color} Install homebrew packages (cli)\n\n"
   brew install --formula \
-    awscli \
     scw
 }
 
