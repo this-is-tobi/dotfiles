@@ -6,9 +6,9 @@ set -eo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
-# Retry apt install a few times; apt mirrors (WakeMeOps in particular)
-# occasionally 404 on a package version that's listed in the index but not
-# yet synced to the CDN edge node serving the request.
+# Retry apt install a few times; Debian mirrors occasionally fail a fetch
+# mid-run (transient DNS, a mirror rotating out behind a round-robin, or a
+# proxy hiccup in CI) and a retry picks a fresh connection.
 apt_install() {
   local attempt
   for attempt in 1 2 3 4 5; do
@@ -169,11 +169,10 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   i=$(($i + 1))
 
   $SCRIPT_PATH/profiles/debian/setup-base.sh
-  export PROTO_HOME="$HOME/.proto"
-  export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PATH"
 
-  # Configure proto proxies
-  $SCRIPT_PATH/helpers/proto.sh
+  # Expose the tools the base profile just installed to the profiles that run
+  # after it.
+  export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 fi
 
 
@@ -230,14 +229,12 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   mkdir -p "$HOME/.config"
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=.*/TLDR_OS=linux/g' "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
-  cp "$SCRIPT_PATH/../dotfiles/.prototools" "$HOME/.proto/.prototools"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
+  # Copies .config/mise/conf.d/00-settings.toml among the rest. It is kept in
+  # conf.d/ rather than config.toml precisely so that re-running this step does
+  # not clobber the tool versions the profiles pinned via `mise use --global`.
   cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
-
-
-  # Configure proto proxies
-  $SCRIPT_PATH/helpers/proto.sh
 
 
   # Install nvim eslint fallback config dependencies
