@@ -66,6 +66,16 @@ install_k8s_lite() {
     view-secret
 }
 
+# ansible is installed by uv rather than mise. mise's pipx backend picks
+# whichever python3 it finds on the machine - Homebrew's on macOS, the distro's
+# on Debian - which is both unpinnable (no mise setting controls it) and
+# fragile: ansible-core requires >= 3.12, so a distro shipping 3.11 cannot
+# satisfy it, and a brew python upgrade orphans the venv it was built against.
+# `uv tool install --python` pins an explicit, self-contained interpreter that
+# neither apt nor brew can move, and puts the entry points in ~/.local/bin
+# (already on PATH) instead of a venv that has to be activated first.
+ANSIBLE_PYTHON="${ANSIBLE_PYTHON:-3.13}"
+
 install_iac_lite() {
   printf "\n\n${red}[devops/iac] =>${no_color} Install mise packages\n\n"
   mise_use \
@@ -74,9 +84,7 @@ install_iac_lite() {
 
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible\n\n"
-    [ -d "$HOME/.venv" ] || uv venv $HOME/.venv
-    source $HOME/.venv/bin/activate
-    uv pip install ansible
+    uv tool install --python "$ANSIBLE_PYTHON" ansible
   fi
 }
 
@@ -116,13 +124,9 @@ install_iac_full() {
     python3-dev
 
   if [ ! -x "$(command -v ansible-lint)" ]; then
-    printf "\n\n${red}[devops/iac] =>${no_color} Install ansible-lint\n\n"
-    # Same venv as ansible (install_iac_lite), which always runs first: `uv
-    # venv` refuses to recreate an existing venv, so only create it here if
-    # install_iac_lite's "iac" category wasn't selected.
-    [ -d "$HOME/.venv" ] || uv venv $HOME/.venv
-    source $HOME/.venv/bin/activate
-    uv pip install ansible-dev-tools
+    printf "\n\n${red}[devops/iac] =>${no_color} Install ansible-dev-tools\n\n"
+    # Same interpreter as ansible above so both toolchains agree.
+    uv tool install --python "$ANSIBLE_PYTHON" ansible-dev-tools
   fi
 }
 
@@ -132,23 +136,6 @@ install_cloud_full() {
   printf "\n\n${red}[devops/cloud] =>${no_color} Install mise packages\n\n"
   mise_use \
     aqua:scaleway/scaleway-cli@latest
-
-  # awscli v2 is not a portable single binary - it ships a bundled Python
-  # runtime and an installer that lays out /usr/local/aws-cli - so it stays on
-  # AWS' own installer rather than moving to mise.
-  if [ ! -x "$(command -v aws)" ]; then
-    printf "\n\n${red}[devops/cloud] =>${no_color} Install awscli\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=x86_64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=aarch64
-    fi
-    mkdir -p /tmp/awscli
-    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" -o /tmp/awscli/awscliv2.zip
-    cd /tmp/awscli && unzip -oq awscliv2.zip
-    sudo /tmp/awscli/aws/install
-    rm -rf /tmp/awscli
-  fi
 }
 
 install_misc_full() {
