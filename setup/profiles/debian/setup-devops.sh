@@ -5,10 +5,15 @@ set -euo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
-# WakeMeOps' mirror occasionally 404s on a package version that's listed in
-# the Packages index but not yet synced to the CDN edge node serving the
-# request; retrying (which re-fetches the index and may hit a different
-# edge) typically clears it within a few tries.
+# Get current script path (this file lives in setup/profiles/debian/)
+SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
+
+# shellcheck source=../../helpers/mise.sh
+. "$SCRIPT_PATH/helpers/mise.sh"
+
+# Debian mirrors occasionally fail a fetch mid-run (transient DNS, a mirror
+# rotating out behind a round-robin, or a proxy hiccup in CI); retrying picks a
+# fresh connection and usually clears it.
 apt_install() {
   local attempt
   for attempt in 1 2 3 4 5; do
@@ -38,25 +43,17 @@ devops_wants() {
 
 
 install_k8s_lite() {
-  printf "\n\n${red}[devops/k8s] =>${no_color} Install apt packages\n\n"
-  apt_install \
-    helm \
-    helm-docs \
-    krew \
-    kubectl \
-    kubectx \
-    oc
-
-  # kubens: on amd64, Debian's native kubectx package wins apt's version
-  # resolution and already ships /usr/bin/kubens itself, so installing
-  # WakeMeOps' separate kubens package on top conflicts (dpkg won't let two
-  # unrelated packages own the same file, this-is-tobi/tools#actions run
-  # 29407034378). On arm64, WakeMeOps' newer kubectx wins instead and does
-  # NOT bundle kubens, so it's still needed there. Only install it if the
-  # kubectx package we ended up with didn't already provide it.
-  if [ ! -x "$(command -v kubens)" ]; then
-    apt_install kubens
-  fi
+  # kubens is its own mise tool (aqua:ahmetb/kubectx/kubens), installed
+  # alongside kubectx rather than bundled with it.
+  printf "\n\n${red}[devops/k8s] =>${no_color} Install mise packages\n\n"
+  mise_use \
+    helm@latest \
+    helm-docs@latest \
+    krew@latest \
+    kubectl@latest \
+    kubectx@latest \
+    kubens@latest \
+    oc@latest
 
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
   krew install \
@@ -70,17 +67,10 @@ install_k8s_lite() {
 }
 
 install_iac_lite() {
-  printf "\n\n${red}[devops/iac] =>${no_color} Install apt packages\n\n"
-  apt_install \
-    terraform
-
-  printf "\n\n${red}[devops/iac] =>${no_color} Install proto packages\n\n"
-  PACKAGES=(
-    uv
-  )
-  for pkg in ${PACKAGES[*]}; do
-    proto install $pkg --pin global
-  done
+  printf "\n\n${red}[devops/iac] =>${no_color} Install mise packages\n\n"
+  mise_use \
+    terraform@latest \
+    uv@latest
 
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible\n\n"
@@ -91,6 +81,8 @@ install_iac_lite() {
 }
 
 install_misc_lite() {
+  # sshpass stays on apt: it is a setuid-adjacent helper that pokes at the
+  # controlling tty, not a portable release binary.
   printf "\n\n${red}[devops/misc] =>${no_color} Install apt packages\n\n"
   apt_install \
     sshpass
@@ -105,27 +97,16 @@ install_lite_setup() {
 
 
 install_k8s_full() {
-  printf "\n\n${red}[devops/k8s] =>${no_color} Install apt packages\n\n"
-  apt_install \
-    argo \
-    argocd \
-    k9s \
-    kind \
-    velero
-
-  if [ ! -x "$(command -v ct)" ]; then
-    printf "\n\n${red}[devops/k8s] =>${no_color} Install chart-testing\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=amd64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=arm64
-    fi
-    mkdir -p /tmp/chart-testing
-    CT_VERSION=$(curl -fsSL "https://api.github.com/repos/helm/chart-testing/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz "https://github.com/helm/chart-testing/releases/latest/download/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz"
-    tar -xf /tmp/chart-testing/chart-testing_${CT_VERSION}_linux_${ARCH}.tar.gz -C /tmp/chart-testing
-    sudo mv /tmp/chart-testing/ct /usr/local/bin/ct
-  fi
+  # chart-testing has no short name in mise's registry, so it is addressed
+  # through its aqua package directly. It provides the `ct` binary.
+  printf "\n\n${red}[devops/k8s] =>${no_color} Install mise packages\n\n"
+  mise_use \
+    argo@latest \
+    argocd@latest \
+    k9s@latest \
+    kind@latest \
+    velero@latest \
+    aqua:helm/chart-testing@latest
 }
 
 install_iac_full() {
@@ -146,10 +127,15 @@ install_iac_full() {
 }
 
 install_cloud_full() {
-  printf "\n\n${red}[devops/cloud] =>${no_color} Install apt packages\n\n"
-  apt_install \
-    scw
+  # scw has no short name in mise's registry; aqua packages it under the
+  # upstream repository name.
+  printf "\n\n${red}[devops/cloud] =>${no_color} Install mise packages\n\n"
+  mise_use \
+    aqua:scaleway/scaleway-cli@latest
 
+  # awscli v2 is not a portable single binary - it ships a bundled Python
+  # runtime and an installer that lays out /usr/local/aws-cli - so it stays on
+  # AWS' own installer rather than moving to mise.
   if [ ! -x "$(command -v aws)" ]; then
     printf "\n\n${red}[devops/cloud] =>${no_color} Install awscli\n\n"
     if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
@@ -166,31 +152,18 @@ install_cloud_full() {
 }
 
 install_misc_full() {
-  printf "\n\n${red}[devops/misc] =>${no_color} Install apt packages\n\n"
-  apt_install \
-    act \
-    k6 \
-    yamllint
+  # yamllint resolves through mise's pipx backend, which provisions its own
+  # Python if none is present.
+  printf "\n\n${red}[devops/misc] =>${no_color} Install mise packages\n\n"
+  mise_use \
+    act@latest \
+    coder@latest \
+    k6@latest \
+    mkcert@latest \
+    yamllint@latest
 
-  if [ ! -x "$(command -v coder)" ]; then
-    printf "\n\n${red}[devops/misc] =>${no_color} Install coder\n\n"
-    curl -fsSL https://coder.com/install.sh | sh
-  fi
-
-  if [ ! -x "$(command -v mkcert)" ]; then
-    printf "\n\n${red}[devops/misc] =>${no_color} Install mkcert\n\n"
-    if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "amd64" ]; then
-      ARCH=amd64
-    elif [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-      ARCH=arm64
-    fi
-    mkdir -p /tmp/mkcert
-    MKCERT_VERSION=$(curl -fsSL "https://api.github.com/repos/FiloSottile/mkcert/releases/latest" | jq -r '.tag_name' | sed 's/v//g')
-    curl -fsSL -o /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} "https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-v${MKCERT_VERSION}-linux-${ARCH}"
-    chmod 755 /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH}
-    sudo mv /tmp/mkcert/mkcert-v${MKCERT_VERSION}-linux-${ARCH} /usr/local/bin/mkcert
-  fi
-
+  # Teleport stays on its own apt repository: tsh is one binary of a suite that
+  # also ships teleport/tctl/tbot plus a systemd unit.
   if [ ! -x "$(command -v tsh)" ]; then
     printf "\n\n${red}[devops/misc] =>${no_color} Install tsh\n\n"
     # Default to v18 if not set
@@ -215,11 +188,8 @@ install_additional_setup() {
 }
 
 
-# Add wakemeops debian repo
-if [ -z "$(find /etc/apt/ -name '*.list' | xargs cat | grep '^[[:space:]]*deb' | grep 'wakemeops')" ]; then
-  printf "\n\n${red}[devops] =>${no_color} Add wakemeops apt repository\n\n"
-  curl -fsSL https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
-fi
+# Install mise
+ensure_mise
 
 # Install lite setup
 install_lite_setup
