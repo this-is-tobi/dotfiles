@@ -196,8 +196,9 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
 
   $SCRIPT_PATH/profiles/osx/setup-base.sh
 
-  # Configure proto proxies
-  $SCRIPT_PATH/helpers/proto.sh
+  # Expose the tools the base profile just installed to the profiles that run
+  # after it.
+  export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 fi
 
 
@@ -263,14 +264,12 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   mkdir -p "$HOME/.config"
   cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && gsed -i 's/^# alias sed=.*/alias sed="gsed"/g' "$HOME/.zshrc"
   cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
-  cp "$SCRIPT_PATH/../dotfiles/.prototools" "$HOME/.proto/.prototools"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
+  # Copies .config/mise/conf.d/00-settings.toml among the rest. It is kept in
+  # conf.d/ rather than config.toml precisely so that re-running this step does
+  # not clobber the tool versions the profiles pinned via `mise use --global`.
   cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
-
-
-  # Configure proto proxies
-  $SCRIPT_PATH/helpers/proto.sh
 
 
   # Install nvim eslint fallback config dependencies
