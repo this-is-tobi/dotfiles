@@ -17,7 +17,7 @@ install_lite_setup() {
     fd \
     fzf \
     glow \
-    proto \
+    mise \
     rclone \
     ripgrep \
     sshs \

@@ -6,18 +6,19 @@ red='\e[0;31m'
 no_color='\033[0m'
 
 
-export PROTO_AUTO_INSTALL=true
-export PROTO_AUTO_CLEAN=true
+# Get current script path (this file lives in setup/profiles/osx/)
+SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
+
+# shellcheck source=../../helpers/mise.sh
+. "$SCRIPT_PATH/helpers/mise.sh"
 
 install_lite_setup() {
-  # Install proto packages
-  printf "\n\n${red}[go] =>${no_color} Install proto packages\n\n"
-  PACKAGES=(
-    go
-  )
-  for pkg in ${PACKAGES[*]}; do
-    proto install $pkg --pin global
-  done
+  # Install mise packages
+  # On macOS mise covers language runtimes only; Homebrew is the package
+  # manager for everything else.
+  printf "\n\n${red}[go] =>${no_color} Install mise packages\n\n"
+  mise_use \
+    go@latest
 }
 
 install_additional_setup() {
@@ -35,6 +36,9 @@ install_additional_setup() {
     github.com/spf13/cobra-cli@latest
 }
 
+
+# Install mise
+ensure_mise
 
 # Install lite setup
 install_lite_setup
