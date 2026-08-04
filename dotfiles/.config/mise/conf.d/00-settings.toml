@@ -18,6 +18,9 @@
 lockfile = true
 
 # `mise use` writes the exact resolved version rather than a fuzzy range.
+# Consequence: an exact pin is always "satisfied", so `mise upgrade` and
+# `mise outdated` alone report everything as up to date. Use `--bump` to
+# rewrite the pins - see docs/08-tools-packages.md.
 pin = true
 
 # Install a missing tool on demand instead of failing.
