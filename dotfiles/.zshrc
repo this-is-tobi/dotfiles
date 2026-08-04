@@ -137,9 +137,14 @@ export PATH="$GOBIN:$PATH"
 # tldr++
 TLDR_OS=osx # linux
 
-# proto
-export PROTO_HOME="$HOME/.proto"
-export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PROTO_HOME/tools/node/globals/bin:$PATH"
+# mise
+# `activate` puts tool versions on PATH and re-resolves them on every directory
+# change. Globals installed via npm/go land in the active tool's bin and are
+# exposed after `mise reshim`.
+export PATH="$HOME/.local/bin:$PATH"
+if type mise &>/dev/null; then
+  eval "$(mise activate zsh)"
+fi
 
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
