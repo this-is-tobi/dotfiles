@@ -432,8 +432,8 @@ brew update && brew upgrade
 # apt (Debian/Ubuntu)
 sudo apt update && sudo apt upgrade
 
-# mise tools
-mise upgrade
+# mise tools - --bump is required, see below
+mise upgrade --bump
 
 # npm packages
 npm update -g
@@ -441,6 +441,33 @@ npm update -g
 # kubectl plugins
 kubectl krew upgrade
 ```
+
+### Why `mise upgrade` needs `--bump`
+
+`~/.config/mise/conf.d/00-settings.toml` sets `pin = true`, so `mise use`
+records an exact version (`kubectl = "1.34.2"`) rather than a range. A plain
+`mise upgrade` only upgrades *within* the recorded constraint, and an exact
+version is always already satisfied — so it reports "All tools are up to date"
+and changes nothing, however old the tools are.
+
+`--bump` is what rewrites the pin to the current latest and installs it:
+
+```sh
+# See what is actually behind (plain `mise outdated` has the same blind spot)
+mise outdated --bump
+
+# Upgrade everything and rewrite the pins
+mise upgrade --bump
+
+# Upgrade a single tool
+mise upgrade --bump kubectl
+```
+
+Re-running a setup profile has the same effect, since each one installs its
+tools with `@latest`.
+
+Upgrading mise itself follows whichever way it was installed: `brew upgrade
+mise` on macOS, `mise self-update` on Debian.
 
 ## Further Resources
 
