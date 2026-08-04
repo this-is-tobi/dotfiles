@@ -59,15 +59,13 @@ sudo apt update
 sudo apt --fix-broken install
 ```
 
-3. **Reinstall WakeMeOps repository:**
+3. **Check sources:**
 ```sh
-curl https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | sudo bash
+cat /etc/apt/sources.list.d/*.list
 ```
 
-4. **Check sources:**
-```sh
-cat /etc/apt/sources.list.d/wakemeops.list
-```
+Note: CLI tooling no longer comes from apt - see the mise section below if the
+missing package is a tool rather than a system library.
 
 ### oh-my-zsh Installation Fails
 
@@ -488,27 +486,33 @@ brew reinstall --cask docker
 
 **Solutions:**
 
-1. **Check proto installation:**
+1. **Check mise installation:**
 ```sh
-proto --version
+mise --version
+mise doctor
 ```
 
 2. **Install Node:**
 ```sh
-proto install node 20
-proto use node 20
+mise use --global node@22
 ```
 
 3. **Check PATH:**
 ```sh
-echo $PATH | grep proto
+echo $PATH | grep mise
 ```
 
-4. **Add proto to PATH:**
+4. **Activate mise in the shell:**
 ```sh
-# Add to ~/.zshrc
-export PATH="$HOME/.proto/bin:$PATH"
+# Should already be in ~/.zshrc
+eval "$(mise activate zsh)"
 source ~/.zshrc
+```
+
+In non-interactive contexts (scripts, CI, container builds) `mise activate` is
+unavailable - put the shims directory on PATH instead:
+```sh
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 ```
 
 ### npm Permissions Error
@@ -517,10 +521,10 @@ source ~/.zshrc
 
 **Solutions:**
 
-1. **Use proto (recommended):**
+1. **Use mise (recommended):**
 ```sh
-proto install node
-# Proto manages permissions correctly
+mise use --global node@22
+# mise installs under $HOME, so no sudo and no permission juggling
 ```
 
 2. **Fix npm permissions:**
@@ -747,9 +751,9 @@ sudo apt autoremove  # Linux
 Pin important tool versions:
 
 ```sh
-# Proto
-proto pin node 20
-proto pin go 1.21
+# mise (writes to ~/.config/mise/config.toml)
+mise use --global node@22
+mise use --global go@1.24
 
 # Document in README
 echo "Node.js: $(node --version)" >> VERSIONS.md

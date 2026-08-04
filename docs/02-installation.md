@@ -178,9 +178,12 @@ Both platforms install:
 - macOS-specific configurations
 
 **Debian/Ubuntu:**
-- WakeMeOps repository for modern packages
-- apt package management
+- apt package management for system packages
+- [mise](https://mise.jdx.dev) for portable CLI binaries
 - Debian-specific system configurations
+
+**Both platforms:**
+- [mise](https://mise.jdx.dev) for language runtimes
 
 ## Post-Installation
 
@@ -260,12 +263,20 @@ If Homebrew installation fails:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### WakeMeOps Repository Issues (Debian)
+### mise Issues
 
-If package installation fails, verify the repository:
+If a tool fails to install, check mise itself first:
 
 ```sh
-curl https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository | bash
+mise doctor
+```
+
+Tool downloads resolve versions through the GitHub API, which rate-limits
+unauthenticated requests. On a shared IP or in CI this surfaces as HTTP 403 and
+is the most common cause of a failed run — export a token to raise the limit:
+
+```sh
+export GITHUB_TOKEN=<your-token>
 ```
 
 ### oh-my-zsh Already Installed
