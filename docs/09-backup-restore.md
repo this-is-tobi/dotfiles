@@ -111,7 +111,7 @@ The backup scripts save your dotfiles, configurations, and important system file
 - `.config/cheat/` - Cheat configuration
 - `.mattermost/` - Mattermost theme
 - `.continue/` - Continue.dev config
-- `.prototools` - Proto version manager
+- `.config/mise/` - mise settings and pinned tool versions
 
 ### Oh-my-zsh
 - `.oh-my-zsh/custom/` - Custom themes and plugins
@@ -130,7 +130,7 @@ The backup scripts save your dotfiles, configurations, and important system file
 The scripts also create package lists:
 - **macOS:** Homebrew package list
 - **Debian:** apt package list
-- **Proto:** Installed tool versions
+- **mise:** Installed tool versions (also captured via `.config/mise/`)
 - **npm:** Global packages (if installed)
 
 ## Backup Structure
@@ -142,12 +142,12 @@ backup-2023-10-15-143022/
 ├── dotfiles/
 │   ├── .zshrc
 │   ├── .gitconfig
-│   ├── .prototools
 │   └── .config/
 │       ├── dotfiles/
 │       ├── cheat/
 │       ├── gh-dash/
 │       ├── lazygit/
+│       ├── mise/
 │       └── nvim/
 ├── vscode/
 │   ├── settings.json
@@ -166,7 +166,7 @@ backup-2023-10-15-143022/
     ├── brew-packages.txt
     ├── brew-casks.txt
     ├── apt-packages.txt
-    └── proto-tools.txt
+    └── mise-tools.txt
 ```
 
 ## Backup Best Practices
@@ -306,14 +306,12 @@ xargs brew install --cask < ~/backups/dotfiles/package-lists/brew-casks.txt
 xargs sudo apt install -y < ~/backups/dotfiles/package-lists/apt-packages.txt
 ```
 
-**Proto tools:**
+**mise tools:**
 ```sh
-# Restore Proto tools
-while read -r line; do
-  tool=$(echo "$line" | awk '{print $1}')
-  version=$(echo "$line" | awk '{print $2}')
-  proto install "$tool" "$version"
-done < ~/backups/dotfiles/package-lists/proto-tools.txt
+# The backed-up ~/.config/mise/config.toml already holds every pinned version,
+# so restoring it and running install is enough:
+cp -R ~/backups/dotfiles/.config/mise ~/.config/
+mise install
 ```
 
 ## Remote Backups

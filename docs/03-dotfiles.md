@@ -18,6 +18,7 @@ The `dotfiles/` directory contains template configuration files for various appl
 │   ├── eslint-fallback/ # Shared ESLint config used when a project has none of its own
 │   ├── gh-dash/         # GitHub Dashboard configuration
 │   ├── lazygit/         # Lazygit TUI configuration
+│   ├── mise/            # mise settings (conf.d/00-settings.toml)
 │   └── nvim/            # Neovim configuration
 ├── .continue/           # Continue.dev AI configuration
 ├── .mattermost/         # Mattermost theme configuration
@@ -27,7 +28,6 @@ The `dotfiles/` directory contains template configuration files for various appl
 │   ├── mcp.json         # Model Context Protocol servers
 │   └── settings.json    # VS Code settings
 ├── .gitconfig           # Git configuration template
-├── .prototools          # Proto version manager configuration
 └── .zshrc               # Zsh shell configuration
 ```
 
@@ -163,11 +163,20 @@ Custom oh-my-zsh theme that combines:
 - Git status information
 - Custom prompt format
 
-#### `.prototools`
-Proto version manager configuration for:
-- Node.js version pinning
-- Go version management
-- Other language runtime versions
+#### `.config/mise/conf.d/00-settings.toml`
+mise settings:
+- Lockfile and version pinning for reproducible toolchains
+- Auto-install of missing tools
+- `asdf` backend disabled so installs come from checksum-verifying backends
+- Idiomatic version files (`.node-version`, `.go-version`) enabled
+
+Kept in `conf.d/` rather than `config.toml` on purpose: the setup profiles pin
+tools with `mise use --global`, which rewrites `config.toml`. Settings in
+`conf.d/` are merged on top and survive both that and a re-run of the dotfiles
+copy step.
+
+Installed tool versions themselves live in `~/.config/mise/config.toml`, which
+is machine state rather than a template and is therefore not tracked here.
 
 ## Using These Dotfiles
 

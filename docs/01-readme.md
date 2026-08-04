@@ -49,7 +49,14 @@ Dedicated backup scripts to save your dotfiles and configurations to local or re
 ## Supported Platforms
 
 - **macOS** - Full support with Homebrew integration
-- **Debian/Ubuntu** - Complete apt-based installation with WakeMeOps repository
+- **Debian/Ubuntu** - apt for system packages, [mise](https://mise.jdx.dev) for CLI tooling
+
+Package sources differ per platform by design:
+
+- **macOS** - Homebrew is the package manager for CLI tools and GUI apps.
+- **Debian/Ubuntu** - apt covers system packages (shared libraries, daemons, man
+  infrastructure); mise covers portable CLI binaries.
+- **Both** - mise manages language runtimes (node, go, bun, pnpm, yarn, uv).
 
 ## Project Structure
 

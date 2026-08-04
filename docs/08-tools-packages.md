@@ -34,12 +34,12 @@ Modern replacements and enhancements (Base profile):
 
 | Tool         | Replaces | Description                          | Source       |
 | ------------ | -------- | ------------------------------------ | ------------ |
-| bat          | cat      | Syntax highlighting, git integration | homebrew/apt |
-| eza          | ls       | Colors, icons, git status            | homebrew/apt |
-| fd           | find     | Simpler syntax, faster               | homebrew/apt |
-| ripgrep (rg) | grep     | Faster recursive search              | homebrew/apt |
-| fzf          | -        | Fuzzy finder for command line        | homebrew/apt |
-| yq           | -        | YAML processor (jq for YAML)         | homebrew/apt |
+| bat          | cat      | Syntax highlighting, git integration | homebrew/mise |
+| eza          | ls       | Colors, icons, git status            | homebrew/mise |
+| fd           | find     | Simpler syntax, faster               | homebrew/mise |
+| ripgrep (rg) | grep     | Faster recursive search              | homebrew/mise |
+| fzf          | -        | Fuzzy finder for command line        | homebrew/mise |
+| yq           | -        | YAML processor (jq for YAML)         | homebrew/mise |
 
 ### Git Tools
 
@@ -47,9 +47,9 @@ Git and platform CLIs (Base profile):
 
 | Tool    | Description         | Extensions         | Source       |
 | ------- | ------------------- | ------------------ | ------------ |
-| lazygit | Terminal UI for git | -                  | homebrew/apt |
-| gh      | GitHub CLI          | gh-dash, gh-notify | homebrew/apt |
-| glab    | GitLab CLI          | -                  | homebrew/apt |
+| lazygit | Terminal UI for git | -                  | homebrew/mise |
+| gh      | GitHub CLI          | gh-dash, gh-notify | homebrew/mise |
+| glab    | GitLab CLI          | -                  | homebrew/mise |
 
 **GitHub CLI Extensions:**
 ```sh
@@ -64,11 +64,11 @@ Docker and Kubernetes tools (DevOps profile):
 
 | Tool    | Purpose                    | Related Tools            | Source       |
 | ------- | -------------------------- | ------------------------ | ------------ |
-| docker  | Container runtime          | lazydocker               | shell/cask   |
-| kubectl | Kubernetes CLI             | k9s, kubectx, stern      | homebrew/apt |
-| helm    | Kubernetes package manager | chart-testing, helm-docs | homebrew/apt |
-| kind    | Local Kubernetes           | -                        | homebrew/apt |
-| k9s     | Kubernetes TUI             | -                        | homebrew/apt |
+| docker  | Container runtime          | lazydocker               | apt/cask     |
+| kubectl | Kubernetes CLI             | k9s, kubectx, stern      | homebrew/mise |
+| helm    | Kubernetes package manager | chart-testing, helm-docs | homebrew/mise |
+| kind    | Local Kubernetes           | -                        | homebrew/mise |
+| k9s     | Kubernetes TUI             | -                        | homebrew/mise |
 
 **kubectl Plugins (via Krew):**
 ```sh
@@ -87,10 +87,10 @@ IaC and configuration management (DevOps profile):
 
 | Tool         | Purpose                  | Config Files       | Source       |
 | ------------ | ------------------------ | ------------------ | ------------ |
-| terraform    | Infrastructure as code   | .tf                | homebrew/apt |
-| ansible      | Configuration management | .yml playbooks     | homebrew/pip |
-| ansible-lint | Ansible linter           | -                  | homebrew/pip |
-| kustomize    | Kubernetes config        | kustomization.yaml | homebrew/apt |
+| terraform    | Infrastructure as code   | .tf                | homebrew/mise |
+| ansible      | Configuration management | .yml playbooks     | homebrew/uv   |
+| ansible-lint | Ansible linter           | -                  | homebrew/uv   |
+| kustomize    | Kubernetes config        | kustomization.yaml | homebrew/mise |
 
 ### Cloud Platform CLIs
 
@@ -99,8 +99,8 @@ Cloud provider tools (DevOps profile):
 | Tool | Platform            | Source         |
 | ---- | ------------------- | -------------- |
 | aws  | Amazon Web Services | homebrew/shell |
-| scw  | Scaleway            | homebrew/apt   |
-| oc   | OpenShift/OKD       | homebrew/apt   |
+| scw  | Scaleway            | homebrew/mise  |
+| oc   | OpenShift/OKD       | homebrew/mise  |
 
 ### Security Tools
 
@@ -108,15 +108,15 @@ Scanning and secret management (SecOps profile):
 
 | Tool      | Purpose               | Scans                 | Source         |
 | --------- | --------------------- | --------------------- | -------------- |
-| trivy     | Vulnerability scanner | containers, IaC, code | homebrew/apt   |
-| cosign    | Container signing     | images                | homebrew/apt   |
-| sops      | Secret encryption     | files                 | homebrew/apt   |
-| vault     | Secret management     | -                     | homebrew/apt   |
-| gitleaks  | Secret detection      | git repos             | homebrew/shell |
-| age       | File encryption       | -                     | homebrew/apt   |
-| kubescape | Kubernetes security   | K8s configs           | homebrew/apt   |
-| kyverno   | Kubernetes policies   | K8s resources         | homebrew/apt   |
-| dive      | Image layer analysis  | Docker images         | homebrew/apt   |
+| trivy     | Vulnerability scanner | containers, IaC, code | homebrew/mise  |
+| cosign    | Container signing     | images                | homebrew/mise  |
+| sops      | Secret encryption     | files                 | homebrew/mise  |
+| vault     | Secret management     | -                     | homebrew/mise  |
+| gitleaks  | Secret detection      | git repos             | homebrew/mise  |
+| age       | File encryption       | -                     | homebrew/mise  |
+| kubescape | Kubernetes security   | K8s configs           | homebrew/mise  |
+| kyverno   | Kubernetes policies   | K8s resources         | homebrew/mise  |
+| dive      | Image layer analysis  | Docker images         | homebrew/mise  |
 
 ### Development Languages
 
@@ -126,44 +126,63 @@ Runtime and toolchain management:
 
 | Tool      | Purpose                 | Managed By | Source |
 | --------- | ----------------------- | ---------- | ------ |
-| node      | JavaScript runtime      | proto      | proto  |
-| npm       | Package manager         | proto      | proto  |
-| pnpm      | Fast package manager    | proto      | proto  |
-| yarn      | Package manager         | proto      | proto  |
-| bun       | Fast runtime & toolkit  | proto      | proto  |
+| node      | JavaScript runtime      | mise       | mise   |
+| npm       | Package manager         | node       | node   |
+| pnpm      | Fast package manager    | mise       | mise   |
+| yarn      | Package manager         | mise       | mise   |
+| bun       | Fast runtime & toolkit  | mise       | mise   |
 | @antfu/ni | Package manager wrapper | -          | npm    |
+
+`npm` is not pinned separately: it ships inside the node release. Globals
+installed with `npm install -g` land in the active node install and become
+callable after `mise reshim`.
 
 #### Go (Go profile)
 
-| Tool         | Purpose                 | Source       |
-| ------------ | ----------------------- | ------------ |
-| go           | Go compiler             | proto        |
-| cobra-cli    | CLI framework           | go install   |
-| kubebuilder  | Kubernetes API SDK      | homebrew/apt |
-| operator-sdk | Kubernetes operator SDK | homebrew/apt |
+| Tool         | Purpose                 | Source     |
+| ------------ | ----------------------- | ---------- |
+| go           | Go compiler             | mise       |
+| cobra-cli    | CLI framework           | go install |
+| kubebuilder  | Kubernetes API SDK      | homebrew/mise |
+| kustomize    | Kubernetes YAML overlay | homebrew/mise |
+| operator-sdk | Kubernetes operator SDK | homebrew/mise |
 
 #### Python (DevOps profile)
 
 | Tool | Purpose               | Source |
 | ---- | --------------------- | ------ |
-| uv   | Fast Python installer | proto  |
+| uv   | Fast Python installer | mise   |
+
+Ansible and ansible-lint are installed into a `uv` virtualenv at `~/.venv` on
+Debian, and via Homebrew on macOS.
 
 #### Version Manager
 
-| Tool  | Languages              | Purpose                   | Source         |
-| ----- | ---------------------- | ------------------------- | -------------- |
-| proto | Node, Go, Python, etc. | Universal version manager | homebrew/shell |
+| Tool | Manages                                              | Source         |
+| ---- | ---------------------------------------------------- | -------------- |
+| mise | Language runtimes (both); CLI binaries (Debian only) | homebrew/shell |
+
+mise manages language runtimes on both platforms, and portable CLI binaries on
+Debian. On macOS, Homebrew is the package manager for CLI tools.
 
 **Usage:**
 ```sh
-# Install Node.js version
-proto install node 20
+# Install a tool globally and pin it
+mise use --global node@22
 
-# Use specific version
-proto use node 20
+# Install without pinning globally (current directory only)
+mise use node@22
 
-# Pin version for project
-proto pin node 20
+# List installed / available versions
+mise ls
+mise ls-remote node
+
+# Tools not in the registry are addressed by backend
+mise use --global aqua:helm/chart-testing@latest
+mise use --global github:isacikgoz/tldr@latest
+
+# Refresh shims after installing globals via npm/go
+mise reshim
 ```
 
 ### Text & Document Tools
@@ -299,9 +318,9 @@ brew install --cask <app>       # Applications
 sudo apt install <package>
 ```
 
-**Proto (Version Manager):**
+**mise (CLI tools & language runtimes):**
 ```sh
-proto install <tool> <version>
+mise use --global <tool>@<version>
 ```
 
 **npm (Node Packages):**
@@ -362,16 +381,16 @@ Quick installation commands:
 
 Understanding the sources:
 
-| Manager  | Platform      | Purpose                   | Auto-Installed |
-| -------- | ------------- | ------------------------- | -------------- |
-| Homebrew | macOS         | System packages & apps    | ✓              |
-| apt      | Debian/Ubuntu | System packages           | ✓              |
-| Proto    | All           | Language runtime versions | ✓              |
-| npm      | All           | Node.js packages          | via Proto      |
-| pip      | All           | Python packages           | System         |
-| go       | All           | Go packages               | via Proto      |
-| Krew     | All           | kubectl plugins           | via kubectl    |
-| gh       | All           | GitHub CLI extensions     | via gh         |
+| Manager  | Platform      | Purpose                          | Auto-Installed |
+| -------- | ------------- | -------------------------------- | -------------- |
+| Homebrew | macOS         | CLI tools, system packages & GUI apps | ✓         |
+| apt      | Debian/Ubuntu | System packages                  | ✓              |
+| mise     | All           | Language runtimes; CLI binaries on Debian | ✓     |
+| npm      | All           | Node.js packages                 | via mise       |
+| uv       | All           | Python packages (ansible venv)   | via mise       |
+| go       | All           | Go packages                      | via mise       |
+| Krew     | All           | kubectl plugins                  | via kubectl    |
+| gh       | All           | GitHub CLI extensions            | via gh         |
 
 ## Verifying Installation
 
@@ -388,8 +407,8 @@ brew list
 # List apt packages (Debian)
 apt list --installed
 
-# Check Proto tools
-proto list
+# Check mise tools
+mise ls
 
 # Check npm global packages
 npm list -g --depth=0
@@ -409,8 +428,8 @@ brew update && brew upgrade
 # apt (Debian/Ubuntu)
 sudo apt update && sudo apt upgrade
 
-# Proto tools
-proto upgrade
+# mise tools
+mise upgrade
 
 # npm packages
 npm update -g
@@ -422,7 +441,8 @@ kubectl krew upgrade
 ## Further Resources
 
 - [Homebrew Packages](https://formulae.brew.sh/)
-- [WakeMeOps Repository](https://docs.wakemeops.com/)
-- [Proto Plugins](https://moonrepo.dev/proto/tools)
+- [mise Documentation](https://mise.jdx.dev/)
+- [mise Registry](https://mise.jdx.dev/registry.html)
+- [aqua Registry](https://github.com/aquaproj/aqua-registry)
 - [Krew Plugins](https://krew.sigs.k8s.io/plugins/)
 - [GitHub CLI Extensions](https://github.com/topics/gh-extension)
