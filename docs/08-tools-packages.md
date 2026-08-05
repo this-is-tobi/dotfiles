@@ -32,8 +32,8 @@ Essential system utilities (always installed):
 
 Modern replacements and enhancements (Base profile):
 
-| Tool         | Replaces | Description                          | Source       |
-| ------------ | -------- | ------------------------------------ | ------------ |
+| Tool         | Replaces | Description                          | Source        |
+| ------------ | -------- | ------------------------------------ | ------------- |
 | bat          | cat      | Syntax highlighting, git integration | homebrew/mise |
 | eza          | ls       | Colors, icons, git status            | homebrew/mise |
 | fd           | find     | Simpler syntax, faster               | homebrew/mise |
@@ -45,8 +45,8 @@ Modern replacements and enhancements (Base profile):
 
 Git and platform CLIs (Base profile):
 
-| Tool    | Description         | Extensions         | Source       |
-| ------- | ------------------- | ------------------ | ------------ |
+| Tool    | Description         | Extensions         | Source        |
+| ------- | ------------------- | ------------------ | ------------- |
 | lazygit | Terminal UI for git | -                  | homebrew/mise |
 | gh      | GitHub CLI          | gh-dash, gh-notify | homebrew/mise |
 | glab    | GitLab CLI          | -                  | homebrew/mise |
@@ -62,9 +62,9 @@ gh extension install meiji163/gh-notify  # Notifications TUI
 
 Docker and Kubernetes tools (DevOps profile):
 
-| Tool    | Purpose                    | Related Tools            | Source       |
-| ------- | -------------------------- | ------------------------ | ------------ |
-| docker  | Container runtime          | lazydocker               | apt/cask     |
+| Tool    | Purpose                    | Related Tools            | Source        |
+| ------- | -------------------------- | ------------------------ | ------------- |
+| docker  | Container runtime          | lazydocker               | apt/cask      |
 | kubectl | Kubernetes CLI             | k9s, kubectx, stern      | homebrew/mise |
 | helm    | Kubernetes package manager | chart-testing, helm-docs | homebrew/mise |
 | kind    | Local Kubernetes           | -                        | homebrew/mise |
@@ -85,8 +85,8 @@ kubectl krew install view-secret   # Decode secrets
 
 IaC and configuration management (DevOps profile):
 
-| Tool         | Purpose                  | Config Files       | Source       |
-| ------------ | ------------------------ | ------------------ | ------------ |
+| Tool         | Purpose                  | Config Files       | Source        |
+| ------------ | ------------------------ | ------------------ | ------------- |
 | terraform    | Infrastructure as code   | .tf                | homebrew/mise |
 | ansible      | Configuration management | .yml playbooks     | homebrew/uv   |
 | ansible-lint | Ansible linter           | -                  | homebrew/uv   |
@@ -96,26 +96,26 @@ IaC and configuration management (DevOps profile):
 
 Cloud provider tools (DevOps profile):
 
-| Tool | Platform            | Source         |
-| ---- | ------------------- | -------------- |
-| scw  | Scaleway            | homebrew/mise  |
-| oc   | OpenShift/OKD       | homebrew/mise  |
+| Tool | Platform      | Source        |
+| ---- | ------------- | ------------- |
+| scw  | Scaleway      | homebrew/mise |
+| oc   | OpenShift/OKD | homebrew/mise |
 
 ### Security Tools
 
 Scanning and secret management (SecOps profile):
 
-| Tool      | Purpose               | Scans                 | Source         |
-| --------- | --------------------- | --------------------- | -------------- |
-| trivy     | Vulnerability scanner | containers, IaC, code | homebrew/mise  |
-| cosign    | Container signing     | images                | homebrew/mise  |
-| sops      | Secret encryption     | files                 | homebrew/mise  |
-| vault     | Secret management     | -                     | homebrew/mise  |
-| gitleaks  | Secret detection      | git repos             | homebrew/mise  |
-| age       | File encryption       | -                     | homebrew/mise  |
-| kubescape | Kubernetes security   | K8s configs           | homebrew/mise  |
-| kyverno   | Kubernetes policies   | K8s resources         | homebrew/mise  |
-| dive      | Image layer analysis  | Docker images         | homebrew/mise  |
+| Tool      | Purpose               | Scans                 | Source        |
+| --------- | --------------------- | --------------------- | ------------- |
+| trivy     | Vulnerability scanner | containers, IaC, code | homebrew/mise |
+| cosign    | Container signing     | images                | homebrew/mise |
+| sops      | Secret encryption     | files                 | homebrew/mise |
+| vault     | Secret management     | -                     | homebrew/mise |
+| gitleaks  | Secret detection      | git repos             | homebrew/mise |
+| age       | File encryption       | -                     | homebrew/mise |
+| kubescape | Kubernetes security   | K8s configs           | homebrew/mise |
+| kyverno   | Kubernetes policies   | K8s resources         | homebrew/mise |
+| dive      | Image layer analysis  | Docker images         | homebrew/mise |
 
 ### Development Languages
 
@@ -138,10 +138,10 @@ callable after `mise reshim`.
 
 #### Go (Go profile)
 
-| Tool         | Purpose                 | Source     |
-| ------------ | ----------------------- | ---------- |
-| go           | Go compiler             | mise       |
-| cobra-cli    | CLI framework           | go install |
+| Tool         | Purpose                 | Source        |
+| ------------ | ----------------------- | ------------- |
+| go           | Go compiler             | mise          |
+| cobra-cli    | CLI framework           | go install    |
 | kubebuilder  | Kubernetes API SDK      | homebrew/mise |
 | kustomize    | Kubernetes YAML overlay | homebrew/mise |
 | operator-sdk | Kubernetes operator SDK | homebrew/mise |
@@ -254,13 +254,14 @@ Media manipulation (Base profile):
 
 Continuous integration tools (DevOps profile):
 
-| Tool          | Purpose              | Platform   | Source         |
-| ------------- | -------------------- | ---------- | -------------- |
-| act           | Local GitHub Actions | GitHub     | homebrew/apt   |
-| argo          | Argo Workflows CLI   | Kubernetes | homebrew/apt   |
-| argocd        | Argo CD CLI          | Kubernetes | homebrew/apt   |
-| chart-testing | Helm chart testing   | Helm       | homebrew/shell |
-| k6            | Load testing         | -          | homebrew/apt   |
+| Tool          | Purpose               | Platform   | Source         |
+| ------------- | --------------------- | ---------- | -------------- |
+| act           | Local GitHub Actions  | GitHub     | homebrew/apt   |
+| actionlint    | Workflow file linting | GitHub     | homebrew/mise  |
+| argo          | Argo Workflows CLI    | Kubernetes | homebrew/apt   |
+| argocd        | Argo CD CLI           | Kubernetes | homebrew/apt   |
+| chart-testing | Helm chart testing    | Helm       | homebrew/shell |
+| k6            | Load testing          | -          | homebrew/apt   |
 
 ### Utilities
 
@@ -385,16 +386,16 @@ Quick installation commands:
 
 Understanding the sources:
 
-| Manager  | Platform      | Purpose                          | Auto-Installed |
-| -------- | ------------- | -------------------------------- | -------------- |
-| Homebrew | macOS         | CLI tools, system packages & GUI apps | ✓         |
-| apt      | Debian/Ubuntu | System packages                  | ✓              |
-| mise     | All           | Language runtimes; CLI binaries on Debian | ✓     |
-| npm      | All           | Node.js packages                 | via mise       |
-| uv       | All           | Python packages (ansible)        | via mise       |
-| go       | All           | Go packages                      | via mise       |
-| Krew     | All           | kubectl plugins                  | via kubectl    |
-| gh       | All           | GitHub CLI extensions            | via gh         |
+| Manager  | Platform      | Purpose                                   | Auto-Installed |
+| -------- | ------------- | ----------------------------------------- | -------------- |
+| Homebrew | macOS         | CLI tools, system packages & GUI apps     | ✓              |
+| apt      | Debian/Ubuntu | System packages                           | ✓              |
+| mise     | All           | Language runtimes; CLI binaries on Debian | ✓              |
+| npm      | All           | Node.js packages                          | via mise       |
+| uv       | All           | Python packages (ansible)                 | via mise       |
+| go       | All           | Go packages                               | via mise       |
+| Krew     | All           | kubectl plugins                           | via kubectl    |
+| gh       | All           | GitHub CLI extensions                     | via gh         |
 
 ## Verifying Installation
 
