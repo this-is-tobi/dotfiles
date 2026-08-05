@@ -144,6 +144,7 @@ install_misc_full() {
   printf "\n\n${red}[devops/misc] =>${no_color} Install mise packages\n\n"
   mise_use \
     act@latest \
+    actionlint@latest \
     coder@latest \
     k6@latest \
     mkcert@latest \

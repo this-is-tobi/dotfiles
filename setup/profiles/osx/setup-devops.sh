@@ -90,6 +90,7 @@ install_misc_full() {
   printf "\n\n${red}[devops/misc] =>${no_color} Install homebrew packages (cli)\n\n"
   brew install --formula \
     act \
+    actionlint \
     coder/coder/coder \
     k6 \
     mkcert \

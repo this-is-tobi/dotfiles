@@ -110,33 +110,34 @@ DEVOPS_CATEGORIES=k8s ./setup/setup-debian.sh -p devops -l
 
 The **Category** column corresponds to the `DEVOPS_CATEGORIES` values described above.
 
-| Package                                                      | Description                                                                                                                                         | Category | Lite | macOS    | Debian |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---- | -------- | ------ |
-| [act](https://github.com/nektos/act)                         | Run GitHub Actions locally                                                                                                                          | misc     | -    | homebrew | mise   |
-| [ansible](https://docs.ansible.com)                          | IT automation tool                                                                                                                                  | iac      | ✓    | homebrew | uv     |
-| [ansible-lint](https://ansible.readthedocs.io/projects/lint) | Linter for Ansible playbooks (via ansible-dev-tools)                                                                                                | iac      | -    | homebrew | uv     |
-| [argo](https://argo-cd.readthedocs.io)                       | Argo Workflows CLI                                                                                                                                  | k8s      | -    | homebrew | mise   |
-| [argocd](https://argo-cd.readthedocs.io)                     | Argo CD CLI for GitOps                                                                                                                              | k8s      | -    | homebrew | mise   |
-| [chart-testing](https://github.com/helm/chart-testing)       | Helm chart linting and testing                                                                                                                      | k8s      | -    | homebrew | mise   |
-| [coder](https://coder.com)                                   | Coder remote development CLI                                                                                                                        | misc     | -    | homebrew | mise   |
-| [helm](https://helm.sh)                                      | Kubernetes package manager                                                                                                                          | k8s      | ✓    | homebrew | mise   |
-| [helm-docs](https://github.com/norwoodj/helm-docs)           | Auto-generate Helm chart documentation                                                                                                              | k8s      | ✓    | homebrew | mise   |
-| [k6](https://k6.io)                                          | Modern load testing tool                                                                                                                            | misc     | -    | homebrew | mise   |
-| [k9s](https://k9scli.io)                                     | Kubernetes TUI                                                                                                                                      | k8s      | -    | homebrew | mise   |
-| [kind](https://kind.sigs.k8s.io)                             | Kubernetes in Docker                                                                                                                                | k8s      | -    | homebrew | mise   |
-| [krew](https://sigs.k8s.io/krew)                             | kubectl plugin manager                                                                                                                              | k8s      | ✓    | homebrew | mise   |
-| [kubectl](https://kubernetes.io/docs/reference/kubectl)      | Kubernetes command-line tool                                                                                                                        | k8s      | ✓    | homebrew | mise   |
-| [kubectx](https://github.com/ahmetb/kubectx)                 | Kubernetes context switcher                                                                                                                         | k8s      | ✓    | homebrew | mise   |
-| [kubens](https://github.com/ahmetb/kubectx)                  | Kubernetes namespace switcher (its own mise tool; the old apt/brew packages bundled it with kubectx)                                                 | k8s      | ✓    | homebrew | mise   |
-| [mkcert](https://github.com/FiloSottile/mkcert)              | Make locally trusted certificates                                                                                                                   | misc     | -    | homebrew | mise   |
-| [oc](https://www.openshift.com)                              | OpenShift CLI                                                                                                                                       | k8s      | ✓    | homebrew | mise   |
-| [scw](https://github.com/scaleway/scaleway-cli)              | Scaleway CLI                                                                                                                                        | cloud    | -    | homebrew | mise   |
-| [sshpass](https://sourceforge.net/projects/sshpass)          | Non-interactive SSH password auth                                                                                                                   | misc     | ✓    | homebrew | apt    |
-| [teleport](https://goteleport.com)                           | Modern SSH server for clusters                                                                                                                      | misc     | -    | homebrew | apt    |
-| [terraform](https://www.terraform.io)                        | Infrastructure as code tool                                                                                                                         | iac      | ✓    | homebrew | mise   |
-| [uv](https://github.com/astral-sh/uv)                        | Python package installer (installs ansible on Debian)                                                                                               | iac      | ✓    | -        | mise   |
-| [velero](https://velero.io)                                  | Kubernetes backup and migration                                                                                                                     | k8s      | -    | homebrew | mise   |
-| [yamllint](https://yamllint.readthedocs.io)                  | Linter for YAML files                                                                                                                               | misc     | -    | homebrew | mise   |
+| Package                                                      | Description                                                                                          | Category | Lite | macOS    | Debian |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | -------- | ---- | -------- | ------ |
+| [act](https://github.com/nektos/act)                         | Run GitHub Actions locally                                                                           | misc     | -    | homebrew | mise   |
+| [actionlint](https://rhysd.github.io/actionlint)             | Static checker for GitHub Actions workflows                                                          | misc     | -    | homebrew | mise   |
+| [ansible](https://docs.ansible.com)                          | IT automation tool                                                                                   | iac      | ✓    | homebrew | uv     |
+| [ansible-lint](https://ansible.readthedocs.io/projects/lint) | Linter for Ansible playbooks (via ansible-dev-tools)                                                 | iac      | -    | homebrew | uv     |
+| [argo](https://argo-cd.readthedocs.io)                       | Argo Workflows CLI                                                                                   | k8s      | -    | homebrew | mise   |
+| [argocd](https://argo-cd.readthedocs.io)                     | Argo CD CLI for GitOps                                                                               | k8s      | -    | homebrew | mise   |
+| [chart-testing](https://github.com/helm/chart-testing)       | Helm chart linting and testing                                                                       | k8s      | -    | homebrew | mise   |
+| [coder](https://coder.com)                                   | Coder remote development CLI                                                                         | misc     | -    | homebrew | mise   |
+| [helm](https://helm.sh)                                      | Kubernetes package manager                                                                           | k8s      | ✓    | homebrew | mise   |
+| [helm-docs](https://github.com/norwoodj/helm-docs)           | Auto-generate Helm chart documentation                                                               | k8s      | ✓    | homebrew | mise   |
+| [k6](https://k6.io)                                          | Modern load testing tool                                                                             | misc     | -    | homebrew | mise   |
+| [k9s](https://k9scli.io)                                     | Kubernetes TUI                                                                                       | k8s      | -    | homebrew | mise   |
+| [kind](https://kind.sigs.k8s.io)                             | Kubernetes in Docker                                                                                 | k8s      | -    | homebrew | mise   |
+| [krew](https://sigs.k8s.io/krew)                             | kubectl plugin manager                                                                               | k8s      | ✓    | homebrew | mise   |
+| [kubectl](https://kubernetes.io/docs/reference/kubectl)      | Kubernetes command-line tool                                                                         | k8s      | ✓    | homebrew | mise   |
+| [kubectx](https://github.com/ahmetb/kubectx)                 | Kubernetes context switcher                                                                          | k8s      | ✓    | homebrew | mise   |
+| [kubens](https://github.com/ahmetb/kubectx)                  | Kubernetes namespace switcher (its own mise tool; the old apt/brew packages bundled it with kubectx) | k8s      | ✓    | homebrew | mise   |
+| [mkcert](https://github.com/FiloSottile/mkcert)              | Make locally trusted certificates                                                                    | misc     | -    | homebrew | mise   |
+| [oc](https://www.openshift.com)                              | OpenShift CLI                                                                                        | k8s      | ✓    | homebrew | mise   |
+| [scw](https://github.com/scaleway/scaleway-cli)              | Scaleway CLI                                                                                         | cloud    | -    | homebrew | mise   |
+| [sshpass](https://sourceforge.net/projects/sshpass)          | Non-interactive SSH password auth                                                                    | misc     | ✓    | homebrew | apt    |
+| [teleport](https://goteleport.com)                           | Modern SSH server for clusters                                                                       | misc     | -    | homebrew | apt    |
+| [terraform](https://www.terraform.io)                        | Infrastructure as code tool                                                                          | iac      | ✓    | homebrew | mise   |
+| [uv](https://github.com/astral-sh/uv)                        | Python package installer (installs ansible on Debian)                                                | iac      | ✓    | -        | mise   |
+| [velero](https://velero.io)                                  | Kubernetes backup and migration                                                                      | k8s      | -    | homebrew | mise   |
+| [yamllint](https://yamllint.readthedocs.io)                  | Linter for YAML files                                                                                | misc     | -    | homebrew | mise   |
 
 Note: `docker` was previously (incorrectly) listed in this table -- it's actually installed by the **Base** profile (see its Applications table below), not DevOps.
 
@@ -180,14 +181,14 @@ The **JavaScript** profile provides Node.js runtime and package managers.
 
 ### Command Line Interfaces
 
-| Package                                  | Description                          | Lite | macOS | Debian |
-| ---------------------------------------- | ------------------------------------ | ---- | ----- | ------ |
-| [@antfu/ni](https://github.com/antfu/ni) | Package manager wrapper              | ✓    | npm   | npm    |
-| [bun](https://bun.sh)                    | Fast JavaScript runtime              | -    | mise  | mise   |
-| [node](https://nodejs.org)               | JavaScript runtime                   | ✓    | mise  | mise   |
-| [npm](https://github.com/npm/cli)        | Node package manager (ships with node) | ✓  | node  | node   |
-| [pnpm](https://pnpm.io)                  | Fast, disk-efficient package manager | -    | mise  | mise   |
-| [yarn](https://yarnpkg.com)              | Package manager and project manager  | -    | mise  | mise   |
+| Package                                  | Description                            | Lite | macOS | Debian |
+| ---------------------------------------- | -------------------------------------- | ---- | ----- | ------ |
+| [@antfu/ni](https://github.com/antfu/ni) | Package manager wrapper                | ✓    | npm   | npm    |
+| [bun](https://bun.sh)                    | Fast JavaScript runtime                | -    | mise  | mise   |
+| [node](https://nodejs.org)               | JavaScript runtime                     | ✓    | mise  | mise   |
+| [npm](https://github.com/npm/cli)        | Node package manager (ships with node) | ✓    | node  | node   |
+| [pnpm](https://pnpm.io)                  | Fast, disk-efficient package manager   | -    | mise  | mise   |
+| [yarn](https://yarnpkg.com)              | Package manager and project manager    | -    | mise  | mise   |
 
 ---
 
