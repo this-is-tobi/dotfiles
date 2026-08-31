@@ -25,7 +25,8 @@
     }
   },
   "enabledPlugins": {
-    "claude-security@claude-plugins-official": true
+    "claude-security@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
   },
   "permissions": {
     "deny": [
