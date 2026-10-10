@@ -12,6 +12,11 @@ i=1
 # Get project directories
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
+# shellcheck source=helpers/files.sh
+. "$SCRIPT_PATH/helpers/files.sh"
+# shellcheck source=helpers/remote.sh
+. "$SCRIPT_PATH/helpers/remote.sh"
+
 # Default
 INSTALL_AI="false"
 INSTALL_BASE="false"
@@ -22,7 +27,6 @@ INSTALL_JS="false"
 INSTALL_SECOPS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
-REMOVE_TMP_CONTENT="false"
 FULL_MODE_SETUP="true"
 DRY_RUN="false"
 
@@ -48,7 +52,7 @@ Following flags are available:
           -> 'secops'
         Default is no profile, this flag can be used with a CSV list (ex: -p \"base,js\").
 
-  -r    Remove all tmp files after installation.
+  -r    Deprecated and ignored: temporary files are removed by the scripts that create them.
 
   -h    Print script help.\n\n"
 
@@ -84,7 +88,7 @@ while getopts hcdlnp:r flag; do
         esac
       done;;
     r)
-      REMOVE_TMP_CONTENT="true";;
+      printf "Note: -r is deprecated and ignored, temporary files are always cleaned up.\n" >&2;;
     h | *)
       print_help
       exit 0;;
@@ -112,64 +116,77 @@ fi
 
 
 # utils
+# Make an installed Homebrew usable in this shell: on Apple Silicon it is not
+# on PATH right after its install, nor in a non-login shell.
+load_brew() {
+  local brew_bin
+  for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if [ -x "$brew_bin" ]; then
+      eval "$("$brew_bin" shellenv)"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Ask before installing a prerequisite and exit unless the answer is yes. A
+# prompt cannot be answered without a terminal, so fail with instructions then.
+confirm_or_exit() {
+  local what="$1" answer
+  if [ ! -t 0 ]; then
+    printf "Error: %s is required but not installed, and this shell is non-interactive so the install prompt can't be answered. Install it first or run this script from an interactive terminal.\n" "$what" >&2
+    exit 1
+  fi
+  read -r -p "You need ${what} to run this script. Do you wish to install it? [y/N] " answer
+  case "$answer" in
+    [Yy]*) ;;
+    *) exit 1;;
+  esac
+}
+
 install_clt() {
   printf "\n\n${red}Optional.${no_color} Installs Command Line Tools for Xcode from softwareupdate...\n\n"
   # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
-  touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  local flag_file="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+  touch "$flag_file"
   PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-  softwareupdate -i "$PROD" --verbose;
-  printf "\Command Line Tools version installed :\n$PROD\n\n"
+  sudo softwareupdate -i "$PROD" --verbose
+  rm -f "$flag_file"
+  printf "\nCommand Line Tools version installed :\n%s\n\n" "$PROD"
 }
 
 install_homebrew() {
   printf "\n\n${red}Optional.${no_color} Installs homebrew...\n\n"
-  export NONINTERACTIVE=1 
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  printf "\nhomebrew version installed :\n$(brew --version)\n\n"
+  export NONINTERACTIVE=1
+  run_remote /bin/bash "https://raw.githubusercontent.com/Homebrew/install/${HOMEBREW_INSTALL_REF:-HEAD}/install.sh"
+  load_brew
+  printf "\nhomebrew version installed :\n%s\n\n" "$(brew --version)"
 }
 
-if [ -z "$(xcode-select -p)" ]; then
-  if [ ! -t 0 ]; then
-    printf "Error: Command Line Tools are required but not installed, and this shell is non-interactive so the install prompt can't be answered. Install them first (xcode-select --install) or run this script from an interactive terminal.\n" >&2
-    exit 1
-  fi
-  while true; do
-    read -p "\nYou need Command Line Tools to run this script. Do you wish to install Command Line Tools?\n" yn
-    case $yn in
-      [Yy]*)
-        install_clt;;
-      [Nn]*)
-        exit;;
-      *)
-        echo "\nPlease answer yes or no.\n";;
-    esac
-  done
+if ! xcode-select -p >/dev/null 2>&1; then
+  confirm_or_exit "Command Line Tools"
+  install_clt
 fi
 
-if [ -z "$(brew --version)" ]; then
-  if [ ! -t 0 ]; then
-    printf "Error: Homebrew is required but not installed, and this shell is non-interactive so the install prompt can't be answered. Install it first (see https://brew.sh) or run this script from an interactive terminal.\n" >&2
-    exit 1
+if ! command -v brew >/dev/null 2>&1; then
+  if ! load_brew; then
+    confirm_or_exit "Homebrew"
+    install_homebrew
   fi
-  while true; do
-    read -p "You need homebrew to run this script. Do you wish to install homebrew?" yn
-    case $yn in
-      [Yy]*)
-        install_homebrew;;
-      [Nn]*)
-        exit;;
-      *)
-        printf "\nPlease answer y or n.\n";;
-    esac
-  done
 fi
 
 
 export FULL_MODE_SETUP=$FULL_MODE_SETUP
 
+# Tools installed by the profiles (mise shims, ~/.local/bin) must be visible to
+# every later step, whichever profiles run.
+export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
-brew update && brew install --formula \
+i=$(($i + 1))
+brew update || printf "brew update failed, continuing with the local formulae index\n"
+brew install --formula \
   ca-certificates \
   curl \
   gnupg \
@@ -185,7 +202,10 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   printf "\n${red}${i}.${no_color} Install oh-my-zsh\n\n"
   i=$(($i + 1))
 
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # --unattended: the installer would otherwise switch the login shell and
+  # `exec zsh`, which ends this script right there. KEEP_ZSHRC leaves an
+  # existing ~/.zshrc alone (the dotfiles step replaces it, with a backup).
+  KEEP_ZSHRC=yes run_remote sh "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/${OMZ_REF:-master}/tools/install.sh" --unattended
 fi
 
 
@@ -194,11 +214,7 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install base profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-base.sh
-
-  # Expose the tools the base profile just installed to the profiles that run
-  # after it.
-  export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+  "$SCRIPT_PATH/profiles/osx/setup-base.sh"
 fi
 
 
@@ -207,7 +223,7 @@ if [[ "$INSTALL_EXTRAS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install extras profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-extras.sh
+  "$SCRIPT_PATH/profiles/osx/setup-extras.sh"
 fi
 
 
@@ -216,7 +232,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install devops profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-devops.sh
+  "$SCRIPT_PATH/profiles/osx/setup-devops.sh"
 fi
 
 
@@ -225,7 +241,7 @@ if [[ "$INSTALL_SECOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install secops profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-secops.sh
+  "$SCRIPT_PATH/profiles/osx/setup-secops.sh"
 fi
 
 
@@ -234,7 +250,7 @@ if [[ "$INSTALL_GO" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install go profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-go.sh
+  "$SCRIPT_PATH/profiles/osx/setup-go.sh"
 fi
 
 
@@ -243,7 +259,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-js.sh
+  "$SCRIPT_PATH/profiles/osx/setup-js.sh"
 fi
 
 
@@ -252,7 +268,7 @@ if [[ "$INSTALL_AI" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install ai profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/osx/setup-ai.sh
+  "$SCRIPT_PATH/profiles/osx/setup-ai.sh"
 fi
 
 
@@ -261,22 +277,28 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
   i=$(($i + 1))
 
-  mkdir -p "$HOME/.config"
-  cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && gsed -i 's/^# alias sed=.*/alias sed="gsed"/g' "$HOME/.zshrc"
-  cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
-  cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
-  cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
+  DOTFILES_PATH="$(cd "$SCRIPT_PATH/.." && pwd -P)/dotfiles"
+
+  # Whatever a copy below would replace is saved under $DOTFILES_BACKUP_DIR first
+  install_file "$DOTFILES_PATH/.zshrc" "$HOME/.zshrc"
+  install_file "$DOTFILES_PATH/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
+  # Keep the identity and signing settings of the current ~/.gitconfig in
+  # ~/.gitconfig.local before it is replaced
+  "$SCRIPT_PATH/helpers/gitconfig.sh"
+  install_file "$DOTFILES_PATH/.gitconfig" "$HOME/.gitconfig"
+  install_tree "$DOTFILES_PATH/.continue" "$HOME/.continue"
+
   # Create secrets.env before the copy below replaces env.sh, so that values a
   # previous env.sh held are moved there instead of being lost.
   "$SCRIPT_PATH/helpers/secrets.sh"
   # Copies .config/mise/conf.d/00-settings.toml among the rest. It is kept in
   # conf.d/ rather than config.toml precisely so that re-running this step does
   # not clobber the tool versions the profiles pinned via `mise use --global`.
-  cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
+  install_tree "$DOTFILES_PATH/.config" "$HOME/.config"
 
 
   # Install the eslint fallback config, used where a project has none
-  cp "$SCRIPT_PATH/../dotfiles/eslint.config.mjs" "$HOME/eslint.config.mjs"
+  install_file "$DOTFILES_PATH/eslint.config.mjs" "$HOME/eslint.config.mjs"
   if [ -x "$(command -v npm)" ]; then
     (cd "$HOME/.config/eslint-fallback" && npm install)
   fi
@@ -284,43 +306,41 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   # Install .vscode configs
   if [ -x "$(command -v code)" ]; then
-    cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-    gsed -i "s|__HOME__|$HOME|g" "$HOME/Library/Application Support/Code/User/settings.json"
-    cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/Library/Application Support/Code/User/mcp.json"
-    VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
-      | grep -v '//' \
-      | grep -E '\S' \
-      | jq -r '.recommendations[]'))
-    for extension in ${VSCODE_EXTENSIONS[@]}; do
-      echo "$extension" | xargs -L 1 code --install-extension
-    done
+    VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
+    vscode_settings="$(mktemp)"
+    sed "s|__HOME__|$HOME|g" "$DOTFILES_PATH/.vscode/settings.json" > "$vscode_settings"
+    install_file "$vscode_settings" "$VSCODE_USER_DIR/settings.json"
+    rm -f "$vscode_settings"
+    install_file "$DOTFILES_PATH/.vscode/mcp.json" "$VSCODE_USER_DIR/mcp.json"
+    # extensions.json is JSONC: drop its comment lines before handing it to jq
+    grep -v '//' "$DOTFILES_PATH/.vscode/extensions.json" \
+      | grep -E '[^[:space:]]' \
+      | jq -r '.recommendations[]' \
+      | while IFS= read -r extension; do
+          code --install-extension "$extension" < /dev/null \
+            || printf "Warning: could not install the VS Code extension %s\n" "$extension" >&2
+        done
   fi
 
 
   # Install .claude config
   mkdir -p "$HOME/.claude"
   if [ -x "$(command -v rtk)" ]; then
-    rtk init -g
+    rtk init -g --auto-patch
   fi
-  cp "$SCRIPT_PATH/../dotfiles/.claude/settings.json" "$HOME/.claude/settings.json"
+  install_file "$DOTFILES_PATH/.claude/settings.json" "$HOME/.claude/settings.json"
 
 
   # Install AI agent instructions & skills (Copilot + Claude Code personal setup)
   # -P installs Claude Code plugins at user scope; it runs after the settings.json copy above, which
   # would otherwise drop the enabledPlugins/extraKnownMarketplaces keys the plugin registers there.
-  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t claude -g -P
-  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t copilot -g -c
+  run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t claude -g -P
+  run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t copilot -g -c
 
 
   # Configure Claude Code MCP servers
   if [ -x "$(command -v claude)" ]; then
     "$SCRIPT_PATH/helpers/claude-mcp.sh"
-  fi
-
-
-  # Update brew links if architecture is arm64
-  if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
-    gsed -i 's/\/usr\/local/\/opt\/homebrew/g' "$HOME/.zshrc"
   fi
 fi
 
@@ -330,18 +350,10 @@ if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install cli completions\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/helpers/completions.sh
-  ZSH_COMPLETIONS_DIR="${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions"
+  "$SCRIPT_PATH/helpers/completions.sh"
+  # .zshrc adds this directory to fpath once it exists
+  ZSH_COMPLETIONS_DIR="${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions"
   if [ ! -d "$ZSH_COMPLETIONS_DIR" ]; then
     git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS_DIR"
   fi
-  gsed -i 's|^# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|g' "$HOME/.zshrc"
-fi
-
-
-if [[ "$REMOVE_TMP_CONTENT" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Remove tmp files\n\n"
-  i=$(($i + 1))
-
-  rm -rf /tmp/*
 fi
