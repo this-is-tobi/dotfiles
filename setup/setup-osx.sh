@@ -272,7 +272,8 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
 
 
-  # Install nvim eslint fallback config dependencies
+  # Install the eslint fallback config, used where a project has none
+  cp "$SCRIPT_PATH/../dotfiles/eslint.config.mjs" "$HOME/eslint.config.mjs"
   if [ -x "$(command -v npm)" ]; then
     (cd "$HOME/.config/eslint-fallback" && npm install)
   fi

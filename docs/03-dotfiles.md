@@ -28,7 +28,8 @@ The `dotfiles/` directory contains template configuration files for various appl
 │   ├── mcp.json         # Model Context Protocol servers
 │   └── settings.json    # VS Code settings
 ├── .gitconfig           # Git configuration template
-└── .zshrc               # Zsh shell configuration
+├── .zshrc               # Zsh shell configuration
+└── eslint.config.mjs    # Home-level ESLint fallback, re-exports .config/eslint-fallback
 ```
 
 ## Key Configuration Files
@@ -126,7 +127,7 @@ Configuration for the [cheat](https://github.com/cheat/cheat) command:
 - Editor preferences
 
 #### `.config/eslint-fallback/`
-Shared [`@antfu/eslint-config`](https://github.com/antfu/eslint-config)-based flat config (`eslint.config.mjs` + `package.json`), used by both Neovim and VS Code as a fallback when the project being edited has no ESLint config of its own. The config dispatches to a project's own `eslint.config.*` if one is found, so it's safe to reference unconditionally. Requires `npm install` in this directory once (done automatically by the setup scripts).
+Shared [`@antfu/eslint-config`](https://github.com/antfu/eslint-config)-based flat config (`eslint.config.mjs` + `package.json`), used by Neovim, VS Code and the CLI as a fallback when the project being edited has no ESLint config of its own. The setup scripts install `~/eslint.config.mjs`, which re-exports it: ESLint looks up its config from each linted file's folder upward, so a project's own `eslint.config.*` always wins, and files without one get this config. Requires `npm install` in this directory once (done automatically by the setup scripts).
 
 #### `.config/gh-dash/config.yml`
 GitHub Dashboard TUI configuration:
