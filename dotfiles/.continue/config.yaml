@@ -13,6 +13,8 @@ models:
   defaultCompletionOptions:
     contextLength: 128000
     maxTokens: 40000
+  capabilities:
+  - tool_use
 - name: Mistral-small3.1 24B
   provider: ollama
   model: mistral-small3.1:24b
@@ -24,17 +26,9 @@ models:
   defaultCompletionOptions:
     contextLength: 128000
     maxTokens: 40000
-- name: Magistral 24B
-  provider: ollama
-  model: magistral:24b
-  roles:
-  - chat
-  - edit
-  - apply
-  - summarize
-  defaultCompletionOptions:
-    contextLength: 128000
-    maxTokens: 40000
+  capabilities:
+  - tool_use
+  - image_input
 - name: Qwen3 8B
   provider: ollama
   model: qwen3:8b
@@ -45,8 +39,23 @@ models:
   - summarize
   - autocomplete
   defaultCompletionOptions:
-    contextLength: 40000
-    maxTokens: 20000
+    contextLength: 128000
+    maxTokens: 40000
+  capabilities:
+  - tool_use
+- name: Mistral-small3.1 24B (Scaleway)
+  provider: openai
+  model: mistral-small-3.1-24b-instruct-2503
+  roles:
+  - chat
+  - edit
+  - apply
+  - summarize
+  apiBase: https://api.scaleway.ai/v1
+  apiKey: ${{ secrets.SCALEWAY_API_KEY }}
+  capabilities:
+  - tool_use
+  - image_input
 - name: Qwen2.5-coder 1.5B
   provider: ollama
   model: qwen2.5-coder:1.5b
@@ -57,16 +66,6 @@ models:
   model: nomic-embed-text:latest
   roles:
   - embed
-- name: Mistral-small3.1 24B (Scaleway)
-  provider: openai
-  model: Mistral-small-3.1-24b-instruct-2503
-  roles:
-  - chat
-  - edit
-  - apply
-  - summarize
-  apiBase: https://api.scaleway.ai/v1
-  apiKey: ${{ secrets.SCALEWAY_API_KEY }}
 prompts:
 - name: check
   description: Check for mistakes for the given context
@@ -129,13 +128,7 @@ mcpServers:
   env:
     GITHUB_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
 - name: kubernetes
-  command: docker
+  command: npx
   args:
-  - run
-  - --name
-  - mcp-kubernetes
-  - --rm
-  - -i
-  - -v
-  - /Users/tobi/.kube:/home/appuser/.kube:ro
-  - docker.io/mcp/kubernetes
+  - -y
+  - kubernetes-mcp-server@latest
