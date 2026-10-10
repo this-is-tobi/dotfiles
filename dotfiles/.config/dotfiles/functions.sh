@@ -70,7 +70,7 @@ browser() {
 		if ! docker info > /dev/null 2>&1; then
 			echo "This function uses docker, and it isn't running - please start docker and try again!"
 		else
-			docker run --rm -it browsh/browsh "$1"
+			docker run --rm -it browsh/browsh "$@"
 		fi
 	esac
 }
@@ -130,7 +130,13 @@ kbp() {
 		printf "  kbp <port_number>   kill process using the given port.\n"
 		;;
 	*)
-		kill -9 $(lsof -i :$1 | tail -n +2 | awk '{print $2}')
+		local pids
+		pids=$(lsof -ti tcp:"$1" -sTCP:LISTEN)
+		if [ -z "$pids" ]; then
+			echo "Nothing is listening on port $1."
+			return 1
+		fi
+		printf '%s\n' "$pids" | xargs kill -9
 		;;
 	esac
 }
@@ -144,6 +150,10 @@ randompass() {
 		printf "  randompass <password_length>   generate a password with the given length.\n"
 		;;
 	*)
+		if [ "${1:-24}" -lt 4 ]; then
+			echo "The password length must be at least 4."
+			return 1
+		fi
 		while true; do
 			local password=$(LC_ALL=C tr -dc 'A-Za-z0-9=!?%~_-' < /dev/urandom | head -c ${1:-24})
 			[[ $password != *[=\!?\%~_-]* ]] && continue
@@ -198,7 +208,7 @@ timestampe() {
 }
 
 tools() {
-	base_url="https://raw.githubusercontent.com/this-is-tobi/tools/main"
+	local base_url="https://raw.githubusercontent.com/this-is-tobi/tools/${TOOLS_REF:-main}"
 	case "$1" in
 	-h | --help)
 		printf "Description:\n"
@@ -220,12 +230,16 @@ tools() {
 			glow --width=200
 		;;
 	*)
-		script_url="$base_url/shell/$1"
-		if curl --output /dev/null --silent --head --fail "$script_url"; then
-			curl -s "$script_url" | bash -s -- "${@:2}"
+		local script_url="$base_url/shell/$1" script rc=0
+		script="$(mktemp)" || return 1
+		if curl -fsL "$script_url" -o "$script"; then
+			bash "$script" "${@:2}" || rc=$?
 		else
 			echo "Error : script '$1' does not exist."
+			rc=1
 		fi
+		rm -f "$script"
+		return $rc
 		;;
 	esac
 }
@@ -236,39 +250,12 @@ urld() {
 		printf "Description:\n"
 		printf "  Url decode the given string.\n\n"
 		printf "Usage:\n"
-		printf "  urle <url>   url decode the given string.\n"
+		printf "  urld <url>   url decode the given string.\n"
 		;;
 	*)
-		echo "$1" | jq -rR '
-			# Emit . and stop as soon as "condition" is true.
-			def until(condition; next):
-				def u: if condition then . else (next|u) end;
-				u;
-
-			def url_decode:
-				# The helper function converts the input string written in the given
-				# "base" to an integer
-				def to_i(base):
-					explode
-					| reverse
-					| map(if 65 <= . and . <= 90 then . + 32  else . end)   # downcase
-					| map(if . > 96  then . - 87 else . - 48 end)  # "a" ~ 97 => 10 ~ 87
-					| reduce .[] as $c
-							# base: [power, ans]
-							([1,0]; (.[0] * base) as $b | [$b, .[1] + (.[0] * $c)]) | .[1];
-				. as $in
-				| length as $length
-				| [0, ""]  # i, answer
-				| until ( .[0] >= $length;
-						.[0] as $i
-						|  if $in[$i:$i+1] == "%"
-							then [ $i + 3, .[1] + ([$in[$i+1:$i+3] | to_i(16)] | implode) ]
-							else [ $i + 1, .[1] + $in[$i:$i+1] ]
-							end)
-				| .[1];  # answer
-
-			. | url_decode
-			'
+		# %xx -> \xxx for printf, with literal backslashes escaped first so they are not interpreted
+		local encoded="${1//\\/\\\\}"
+		printf '%b\n' "${encoded//\%/\\x}"
 		;;
 	esac
 }
@@ -297,12 +284,14 @@ vault-cp() {
 		printf "  vault-cp -f <old_location> <new_location>	copy every version of a secret from a path to another.\n"
 		;;
 	-f | --full)
-		for i in $(vault kv metadata get -format=json $1 | jq '.data.versions|keys|join("\n")' -r); do
-			vault kv get -version=$i -format=json -field=data $1 | vault kv put $2 -
+		local version data
+		for version in $(vault kv metadata get -format=json "$2" | jq -r '.data.versions | keys | map(tonumber) | sort | .[]'); do
+			data=$(vault kv get -version="$version" -format=json -field=data "$2") || { echo "Skipping version $version (destroyed or deleted)."; continue; }
+			printf '%s' "$data" | vault kv put "$3" -
 		done
 		;;
 	*)
-		vault kv get -format=json -field=data $1 | vault kv put $2 -
+		vault kv get -format=json -field=data "$1" | vault kv put "$2" -
 		;;
 	esac
 }
@@ -316,7 +305,7 @@ weather() {
 		printf "  weather <location>   get the weather.\n"
 		;;
 	*)
-		curl "wttr.in/$1"
+		curl -fsS "https://wttr.in/$(jq -rn --arg location "$1" '$location | @uri')"
 		;;
 	esac
 }
