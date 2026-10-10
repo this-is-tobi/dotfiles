@@ -21,7 +21,7 @@ Comprehensive documentation is available:
 ## Features
 
 - **Profile-Based Installation** - Choose from Base, AI, DevOps, SecOps, Go, JavaScript, and Extras profiles
-- **Automated Setup** - One-command installation for your entire development environment
+- **Automated Setup** - One script per platform installs your development environment from a clone of the repository
 - **Backup & Restore** - Save and restore your configurations easily
 - **Custom Utilities** - Powerful shell functions and tools integration
 - **GitHub Copilot Integration** - AI-assisted development with best practice instructions
@@ -29,34 +29,48 @@ Comprehensive documentation is available:
 
 ## Quick Start
 
+The setup scripts read their profiles and dotfiles from the repository, so clone it first, then run the script for your platform with the flags you want.
+
+```sh
+git clone https://github.com/this-is-tobi/dotfiles.git
+cd dotfiles
+```
+
 ### macOS
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-osx.sh | bash
+./setup/setup-osx.sh -p base,devops -d -c
 ```
 
 ### Debian/Ubuntu
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-debian.sh | bash
+./setup/setup-debian.sh -p base,devops -d -c
 ```
+
+The scripts cannot be piped into bash (`curl ... | bash`): they look for `setup/helpers/`, `setup/profiles/` and `dotfiles/` next to themselves and stop immediately when run that way.
 
 ### Installation Options
 
 ```sh
-# Install with specific profiles
-./setup/setup-osx.sh -p 'devops,secops,js'
+# Profiles, dotfiles (-d) and CLI completions (-c) in one run
+./setup/setup-osx.sh -p 'devops,secops,js' -d -c
 
 # Lite mode (minimal tools only)
 ./setup/setup-osx.sh -l
+
+# Print the resolved settings and exit, nothing is installed
+./setup/setup-osx.sh -n -p 'devops,secops,js'
 
 # View all options
 ./setup/setup-osx.sh -h
 ```
 
+Available flags: `-c` (completions), `-d` (copy dotfiles), `-l` (lite mode), `-n` (dry run), `-p` (profiles), `-h` (help). `-r` is deprecated and ignored.
+
 Available profiles: `base`, `ai`, `devops`, `go`, `js`, `secops`, `extras` (macOS only)
 
-For detailed installation instructions and profile descriptions, see the [Installation Guide](./docs/02-installation.md) and [Profiles Reference](./docs/04-profiles.md).
+Without `-p` only the common packages and oh-my-zsh are installed. For prerequisites (Command Line Tools and Homebrew on macOS, sudo on Debian), the order the steps run in and the environment overrides, see the [Installation Guide](./docs/02-installation.md) and the [Profiles Reference](./docs/04-profiles.md).
 
 ## Learning Resources
 
@@ -73,7 +87,3 @@ For detailed installation instructions and profile descriptions, see the [Instal
 ## Contributing
 
 This is a personal dotfiles repository, but feel free to fork and adapt to your needs.
-
-## License
-
-This project is open source and available for personal use.
