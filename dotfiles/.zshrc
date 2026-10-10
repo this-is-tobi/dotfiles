@@ -53,25 +53,35 @@ plugins=(
   terraform
 )
 
-# brew settings
-if type brew &>/dev/null; then
-  # configure brew fpath
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+# homebrew: make brew available in this shell on Apple Silicon and Intel (it is
+# not on PATH in a fresh login shell). shellenv also puts brew's bin on PATH
+# and its zsh site-functions on FPATH.
+for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  if [ -x "$brew_bin" ]; then
+    eval "$("$brew_bin" shellenv)"
+    break
+  fi
+done
+unset brew_bin
 
+# brew settings
+if [ -n "$HOMEBREW_PREFIX" ]; then
   # aliases
   alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
 
-  # use homebrew packages instead of default system packages
-  export PATH="/usr/local/bin:$PATH"
+  # docker desktop cli
   export PATH="$HOME/.docker/bin:$PATH"
 
-  # lesspipe.sh
-  export LESSOPEN="|/usr/local/bin/lesspipe.sh %s"
+  # lesspipe.sh, when installed
+  [ -x "$HOMEBREW_PREFIX/bin/lesspipe.sh" ] && export LESSOPEN="|$HOMEBREW_PREFIX/bin/lesspipe.sh %s"
 fi
 
 # add common completion
 export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
-# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+# zsh-completions, cloned by the setup when it installs the completions
+zsh_completions_dir="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
+[ -d "$zsh_completions_dir" ] && fpath+=("$zsh_completions_dir")
+unset zsh_completions_dir
 
 source $ZSH/oh-my-zsh.sh
 
@@ -111,7 +121,8 @@ alias kvs="kubectl-view_secret"
 alias lad="lazydocker"
 alias lag="lazygit"
 alias pubip="dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '\"'"
-# alias sed="gsed"
+# GNU sed where it is installed (macOS ships BSD sed)
+command -v gsed &>/dev/null && alias sed="gsed"
 
 if [ "$(uname)" = "Darwin" ]; then
   # intel/arm switch aliases for osx
@@ -135,7 +146,7 @@ export GOBIN="$HOME/go/bin"
 export PATH="$GOBIN:$PATH"
 
 # tldr++
-TLDR_OS=osx # linux
+export TLDR_OS=$([ "$(uname)" = Darwin ] && echo osx || echo linux)
 
 # mise
 # `activate` puts tool versions on PATH and re-resolves them on every directory

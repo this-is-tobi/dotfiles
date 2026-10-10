@@ -41,13 +41,8 @@
 	defaultBranch = main
 [pull]
 	rebase = true
-[commit]
-	gpgsign = true
-[user]
-	email = this-is-tobi@proton.me
-	name = this-is-tobi
-# 	signingkey = ~/.ssh/id_rsa.pub
-# [gpg]
-# 	format = ssh
-# [gpg "ssh"]
-#   allowedSignersFile = ~/.ssh/allowed_signers
+# Identity and commit signing are per machine: the setup creates ~/.gitconfig.local
+# (user.name, user.email and, optionally, signing) and never overwrites it.
+# Keep this include last so the local file wins.
+[include]
+	path = ~/.gitconfig.local
