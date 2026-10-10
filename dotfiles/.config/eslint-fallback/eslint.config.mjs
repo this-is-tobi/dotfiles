@@ -1,7 +1,11 @@
 // Shared ESLint config for projects without one of their own, used by Neovim,
-// VS Code and the CLI. ~/eslint.config.mjs re-exports it: ESLint looks up its
-// config from each linted file's folder upward, so a project's own config is
-// always found first, and this one only for files that have none.
+// VS Code and the CLI. ~/eslint.config.mjs re-exports it. ESLint 10 looks up
+// its config from each linted file's folder upward, so a project's own config
+// is always found first and this one only serves files that have none. ESLint
+// 9 looks up from the working directory instead: set
+// ESLINT_FLAGS=v10_config_lookup_from_file to get the same behaviour. Projects
+// still on .eslintrc under the home directory are ignored by ESLint 9/10 and
+// linted with this config instead.
 //
 // Falls back to https://github.com/this-is-tobi/template-monorepo-ts/blob/main/packages/eslint-config/src/index.ts
 import antfu from '@antfu/eslint-config'

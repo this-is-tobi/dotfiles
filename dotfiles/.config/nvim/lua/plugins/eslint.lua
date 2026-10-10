@@ -70,11 +70,14 @@ return {
               config.cmd = vim.list_extend({ "yarn", "exec" }, config.cmd)
             end
 
+            -- the server only falls back to nodePath when a project does not
+            -- install eslint itself, so it is safe to set unconditionally
+            config.settings.nodePath = vim.fn.fnamemodify(fallback_config_file, ":h")
+
             if fallback_dirs[root_dir] then
               config.settings.options = {
                 overrideConfigFile = fallback_config_file,
               }
-              config.settings.nodePath = vim.fn.fnamemodify(fallback_config_file, ":h")
             end
           end,
         },

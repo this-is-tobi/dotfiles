@@ -129,6 +129,11 @@ Configuration for the [cheat](https://github.com/cheat/cheat) command:
 #### `.config/eslint-fallback/`
 Shared [`@antfu/eslint-config`](https://github.com/antfu/eslint-config)-based flat config (`eslint.config.mjs` + `package.json`), used by Neovim, VS Code and the CLI as a fallback when the project being edited has no ESLint config of its own. The setup scripts install `~/eslint.config.mjs`, which re-exports it: ESLint looks up its config from each linted file's folder upward, so a project's own `eslint.config.*` always wins, and files without one get this config. Requires `npm install` in this directory once (done automatically by the setup scripts).
 
+Things to know:
+- ESLint 10 does the per-file lookup by default; ESLint 9 looks up from the working directory, so export `ESLINT_FLAGS=v10_config_lookup_from_file` to get the same behavior.
+- Only files under your home directory find `~/eslint.config.mjs`. Neovim still passes the shared config explicitly for projects elsewhere; VS Code has no fallback there.
+- A project under your home directory that still uses a legacy `.eslintrc` has it ignored by ESLint 9/10 and is linted with this config instead.
+
 #### `.config/gh-dash/config.yml`
 GitHub Dashboard TUI configuration:
 - PR and issue views
