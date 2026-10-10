@@ -170,6 +170,9 @@
     "plaintext": false,
     "scminput": false
   },
+  // The chat.*Locations settings below (instructions, skills, agents) are deprecated by
+  // VS Code and only read by the Local agent; the Agent Host reads these folders by
+  // default. Drop them once the Local agent is no longer used.
   // instructions — ~/.copilot/instructions/ loaded in every repo
   "chat.instructionsFilesLocations": {
     ".github/instructions": true,
