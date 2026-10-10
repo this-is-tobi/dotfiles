@@ -18,6 +18,53 @@ chmod +x setup/setup-debian.sh
 bash setup/setup-osx.sh
 ```
 
+### Check What the Setup Would Do (-n)
+
+**Problem:** You want to see which profiles and steps a run would use before it installs anything
+
+**Solution:** `-n` prints the resolved settings and exits. It installs and changes nothing:
+```sh
+./setup/setup-osx.sh -n -p base,js -d
+```
+
+An unknown profile name stops the run with `Error: unknown profile '<name>'` and exit status 1, and the message lists the valid profiles. The backup scripts have the same flag: `./backup/backup-osx.sh -n` shows what a backup would copy without creating anything.
+
+### Profiles or Dotfiles Not Installed
+
+**Problem:** The setup stops with `Error: this script needs the rest of the repository`, for example when it was piped into bash (`curl ... | bash`) or the script was copied out of the repository
+
+**Solution:** `-p` and `-d` resolve `profiles/` and `dotfiles/` relative to the script, so the script has to run from a cloned repository:
+```sh
+git clone https://github.com/this-is-tobi/dotfiles.git
+cd dotfiles
+./setup/setup-osx.sh -p base -d
+```
+
+### Replaced Dotfiles: Where Are They?
+
+**Problem:** After `-d`, your own `~/.zshrc`, `~/.gitconfig` or another file looks overwritten
+
+**Solution:** A destination whose content differs from the repository is saved first under `~/.dotfiles-backup/<timestamp>/`, with the same path relative to `$HOME` (the directory is private, mode `700`). Identical files are left alone, so re-running the setup creates no backup.
+```sh
+ls -R ~/.dotfiles-backup
+# Put one back
+cp ~/.dotfiles-backup/<timestamp>/.zshrc ~/.zshrc
+```
+
+Edits you made to an installed dotfile (for example `~/.zshrc`) are replaced the same way by the repository version when you re-run the setup with `-d`; the previous content is in that directory. This is not the same thing as the `backup/` scripts, which copy your files to a directory of your choice.
+
+### The -r Flag Does Nothing
+
+**Problem:** `-r` (remove temporary files) no longer cleans anything
+
+**Solution:** `-r` is deprecated and ignored: the setup prints a note and carries on. The scripts that create temporary files remove them themselves, so there is nothing to clean up afterwards. Do not replace it with `rm -rf /tmp/*`, which also deletes other applications' state.
+
+### Setup Stops: Command Line Tools or Homebrew Missing (macOS)
+
+**Problem:** The setup exits with `... is required but not installed, and this shell is non-interactive`
+
+**Solution:** The setup offers to install Command Line Tools and Homebrew (`[y/N]`) only when it runs in an interactive terminal. Run it from one, or install them first (next section).
+
 ### Homebrew Installation Fails (macOS)
 
 **Problem:** Homebrew won't install
@@ -35,6 +82,8 @@ xcode-select --install
 ```
 
 3. **Check Homebrew path:**
+
+The dotfiles' `.zshrc` already finds `brew` on both architectures. If `brew` is not found in a shell that does not load it (for example before `-d` has installed it, or with another `.zshrc`):
 ```sh
 # Apple Silicon (M1/M2)
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
@@ -64,8 +113,12 @@ sudo apt --fix-broken install
 cat /etc/apt/sources.list.d/*.list
 ```
 
-Note: CLI tooling no longer comes from apt - see the mise section below if the
-missing package is a tool rather than a system library.
+Note: CLI tooling no longer comes from apt - see
+[mise Issues](02-installation.md#mise-issues) if the missing package is a tool
+rather than a system library.
+
+Docker's apt repository follows the distribution (`debian` or `ubuntu`): on any
+other distribution the setup stops with an error instead of adding it.
 
 ### oh-my-zsh Installation Fails
 
@@ -73,21 +126,22 @@ missing package is a tool rather than a system library.
 
 **Solutions:**
 
-1. **Manual install:**
+1. **Manual install** (the setup runs the installer with `--unattended`, which neither switches your login shell nor starts zsh):
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 ```
 
 2. **Remove existing installation:**
 ```sh
 rm -rf ~/.oh-my-zsh
-# Run setup again
+# Run setup again (with -d to put the theme back)
 ```
 
 3. **Check Git availability:**
 ```sh
 git --version
-# Install if missing
+# The Debian setup installs git when it is missing; on macOS it comes with
+# the Command Line Tools
 ```
 
 ### Package Installation Fails
@@ -216,6 +270,27 @@ source ~/.config/dotfiles/functions.sh
 ls -la ~/.config/dotfiles/functions.sh
 ```
 
+### API Keys or Environment Variables Missing
+
+**Problem:** `CONTEXT7_API_KEY`, `ARGOCD_BASE_URL` or another variable is empty in a shell, or an MCP server complains about a missing key
+
+**Solutions:**
+
+1. **Check the secrets file:** secrets live in `~/.config/dotfiles/secrets.env`, plain `KEY=value` lines, created once by the setup with `-d` (mode `600`, from `secrets.env.example`) and never overwritten. `env.sh` is managed by the setup (edits are lost) and only loads that file:
+```sh
+ls -l ~/.config/dotfiles/secrets.env
+# values you used to keep in env.sh were moved here by the setup
+```
+If the file does not exist, run the setup with `-d`.
+
+2. **Fill in the keys you use** (uncomment them in the template), then open a new shell:
+```sh
+vim ~/.config/dotfiles/secrets.env
+exec zsh
+```
+
+3. **Register them with Claude Code:** MCP servers that need a key only see it after `setup/helpers/claude-mcp.sh` has run again (see [MCP Server Connection Failed](#mcp-server-connection-failed)). VS Code prompts for its keys itself the first time a server starts.
+
 ### Completions Not Working
 
 **Problem:** Tab completion doesn't work
@@ -253,10 +328,13 @@ exec zsh
 ls -la ~/.copilot/instructions/
 ```
 
-2. **Check settings.json:**
+2. **Check settings.json** (the user settings file is not in `~/.vscode`):
 ```sh
-# Ensure absolute paths with ~
-code ~/.vscode/settings.json
+# macOS
+code ~/Library/Application\ Support/Code/User/settings.json
+
+# Linux
+code ~/.config/Code/User/settings.json
 ```
 
 3. **Reload window:**
@@ -286,55 +364,53 @@ code ~/.vscode/settings.json
 code .
 ```
 
-4. **Check Docker (for Docker-based servers):**
+4. **Verify mcp.json syntax:**
 ```sh
-docker ps
-# Start Docker Desktop if not running
+# macOS: ~/Library/Application Support/Code/User/mcp.json
+# Linux: ~/.config/Code/User/mcp.json
+# The file allows // comment lines, which jq rejects: drop them first
+grep -v '^[[:space:]]*//' ~/Library/Application\ Support/Code/User/mcp.json | jq .
 ```
 
-5. **Verify mcp.json syntax:**
-```sh
-# Validate JSON
-cat ~/.vscode/mcp.json | jq .
-```
+### npx-based MCP Servers Not Starting
 
-### Docker MCP Server Not Working
+**Problem:** The `kubernetes`, `argocd` or `playwright` server does not start
 
-**Problem:** Kubernetes or GitKraken MCP not connecting
+The servers in `dotfiles/.vscode/mcp.json` are `github` (remote, authenticated by your VS Code session), `context7` (remote, API key), and three servers started with `npx`: `kubernetes` (`kubernetes-mcp-server`), `argocd` (`argocd-mcp`) and `playwright` (`@playwright/mcp`). None of them needs Docker.
 
 **Solutions:**
 
-1. **Ensure Docker is running:**
+1. **Check that Node and npx are available** (the `js` profile installs Node with mise):
 ```sh
-docker ps
-# If error, start Docker Desktop
+command -v npx
+mise doctor
 ```
 
-2. **Test Docker:**
+2. **Run the server by hand** to see its error (it should start and wait for input, stop it with `Ctrl+C`):
 ```sh
-docker run hello-world
+npx -y kubernetes-mcp-server@latest
 ```
 
-3. **Check volume mounts:**
+3. **Kubernetes:** the server reads your kubeconfig:
 ```sh
-# Kubernetes
 ls -la ~/.kube/config
-
-# GitKraken
-ls -la ~/.gitkraken/
+kubectl config current-context
 ```
 
-4. **Pull images manually:**
+4. **Argo CD:** it needs the server URL and an API token. VS Code asks for both the first time the server starts. For Claude Code, set `ARGOCD_BASE_URL` and `ARGOCD_API_TOKEN` in `~/.config/dotfiles/secrets.env`: the setup registers the server only when `ARGOCD_BASE_URL` is set, so re-run `setup/helpers/claude-mcp.sh` afterwards.
+
+5. **Claude Code:** `setup/helpers/claude-mcp.sh` (the setup runs it with `-d` when `claude` is installed) registers `context7`, `kubernetes`, `playwright` and, when configured, `argocd`, and is safe to re-run:
 ```sh
-docker pull ghcr.io/stophobia/mcp-k8s:latest
-docker pull gitkraken/mcp-server-gk
+claude mcp list
 ```
 
 ## Git Issues
 
 ### Git Configuration Not Applied
 
-**Problem:** Git config not working
+**Problem:** Git config not working, or commits fail with `Author identity unknown`
+
+The shared `~/.gitconfig` carries no identity and no commit signing: those are per machine and live in `~/.gitconfig.local`, which `~/.gitconfig` includes last. The setup creates `~/.gitconfig.local` once (it carries your name, email and signing settings over from an existing `~/.gitconfig`, otherwise it asks, or prints how to set them when there is no terminal) and never overwrites it.
 
 **Solutions:**
 
@@ -343,16 +419,17 @@ docker pull gitkraken/mcp-server-gk
 cat ~/.gitconfig
 ```
 
-2. **Verify user info:**
+2. **Verify user info and where it comes from:**
 ```sh
-git config --global user.name
-git config --global user.email
+git config --show-origin user.name
+git config --show-origin user.email
 ```
+(`git config --global user.name` only reads `~/.gitconfig` and shows nothing here.)
 
-3. **Set if missing:**
+3. **Set if missing** (not with `--global`: `~/.gitconfig` is replaced when you re-run the setup with `-d`):
 ```sh
-git config --global user.name "Your Name"
-git config --global user.email "your@email.com"
+git config --file ~/.gitconfig.local user.name "Your Name"
+git config --file ~/.gitconfig.local user.email "you@example.com"
 ```
 
 ### Git Credentials Not Saved
@@ -371,13 +448,13 @@ cat ~/.ssh/id_ed25519.pub
 # Copy and add to GitHub.com → Settings → SSH Keys
 ```
 
-2. **Configure credential helper:**
+2. **Configure credential helper:** the shared `~/.gitconfig` sets `cache --timeout=3600`, so HTTPS passwords are forgotten after an hour. Credential helpers add up, so a persistent one in `~/.gitconfig.local` is used alongside it:
 ```sh
 # macOS
-git config --global credential.helper osxkeychain
+git config --file ~/.gitconfig.local credential.helper osxkeychain
 
 # Linux
-git config --global credential.helper store
+git config --file ~/.gitconfig.local credential.helper store
 ```
 
 ## Kubernetes Issues
@@ -468,7 +545,7 @@ docker ps
 **Solutions:**
 
 1. **Check macOS version:**
-- Docker Desktop requires macOS 10.15+
+- Check that your macOS version is still supported by your Docker Desktop release (see Docker's system requirements)
 
 2. **Reset Docker:**
 - Docker Desktop → Troubleshoot → Reset to factory defaults
@@ -542,10 +619,18 @@ export PATH=~/.npm-global/bin:$PATH
 
 **Solutions:**
 
-1. **Install Nerd Font:**
+1. **Check the Nerd Fonts are installed:** the base profile downloads Hack and the Nerd Fonts symbols from the nerd-fonts release zips (see `setup/helpers/fonts.sh`) into `~/.fonts`, and on macOS copies the `.ttf` files to `~/Library/Fonts`:
 ```sh
 # macOS
-brew tap homebrew/cask-fonts
+ls ~/Library/Fonts | grep -i nerd
+
+# Debian/Ubuntu
+fc-list | grep -i nerd
+```
+On Debian the font step is skipped when `~/.fonts` already exists: rename that directory and re-run the base profile to get the fonts.
+
+If you prefer Homebrew, the font is a regular cask (no tap needed):
+```sh
 brew install --cask font-hack-nerd-font
 ```
 
@@ -569,19 +654,17 @@ grep "ZSH_THEME" ~/.zshrc
 
 **Solutions:**
 
-1. **Check kube-ps1 plugin:**
+1. **Check the theme:** kube-ps1 is embedded in the theme `this-is-tobi.zsh-theme`, it is not an oh-my-zsh plugin (nothing to add to `plugins`):
 ```sh
-grep "kube-ps1" ~/.zshrc
+grep "kube_ps1" ~/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme | head -3
+grep "ZSH_THEME" ~/.zshrc
+# Should be: ZSH_THEME="this-is-tobi"
 ```
+If the theme file is missing, re-run the setup with `-d`.
 
-2. **Enable in .zshrc:**
+2. **Check the prompt is switched on:** the theme defines `kubeon` and `kubeoff` (`-g` for all shells):
 ```sh
-# Should be in plugins list
-plugins=(
-  ...
-  kube-ps1
-  ...
-)
+kubeon
 ```
 
 3. **Verify kubectl config:**
@@ -638,29 +721,39 @@ ps aux | grep -E "(zsh|docker|kubectl)"
 
 ### Backup Script Fails
 
-**Problem:** Backup doesn't complete
+**Problem:** Backup doesn't complete, or nothing is created
 
 **Solutions:**
 
-1. **Check destination exists:**
+1. **Use the right flags:** the output directory is `-o` (there is no `-d`). Any unknown flag prints the help and exits with status 1:
 ```sh
-mkdir -p ~/backups
+./backup/backup-osx.sh -o ~/backups
 ```
 
-2. **Check permissions:**
+2. **Preview with a dry run:** `-n` shows what would be copied and creates nothing:
 ```sh
+./backup/backup-osx.sh -n -o ~/backups
+```
+
+3. **Check destination exists and is writable:**
+```sh
+mkdir -p ~/backups
 ls -la ~/backups
 ```
 
-3. **Check disk space:**
+4. **Check disk space:**
 ```sh
 df -h
 ```
 
-4. **Run with verbose output:**
+5. **Check the warnings at the end:** a single item that fails (for example a broken symlink) does not stop the run, it is listed in a final warning. The script also needs `rclone` (installed by the base profile).
+
+6. **Run with verbose output:**
 ```sh
-bash -x backup/backup-osx.sh -d ~/backups
+bash -x backup/backup-osx.sh -o ~/backups
 ```
+
+A backup is private (mode `700`) but not encrypted: see [Backup & Restore](09-backup-restore.md#security-considerations) before copying it anywhere.
 
 ### Restore Doesn't Work
 
@@ -668,14 +761,15 @@ bash -x backup/backup-osx.sh -d ~/backups
 
 **Solutions:**
 
-1. **Verify backup integrity:**
+1. **Verify backup integrity:** each run creates `backup_<timestamp>/` in the output directory, with `etc/`, `dotfiles/`, `home/` (and `brave/` on macOS) inside:
 ```sh
-ls -la ~/backups/dotfiles
+BACKUP=~/backups/backup_<timestamp>
+ls -la "$BACKUP" "$BACKUP/dotfiles"
 ```
 
 2. **Copy files manually:**
 ```sh
-cp ~/backups/dotfiles/.zshrc ~/
+cp "$BACKUP/dotfiles/.zshrc" ~/
 ```
 
 3. **Check ownership:**
@@ -685,6 +779,7 @@ sudo chown -R $USER:$USER ~/backups
 
 4. **Restore permissions:**
 ```sh
+chmod 700 ~/.ssh ~/.gnupg
 chmod 600 ~/.ssh/id_*
 chmod 644 ~/.ssh/*.pub
 ```
@@ -693,12 +788,10 @@ chmod 644 ~/.ssh/*.pub
 
 ### Enable Debug Mode
 
-Add to top of script to debug:
+Trace a script instead of editing it (the scripts already stop on the first error):
 
 ```sh
-set -x  # Print commands
-set -e  # Exit on error
-set -u  # Error on undefined variable
+bash -x setup/setup-osx.sh -p base
 ```
 
 ### Check Logs
@@ -742,8 +835,8 @@ sudo apt update && sudo apt upgrade  # Linux
 brew cleanup  # macOS
 sudo apt autoremove  # Linux
 
-# Backup regularly
-./backup/backup-osx.sh
+# Backup regularly (private but not encrypted, see Backup & Restore)
+./backup/backup-osx.sh -o ~/backups
 ```
 
 ### Version Pinning
