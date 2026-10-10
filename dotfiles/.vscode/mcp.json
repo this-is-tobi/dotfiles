@@ -6,12 +6,13 @@
       "url": "https://api.githubcopilot.com/mcp/"
     },
     // Context7 — up-to-date library docs fetched on demand
-    // Requires CONTEXT7_API_KEY env var (get one at https://context7.com)
+    // VS Code asks for the API key (get one at https://context7.com) the first
+    // time the server starts, then stores it securely
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
+        "CONTEXT7_API_KEY": "${input:context7-api-key}"
       }
     },
     // Kubernetes MCP — reads ~/.kube/config, gives Copilot cluster access
@@ -21,14 +22,15 @@
       "args": ["-y", "kubernetes-mcp-server@latest"]
     },
     // Argo CD MCP — lets Copilot list/sync/inspect ArgoCD apps
-    // Requires an ArgoCD API token: Settings > Accounts > Generate Token
+    // VS Code asks for the server URL and an API token (Settings > Accounts >
+    // Generate Token) on first start. Remove this entry if you do not use Argo CD.
     "argocd": {
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "argocd-mcp@latest", "stdio"],
       "env": {
-        "ARGOCD_BASE_URL": "https://gitops.ohmlab.fr",
-        "ARGOCD_API_TOKEN": "${env:ARGOCD_API_TOKEN}"
+        "ARGOCD_BASE_URL": "${input:argocd-base-url}",
+        "ARGOCD_API_TOKEN": "${input:argocd-api-token}"
       }
     },
     // Playwright MCP — browser automation for Copilot (screenshots, clicks, forms)
@@ -38,5 +40,23 @@
       "args": ["-y", "@playwright/mcp@latest"]
     }
   },
-  "inputs": []
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "context7-api-key",
+      "description": "Context7 API key (https://context7.com)",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "argocd-base-url",
+      "description": "Argo CD server URL (e.g. https://argocd.example.com)"
+    },
+    {
+      "type": "promptString",
+      "id": "argocd-api-token",
+      "description": "Argo CD API token",
+      "password": true
+    }
+  ]
 }
