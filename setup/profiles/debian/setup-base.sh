@@ -120,7 +120,6 @@ install_additional_setup() {
     lazydocker@latest \
     lazygit@latest \
     aqua:neovim/neovim@latest \
-    skate@latest \
     ttyd@latest \
     vhs@latest \
     github:isacikgoz/tldr@latest

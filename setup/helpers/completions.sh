@@ -172,12 +172,6 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
   && scw autocomplete install shell=zsh
 
 
-# Install skate completion
-[ -x "$(command -v skate)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install skate completion\n" \
-  && skate completion zsh > $COMPLETION_DIR/_skate
-
-
 # Install teleport completion
 [ -x "$(command -v teleport)" ] \
   && printf "\n${red}[completion] =>${no_color} Install teleport completion\n" \
