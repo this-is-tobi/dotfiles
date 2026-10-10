@@ -29,7 +29,6 @@ plugins=(
   brew
   bun
   colored-man-pages
-  direnv
   docker
   docker-compose
   gh
@@ -67,7 +66,7 @@ unset brew_bin
 # brew settings
 if [ -n "$HOMEBREW_PREFIX" ]; then
   # aliases
-  alias bcu="brew outdated --cask --greedy | awk '{print $1}' | xargs brew reinstall --cask"
+  alias bcu='brew outdated --cask --greedy | awk "{print \$1}" | xargs brew reinstall --cask'
 
   # docker desktop cli
   export PATH="$HOME/.docker/bin:$PATH"
@@ -83,6 +82,18 @@ zsh_completions_dir="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
 [ -d "$zsh_completions_dir" ] && fpath+=("$zsh_completions_dir")
 unset zsh_completions_dir
 
+# mise (before oh-my-zsh: it provides tools some plugins look for, such as direnv on Debian)
+# `activate` puts tool versions on PATH and re-resolves them on every directory
+# change. Globals installed via npm/go land in the active tool's bin and are
+# exposed after `mise reshim`.
+export PATH="$HOME/.local/bin:$PATH"
+if type mise &>/dev/null; then
+  eval "$(mise activate zsh)"
+fi
+
+# direnv plugin, only when direnv is installed (it warns at every start otherwise)
+command -v direnv &>/dev/null && plugins+=(direnv)
+
 source $ZSH/oh-my-zsh.sh
 
 # aliases
@@ -93,7 +104,7 @@ alias f="fzf --preview 'bat --color=always {}' --preview-window='right:60%:nohid
 alias gs="git stash"
 alias gsa="git stash apply"
 alias gsp="git stash pop"
-alias h="history | tail -r | fzf --preview 'bat --color=always {}' --preview-window='right:60%:hidden'"
+alias h="history | { tac 2>/dev/null || tail -r; } | fzf --preview 'bat --color=always {}' --preview-window='right:60%:hidden'"
 alias hs="history | grep"
 alias hsi="history | grep -i"
 alias img="chafa"
@@ -147,15 +158,6 @@ export PATH="$GOBIN:$PATH"
 
 # tldr++
 export TLDR_OS=$([ "$(uname)" = Darwin ] && echo osx || echo linux)
-
-# mise
-# `activate` puts tool versions on PATH and re-resolves them on every directory
-# change. Globals installed via npm/go land in the active tool's bin and are
-# exposed after `mise reshim`.
-export PATH="$HOME/.local/bin:$PATH"
-if type mise &>/dev/null; then
-  eval "$(mise activate zsh)"
-fi
 
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
