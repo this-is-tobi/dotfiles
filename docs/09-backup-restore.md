@@ -4,13 +4,16 @@ This document explains how to backup and restore your dotfiles and system config
 
 ## Overview
 
-The backup scripts save your dotfiles, configurations, and important system files to a specified directory (local or remote). This ensures you can:
+The backup scripts copy your dotfiles, credentials, configurations and a few important files to a timestamped directory (local or a mounted share). This ensures you can:
 - Restore configurations after a system reinstall
-- Sync settings across multiple machines
-- Keep a history of configuration changes
+- Keep timestamped snapshots of your configuration
 - Migrate to a new computer
 
+> **Backups are not encrypted.** A backup holds `~/.ssh`, `~/.gnupg` (plus an exported GPG private key), `~/.aws`, `~/.kube`, `~/.docker`, `~/.npmrc`, `~/.config/dotfiles/secrets.env` and your Claude Code history. The scripts run with `umask 077` and set the backup directory to mode `700`, so other local users cannot read it, but nothing is encrypted. Keep it on storage only you can access, and encrypt it (see [Encryption](#encryption)) before it leaves the machine: cloud-synced folders, a NAS, a git remote.
+
 ## Backup Scripts
+
+Both scripts copy files with [rclone](https://rclone.org), which the base profile installs.
 
 ### macOS: backup-osx.sh
 
@@ -25,29 +28,37 @@ The backup scripts save your dotfiles, configurations, and important system file
 
 **Options:**
 ```
--f          Full backup: also include the entire home directory (Desktop, Documents,
-            Downloads, Movies, Music, Pictures, dev), not just ~/dev. For personal use.
--n          Dry run: show what would be copied without copying anything.
+-f          Full backup: copy Desktop, dev, Documents, Downloads, Movies, Music and
+            Pictures from the home directory, instead of only ~/dev. For personal use.
+-n          Dry run: show what would be copied without copying anything (no directory
+            is created).
 -o DIR      Output directory (default: current directory). The backup itself is
             written to DIR/backup_<timestamp>.
 -h          Display help message
 ```
 
+Any other flag prints the help and exits with status 1 (there is no `-d` option: the output directory is `-o`).
+
+**Environment:** `BACKUP_GPG_EMAIL` selects the GPG key to export (default: the `user.email` of your git configuration).
+
 **Examples:**
 ```sh
-# Backup to default location
+# Backup to default location (a backup_<timestamp> directory in the current directory)
 ./backup/backup-osx.sh
 
 # Preview what a backup would copy, without copying anything
 ./backup/backup-osx.sh -n
 
 # Backup to specific directory
-./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
+./backup/backup-osx.sh -o ~/backups/dotfiles
 
-# Full backup (entire home directory) to an external drive
+# Full backup (Desktop, Documents, Downloads, ...) to an external drive
 ./backup/backup-osx.sh -f -o /Volumes/Backup/dotfiles
 
-# Backup to remote mount
+# Export the GPG key of another identity
+BACKUP_GPG_EMAIL=you@example.com ./backup/backup-osx.sh -o ~/backups/dotfiles
+
+# Backup to a mounted share (not encrypted: see Security Considerations)
 ./backup/backup-osx.sh -o ~/mnt/nas/dotfiles
 ```
 
@@ -64,13 +75,16 @@ The backup scripts save your dotfiles, configurations, and important system file
 
 **Options:**
 ```
--f          Full backup: also include the entire home directory, not just ~/dev.
+-f          Full backup: copy the whole home directory instead of only ~/dev.
             For personal use.
--n          Dry run: show what would be copied without copying anything.
+-n          Dry run: show what would be copied without copying anything (no directory
+            is created).
 -o DIR      Output directory (default: current directory). The backup itself is
             written to DIR/backup_<timestamp>.
 -h          Display help message
 ```
+
+Any other flag prints the help and exits with status 1. `BACKUP_GPG_EMAIL` works as on macOS.
 
 **Examples:**
 ```sh
@@ -81,155 +95,166 @@ The backup scripts save your dotfiles, configurations, and important system file
 ./backup/backup-debian.sh -n
 
 # Backup to specific directory
-./backup/backup-debian.sh -o ~/backup/dotfiles
+./backup/backup-debian.sh -o ~/backups/dotfiles
 
-# Backup to mounted network share
+# Backup to mounted network share (not encrypted: see Security Considerations)
 ./backup/backup-debian.sh -o /mnt/backup/dotfiles
 ```
 
 ## What Gets Backed Up
 
-### Shell Configuration
-- `.zshrc` - Zsh configuration
-- `.bashrc` - Bash configuration (if exists)
-- `.profile` - Shell profile
-- `.config/dotfiles/` - Custom functions and environment
+The scripts run five steps in this order. A source that does not exist is skipped silently, and a failing copy does not stop the run: failures are listed in a warning at the end (the exit status stays `0`, so check the output when automating).
 
-### Development Tools
-- `.gitconfig` - Git configuration
-- `.vscode/` - VS Code workspace settings
-- `.config/gh/` - GitHub CLI configuration
-- `.config/gh-dash/` - GitHub Dashboard config
-- `.config/lazygit/` - Lazygit configuration
-- `.config/nvim/` - Neovim configuration
+### 1. System files
+- `/etc/hosts` and `/etc/resolv.conf` go to `etc/`
 
-### AI Agent Configs
-- `.claude/` - Claude Code settings, instructions, agents, skills, and memory/conversation history (caches, plugin installs, and other regenerable state are excluded)
-- `.copilot/` - Copilot CLI settings, instructions, agents, skills, and hooks (downloaded packages and session state are excluded)
+### 2. GPG key export
+- The key is chosen by `BACKUP_GPG_EMAIL` (default: the git `user.email`)
+- The public and private key are written as `public-key-<id>.asc` and `private-key-<id>.asc` to `~/.gnupg/backup/` (directory mode `700`, private key mode `600`). As `~/.gnupg` is copied in the next step, they also end up in the backup under `dotfiles/.gnupg/backup/`
+- If no matching secret key is found, the step is reported and skipped
 
-### Application Configs
-- `.config/cheat/` - Cheat configuration
-- `.mattermost/` - Mattermost theme
-- `.continue/` - Continue.dev config
-- `.config/mise/` - mise settings and pinned tool versions
+### 3. Dotfiles
+Each entry goes to `dotfiles/<basename>`:
 
-### Oh-my-zsh
-- `.oh-my-zsh/custom/` - Custom themes and plugins
-- Theme file: `this-is-tobi.zsh-theme`
+- `.aws` - AWS CLI configuration (`cli/cache` and `sso/cache` excluded)
+- `.claude` - Claude Code settings, instructions, agents, skills, memory and conversation history (`projects/`). Caches, shell snapshots, file history, backups, IDE state, plugin installs and sessions are excluded
+- `.config` - everything under `~/.config`: gh, gh-dash, lazygit, nvim, mise, cheat, `dotfiles/` (functions and `secrets.env`), gcloud and any other tool that keeps its configuration there, including the VS Code user settings on Linux. Cache and log directories (`Cache`, `Caches`, `cache`, `GPUCache`, `Code Cache`, `DawnCache`, `logs`, `Logs`) are excluded
+- `.copilot` - Copilot CLI configuration (`pkg`, `ide` and `session-state` excluded)
+- `.docker` - Docker client configuration (`scout`, `sbom`, `scan`, `desktop`, `buildx`, `mutagen` and `run` excluded)
+- `.gitconfig`
+- `.gnupg` - the GPG keyring, including the exported key from step 2
+- `.kube` - Kubernetes configuration (`cache` and `http-cache` excluded)
+- `.mc` - MinIO client configuration
+- `.npmrc`
+- `.ssh` - SSH keys and configuration
+- `.tsh` - Teleport profiles
+- `.zshrc`
 
-### Kubernetes & Cloud
-- `.kube/config` - Kubernetes configuration
-- `.aws/` - AWS CLI configuration (if exists)
-- `.config/gcloud/` - Google Cloud SDK (if exists)
+To keep one of them out of your backups, remove it from the `DOT_FILES` list in the script.
 
-### SSH Keys (Optional)
-- `.ssh/` - SSH keys and configuration
-  - **Note:** Keys are backed up with restrictive permissions
+### 4. Home directories
+Each directory goes to `home/<name>`:
 
-### Package Lists
-The scripts also create package lists:
-- **macOS:** Homebrew package list
-- **Debian:** apt package list
-- **mise:** Installed tool versions (also captured via `.config/mise/`)
-- **npm:** Global packages (if installed)
+- **macOS:** `~/dev` by default. With `-f`: `~/Desktop`, `~/dev`, `~/Documents`, `~/Downloads`, `~/Movies`, `~/Music` and `~/Pictures`
+- **Debian:** `~/dev` by default. With `-f`: the whole home directory, as `home/<username>/` (it holds a second copy of the dotfiles above, without their per-directory exclusions)
+
+### 5. Brave (macOS only)
+- If `~/Library/Application Support/BraveSoftware` exists, the `Default` profile is copied to `brave/Default` (`Cache`, `Code Cache`, `GPUCache`, `DawnCache` and `Crashpad` excluded)
+
+### Always excluded
+Every directory copy skips OS metadata (`.DS_Store`, `Thumbs.db`), `*.tmp`, `*.log`, earlier backups (`backup_*`, so a backup written under a source directory never copies itself), `.cache`, `.local/share/mise` and regenerable project output: `node_modules`, `__pycache__`, `*.pyc`, `.venv`, `venv`, `.pytest_cache`, `target`, `dist`, `build`, `.next`, `.nuxt`, `.gradle`, `.parcel-cache` and `coverage`. These patterns have no leading `/`, so they match at any depth: a project folder named `build` or `dist` is skipped too. Symbolic links are followed (their target is copied).
+
+### Not backed up
+- **Package lists.** The scripts do not record installed packages (see [Package Restore](#package-restore))
+- `~/.gitconfig.local`, the per-machine git identity and signing settings: only the shared `~/.gitconfig` is copied
+- `~/.bashrc`, `~/.profile` and every shell file other than `~/.zshrc`
+- `~/.oh-my-zsh` (the theme and plugins are reinstalled by the setup)
+- `~/.continue` (including a `.env` you may keep there) and, on macOS, the VS Code user directory `~/Library/Application Support/Code/User`
+- Anything under `/etc` other than the two files above, and anything outside the lists above
 
 ## Backup Structure
 
-Example backup directory structure:
+Each run creates one directory, `backup_<YYYY-MM-DDTHH-MM-SS>`, inside the output directory (`-o`, default: the current directory). Example on macOS:
 
 ```
-backup-2023-10-15-143022/
+backup_2026-10-10T13-26-17/
+├── etc/
+│   ├── hosts
+│   └── resolv.conf
 ├── dotfiles/
-│   ├── .zshrc
+│   ├── .aws/
+│   ├── .claude/
+│   ├── .config/
+│   │   ├── dotfiles/          (functions, secrets.env)
+│   │   ├── gh/
+│   │   ├── lazygit/
+│   │   ├── mise/
+│   │   ├── nvim/
+│   │   └── ...
+│   ├── .copilot/
+│   ├── .docker/
 │   ├── .gitconfig
-│   └── .config/
-│       ├── dotfiles/
-│       ├── cheat/
-│       ├── gh-dash/
-│       ├── lazygit/
-│       ├── mise/
-│       └── nvim/
-├── vscode/
-│   ├── settings.json
-│   ├── mcp.json
-│   └── extensions.json
-├── oh-my-zsh/
-│   └── custom/
-│       └── themes/
-│           └── this-is-tobi.zsh-theme
-├── kubernetes/
-│   └── config
-├── ssh/ (optional)
-│   ├── config
-│   └── *.pub
-└── package-lists/
-    ├── brew-packages.txt
-    ├── brew-casks.txt
-    ├── apt-packages.txt
-    └── mise-tools.txt
+│   ├── .gnupg/
+│   │   └── backup/            (exported GPG key)
+│   ├── .kube/
+│   ├── .mc/
+│   ├── .npmrc
+│   ├── .ssh/
+│   ├── .tsh/
+│   └── .zshrc
+├── home/
+│   └── dev/                   (with -f: also Desktop, Documents, ... on macOS; <username>/ on Debian)
+└── brave/                     (macOS only, when Brave is installed)
+    └── Default/
 ```
+
+Entries only exist when their source exists on the machine. When the run ends, the script prints the location and size of the backup and reminds you that it is not encrypted.
 
 ## Backup Best Practices
 
 ### Regular Backups
 ```sh
-# Weekly backup
-./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
+# Weekly backup to a local directory
+./backup/backup-osx.sh -o ~/backups/dotfiles
 
 # Use cron for automation (macOS/Linux)
 # Edit crontab
 crontab -e
 
 # Add weekly backup (Sunday at 2 AM)
-0 2 * * 0 /path/to/dotfiles/backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
+0 2 * * 0 /path/to/dotfiles/backup/backup-osx.sh -o ~/backups/dotfiles
 ```
 
 ### Version Control
-```sh
-# Initialize git in backup directory
-cd ~/backups/dotfiles
-git init
-git add .
-git commit -m "Backup $(date +%Y-%m-%d)"
 
-# Push to private repository
-git remote add origin git@github.com:you/private-dotfiles-backup.git
-git push -u origin main
-```
+Do not commit a backup to a git repository, not even a private one: it holds private keys and tokens in clear text. Your configuration is already versioned by this repository (`dotfiles/`); backups are for what the repository deliberately does not contain.
 
 ### Multiple Destinations
 ```sh
 # Local backup
 ./backup/backup-osx.sh -o ~/backups/dotfiles
 
-# Cloud backup (Dropbox)
-./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
-
 # Network backup
 ./backup/backup-osx.sh -o /Volumes/NAS/backups/dotfiles
 
 # External drive
 ./backup/backup-osx.sh -o /Volumes/Backup/dotfiles
+
+# Cloud-synced folder (Dropbox, ...): the backup is NOT encrypted and would be
+# uploaded in clear text. Only do this with the encrypted archive from the
+# Encryption section, never with the raw backup directory.
+./backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
 ```
 
 ### Encryption
-For sensitive data:
+The scripts do not encrypt anything. Before a backup is stored anywhere you do not fully control (cloud storage, a shared NAS, a server), encrypt it:
 
 ```sh
-# Backup first
-./backup/backup-osx.sh -o ~/backup-temp
+# Backup first, to a local private directory
+./backup/backup-osx.sh -o ~/backups/dotfiles
 
-# Encrypt with gpg
-tar czf - ~/backup-temp | gpg -c > dotfiles-backup.tar.gz.gpg
+# The backup to protect (printed as "location" at the end of the run)
+BACKUP=$(ls -d ~/backups/dotfiles/backup_* | tail -1)
+
+# Encrypt with gpg (symmetric, passphrase)
+tar czf - -C "$(dirname "$BACKUP")" "$(basename "$BACKUP")" | gpg -c > "$BACKUP.tar.gz.gpg"
 
 # Or use age
-tar czf - ~/backup-temp | age -p > dotfiles-backup.tar.gz.age
+tar czf - -C "$(dirname "$BACKUP")" "$(basename "$BACKUP")" | age -p > "$BACKUP.tar.gz.age"
 
-# Upload encrypted backup to cloud
-rclone copy dotfiles-backup.tar.gz.gpg remote:backups/
+# Upload only the encrypted archive
+rclone copy "$BACKUP.tar.gz.gpg" remote:backups/
 ```
 
+To read it back: `gpg -d <file>.tar.gz.gpg | tar xzf - -C ~/restored-dotfiles`. An [rclone `crypt` remote](https://rclone.org/crypt/) is another option: it encrypts file names and contents on the fly (see [Using rclone](#using-rclone)). Once the archive is stored safely, delete the clear-text backup directory.
+
 ## Restoring from Backup
+
+In the commands below, `BACKUP` is the backup directory to restore from (the "location" printed at the end of the run):
+
+```sh
+BACKUP=~/backups/dotfiles/backup_2026-10-10T13-26-17
+```
 
 ### Full Restore
 
@@ -239,32 +264,43 @@ git clone https://github.com/this-is-tobi/dotfiles.git
 cd dotfiles
 ```
 
-2. **Run setup script:**
+2. **Run setup script** (profiles and dotfiles need the cloned repository):
 ```sh
-./setup/setup-osx.sh -p 'base,devops,js'  # Your profiles
+./setup/setup-osx.sh -p 'base,devops,js' -d  # Your profiles
+```
+With `-d` the setup installs the repository's dotfiles. A file it replaces is first saved under `~/.dotfiles-backup/<timestamp>/`.
+
+3. **Restore credentials and tool state** (the repository does not ship them):
+```sh
+for item in .ssh .gnupg .aws .kube .docker .mc .tsh; do
+  [ -d "$BACKUP/dotfiles/$item" ] || continue
+  mkdir -p ~/"$item"
+  cp -Rp "$BACKUP/dotfiles/$item/." ~/"$item"/
+done
+[ -f "$BACKUP/dotfiles/.npmrc" ] && cp -p "$BACKUP/dotfiles/.npmrc" ~/.npmrc
+
+# Claude Code conversation history (optional)
+[ -d "$BACKUP/dotfiles/.claude/projects" ] && mkdir -p ~/.claude/projects \
+  && cp -Rp "$BACKUP/dotfiles/.claude/projects/." ~/.claude/projects/
 ```
 
-3. **Restore backed-up files:**
+4. **Restore your secrets file:**
 ```sh
-# Copy from backup
-cp -r ~/backups/dotfiles/dotfiles/. ~/
+mkdir -p ~/.config/dotfiles
+cp -p "$BACKUP/dotfiles/.config/dotfiles/secrets.env" ~/.config/dotfiles/secrets.env
+chmod 600 ~/.config/dotfiles/secrets.env
+```
+The setup already installed the repository's `~/.config`. Copy back from `$BACKUP/dotfiles/.config/` only what you customized (for example `gh` or `lazygit`); copying the whole directory would replace the managed files, such as `env.sh`, with older versions.
 
-# Or use rsync
-rsync -av ~/backups/dotfiles/dotfiles/ ~/
+5. **Check permissions:** `~/.ssh`, `~/.gnupg`, the private keys and `~/.kube/config` must not be readable by others, see [Permissions](#permissions).
+
+6. **Git identity:** `~/.gitconfig.local` is not part of the backup. The setup asks for your name and email when it creates it. To set them yourself:
+```sh
+git config --file ~/.gitconfig.local user.name "Your Name"
+git config --file ~/.gitconfig.local user.email "you@example.com"
 ```
 
-4. **Restore application configs:**
-```sh
-# VS Code
-cp -r ~/backups/dotfiles/vscode/.vscode ~/.vscode
-
-# Kubernetes config
-mkdir -p ~/.kube
-cp ~/backups/dotfiles/kubernetes/config ~/.kube/config
-chmod 600 ~/.kube/config
-```
-
-5. **Reload shell:**
+7. **Reload shell:**
 ```sh
 exec zsh
 ```
@@ -274,62 +310,83 @@ exec zsh
 Restore only specific configurations:
 
 ```sh
-# Just shell config
-cp ~/backups/dotfiles/dotfiles/.zshrc ~/
+# Just shell config (the setup's -d would otherwise install the repository version)
+cp "$BACKUP/dotfiles/.zshrc" ~/
 
 # Just Git config
-cp ~/backups/dotfiles/dotfiles/.gitconfig ~/
+cp "$BACKUP/dotfiles/.gitconfig" ~/
 
-# Just VS Code settings
-cp -r ~/backups/dotfiles/vscode/.vscode ~/workspace/.vscode
+# Just SSH
+mkdir -p ~/.ssh && cp -Rp "$BACKUP/dotfiles/.ssh/." ~/.ssh/ && chmod 700 ~/.ssh
 
 # Just Kubernetes config
-cp ~/backups/dotfiles/kubernetes/config ~/.kube/config
+mkdir -p ~/.kube
+cp -p "$BACKUP/dotfiles/.kube/config" ~/.kube/config
+chmod 600 ~/.kube/config
+
+# Your projects
+mkdir -p ~/dev && cp -Rp "$BACKUP/home/dev/." ~/dev/
+
+# Brave profile on macOS (quit Brave first)
+mkdir -p "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/Default"
+cp -Rp "$BACKUP/brave/Default/." "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/Default/"
+```
+
+Projects were backed up without `node_modules`, `.venv`, `dist`, `build` and the other regenerable output listed above: reinstall dependencies after restoring.
+
+### GPG Key
+
+`~/.gnupg` is restored with the credentials above. To import the exported key on its own:
+
+```sh
+gpg --import "$BACKUP"/dotfiles/.gnupg/backup/private-key-*.asc
+gpg --list-secret-keys
 ```
 
 ### Package Restore
 
-Reinstall packages from backup lists:
+The backup contains no package lists. Reinstall the toolset by re-running the setup, which installs everything defined by the profiles:
 
-**macOS:**
 ```sh
-# Install Homebrew packages
-xargs brew install < ~/backups/dotfiles/package-lists/brew-packages.txt
-
-# Install Cask applications
-xargs brew install --cask < ~/backups/dotfiles/package-lists/brew-casks.txt
-```
-
-**Debian/Ubuntu:**
-```sh
-# Install apt packages
-xargs sudo apt install -y < ~/backups/dotfiles/package-lists/apt-packages.txt
+./setup/setup-osx.sh -p 'base,devops,js'      # macOS
+./setup/setup-debian.sh -p 'base,devops,js'   # Debian/Ubuntu
 ```
 
 **mise tools:**
 ```sh
-# The backed-up ~/.config/mise/config.toml already holds every pinned version,
-# so restoring it and running install is enough:
-cp -R ~/backups/dotfiles/.config/mise ~/.config/
+# The backed-up ~/.config/mise/config.toml holds the versions pinned with
+# `mise use --global`, so restoring it and running install is enough:
+mkdir -p ~/.config/mise
+cp -p "$BACKUP/dotfiles/.config/mise/config.toml" ~/.config/mise/
 mise install
 ```
 
+**Anything you installed by hand** is not recorded anywhere. If you want a list before wiping a machine, capture it yourself, for example:
+```sh
+brew bundle dump --file ~/Brewfile   # macOS
+apt-mark showmanual > ~/apt-manual.txt   # Debian/Ubuntu
+```
+
 ## Remote Backups
+
+> The backup is not encrypted. Everything below moves it to another machine or provider: encrypt first (see [Encryption](#encryption)) or use an encrypted rclone remote.
 
 ### Using rclone
 
 Setup rclone for cloud storage:
 
 ```sh
-# Configure rclone (first time)
+# Configure rclone (first time): create a remote for your provider, then a
+# "crypt" remote on top of it (called "secret" below) so that names and
+# contents are encrypted before they are uploaded
 rclone config
 
-# Backup to cloud
-./backup/backup-osx.sh -o /tmp/dotfiles-backup
-rclone sync /tmp/dotfiles-backup remote:dotfiles-backup
+# Backup locally, then push through the encrypted remote
+./backup/backup-osx.sh -o ~/backups/dotfiles
+rclone sync ~/backups/dotfiles secret:dotfiles-backup
 
 # Restore from cloud
-rclone sync remote:dotfiles-backup ~/restored-dotfiles
+rclone sync secret:dotfiles-backup ~/restored-dotfiles
 ```
 
 Supported providers:
@@ -346,33 +403,22 @@ Backup to remote server:
 
 ```sh
 # Initial backup
-./backup/backup-osx.sh -o /tmp/dotfiles-backup
-rsync -avz /tmp/dotfiles-backup user@server:/backups/
+./backup/backup-osx.sh -o ~/backups/dotfiles
+rsync -avz ~/backups/dotfiles/ user@server:/backups/dotfiles/
 
 # Restore from remote
-rsync -avz user@server:/backups/dotfiles-backup ~/restored-dotfiles
+rsync -avz user@server:/backups/dotfiles/ ~/restored-dotfiles/
 ```
+
+The server then holds your keys and tokens in clear text: use a server (and disk) you trust as much as this machine, or sync an encrypted archive instead.
 
 ### Using Git
 
-Backup to private Git repository:
-
-```sh
-# Create backup
-./backup/backup-osx.sh -o ~/dotfiles-backup
-
-# Initialize git
-cd ~/dotfiles-backup
-git init
-git add .
-git commit -m "Backup $(date +%Y-%m-%d)"
-
-# Push to private repo
-git remote add origin git@github.com:you/private-backup.git
-git push -u origin main
-```
+Do not push a backup directory to a git remote (see [Version Control](#version-control)). If you want history in git, commit only an encrypted archive.
 
 ## Automated Backups
+
+The GPG export may ask for the key's passphrase. In an unattended run (cron, launchd, systemd) a failing `gpg` command stops the script, because it runs with `set -e`: make sure gpg-agent can answer, or run the backup by hand.
 
 ### cron (macOS/Linux)
 
@@ -381,10 +427,10 @@ git push -u origin main
 crontab -e
 
 # Daily backup at 2 AM
-0 2 * * * /Users/you/dotfiles/backup/backup-osx.sh -o ~/Dropbox/dotfiles-backup
+0 2 * * * /Users/you/dotfiles/backup/backup-osx.sh -o ~/backups/dotfiles
 
-# Weekly backup on Sunday at 3 AM with cloud sync
-0 3 * * 0 /Users/you/dotfiles/backup/backup-osx.sh -o /tmp/backup && rclone sync /tmp/backup remote:dotfiles
+# Weekly backup on Sunday at 3 AM, pushed through an encrypted rclone remote
+0 3 * * 0 /Users/you/dotfiles/backup/backup-osx.sh -o ~/backups/dotfiles && rclone sync ~/backups/dotfiles secret:dotfiles
 ```
 
 ### launchd (macOS)
@@ -402,7 +448,7 @@ Create `~/Library/LaunchAgents/com.user.dotfiles-backup.plist`:
     <array>
         <string>/Users/you/dotfiles/backup/backup-osx.sh</string>
         <string>-o</string>
-        <string>/Users/you/Dropbox/dotfiles-backup</string>
+        <string>/Users/you/backups/dotfiles</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>
@@ -465,54 +511,46 @@ Keep:
 Example:
 1. Original files on your computer
 2. Local backup on external drive
-3. Cloud backup (Dropbox, S3, etc.)
+3. Encrypted cloud backup (an encrypted rclone remote, or an archive encrypted with gpg or age)
 
 ### Incremental Backups
 
-Use time-stamped backups:
+Every run writes its own `backup_<timestamp>` directory, so snapshots accumulate in the output directory. Prune the old ones:
 
 ```sh
-# Create dated backup
-./backup/backup-osx.sh -o ~/backups/dotfiles-$(date +%Y-%m-%d)
+# Create a snapshot
+./backup/backup-osx.sh -o ~/backups/dotfiles
 
-# Keep last 7 days, delete older
-find ~/backups -name 'dotfiles-*' -mtime +7 -exec rm -rf {} \;
-```
-
-### Differential Backups
-
-Only backup changed files:
-
-```sh
-# First full backup
-./backup/backup-osx.sh -o ~/backups/full
-
-# Subsequent differential backups
-rsync -av --compare-dest=~/backups/full ~ ~/backups/diff-$(date +%Y-%m-%d)
+# Keep the last 7 days, delete older snapshots
+find ~/backups/dotfiles -maxdepth 1 -name 'backup_*' -mtime +7 -exec rm -rf {} +
 ```
 
 ## Security Considerations
 
 ### Sensitive Data
 
-Be careful with:
-- SSH private keys
-- API keys and tokens
-- Passwords and credentials
-- Cloud provider credentials
+A backup contains:
+- SSH private keys (`.ssh`), the GPG keyring (`.gnupg`) and the exported GPG private key
+- Cloud and cluster credentials (`.aws`, `.kube`, `.tsh`, `.docker`, `.mc`, `.npmrc`)
+- Everything in `~/.config`, including `~/.config/dotfiles/secrets.env`
+- Claude Code settings and conversation history, and Copilot CLI configuration
+
+The scripts only keep other local users out (`umask 077`, backup directory mode `700`). They do not encrypt.
 
 **Best practices:**
-- Don't backup private keys to cloud (or encrypt them)
-- Use secret management tools (1Password, Vault)
-- Exclude sensitive files from backups
-- Encrypt backups containing credentials
+- Keep backups on storage only you can access, and encrypt them before they go to a cloud folder, a NAS or a server
+- Remove entries you do not want from the `DOT_FILES` list of the script
+- Delete backups you no longer need: they hold the keys and tokens of their day
+- The GPG export stays in `~/.gnupg/backup/` on the machine after each run: store the key safely, then remove it from there if you do not want a second copy
+- Use secret management tools (1Password, Vault) rather than long-lived tokens in files
 
 ### Permissions
 
-Ensure proper file permissions:
+Ensure proper file permissions, especially after a restore:
 
 ```sh
 # SSH keys
+chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_*
 chmod 644 ~/.ssh/*.pub
 
@@ -521,11 +559,23 @@ chmod 600 ~/.kube/config
 
 # GPG keys
 chmod 700 ~/.gnupg
+
+# Local secrets
+chmod 600 ~/.config/dotfiles/secrets.env
 ```
 
 ## Troubleshooting
 
 ### Backup Fails
+
+**Check the flags:**
+```sh
+# An unknown flag (for example -d) prints the help and exits 1: the output directory is -o
+./backup/backup-osx.sh -o ~/backups/dotfiles
+
+# Preview without copying anything
+./backup/backup-osx.sh -n -o ~/backups/dotfiles
+```
 
 **Check permissions:**
 ```sh
@@ -533,7 +583,7 @@ chmod 700 ~/.gnupg
 chmod +x backup/backup-osx.sh
 
 # Check destination is writable
-touch ~/backups/test && rm ~/backups/test
+mkdir -p ~/backups && touch ~/backups/test && rm ~/backups/test
 ```
 
 **Check disk space:**
@@ -545,15 +595,17 @@ df -h ~/backups
 df -h ~/backups
 ```
 
+**Check the final summary:** an item that could not be copied (for example a broken symlink or an unreadable file) does not stop the run. It is listed in a warning at the end of the output.
+
 ### Restore Fails
 
 **Verify backup integrity:**
 ```sh
 # Check backup directory exists
-ls -la ~/backups/dotfiles
+ls -la "$BACKUP"
 
 # Verify files are present
-find ~/backups/dotfiles -type f | wc -l
+find "$BACKUP" -type f | wc -l
 ```
 
 **Permissions issues:**
