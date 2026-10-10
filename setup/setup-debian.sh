@@ -27,6 +27,12 @@ i=1
 # Get project directories
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
+# Profiles, helpers and dotfiles are read from the repository next to this script
+if [ ! -f "$SCRIPT_PATH/helpers/files.sh" ]; then
+  printf "Error: this script needs the rest of the repository (helpers/, profiles/, dotfiles/). Clone it and run the script from the clone.\n" >&2
+  exit 1
+fi
+
 # shellcheck source=helpers/files.sh
 . "$SCRIPT_PATH/helpers/files.sh"
 # shellcheck source=helpers/remote.sh
