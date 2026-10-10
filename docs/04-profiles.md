@@ -21,18 +21,22 @@ The **Core** profile is always installed and provides essential system utilities
 | --------------------------------------------------------------------- | ------------------------------------------------- | ---- | -------- | ------ |
 | [build-essential](https://packages.debian.org/en/sid/build-essential) | Essential packages for building debian packages   | ✓    | -        | apt    |
 | [ca-certificates](https://packages.debian.org/en/sid/ca-certificates) | Common CA certificates                            | ✓    | homebrew | apt    |
-| [coreutils](https://www.gnu.org/software/coreutils)                   | Basic file, shell and text manipulation utilities | ✓    | -        | apt    |
 | [curl](https://curl.se/)                                              | Command line tool for transferring data with URLs | ✓    | homebrew | apt    |
+| [git](https://git-scm.com)                                            | Distributed version control system                | ✓    | -        | apt    |
 | [gnupg](https://gnupg.org)                                            | Encryption tool (GPG)                             | ✓    | homebrew | apt    |
+| [gsed](https://www.gnu.org/software/sed)                              | GNU sed, installed under the name gsed            | ✓    | homebrew | -      |
 | [gzip](https://www.gnu.org/software/gzip)                             | Data compression program                          | ✓    | homebrew | apt    |
 | [jq](https://stedolan.github.io/jq)                                   | JSON processor tool                               | ✓    | homebrew | apt    |
 | [locales](https://packages.debian.org/en/sid/locales)                 | Tools to generate locale definitions              | ✓    | -        | apt    |
 | [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)                       | Zsh configuration manager                         | ✓    | shell    | shell  |
-| [sed](https://www.gnu.org/software/sed)                               | Non-interactive command-line text editor          | ✓    | homebrew | apt    |
+| [sed](https://www.gnu.org/software/sed)                               | Non-interactive command-line text editor          | ✓    | -        | apt    |
 | [tar](https://www.gnu.org/software/tar)                               | Create and manipulate tar archives                | ✓    | -        | apt    |
 | [unzip](https://packages.debian.org/en/sid/unzip)                     | De-archiver for zip files                         | ✓    | homebrew | apt    |
 | [wget](https://www.gnu.org/software/wget)                             | Retrieve files using HTTP, HTTPS, FTP and FTPS    | ✓    | homebrew | apt    |
 | [xz-utils](https://packages.debian.org/en/sid/xz-utils)               | XZ format compression utilities                   | ✓    | homebrew | apt    |
+| [zsh](https://www.zsh.org)                                            | Z shell, made the default login shell             | ✓    | -        | apt    |
+
+On macOS the system tools stay in place: git comes with the Command Line Tools, zsh ships with macOS and the BSD `sed` is not replaced. GNU sed is installed as `gsed`, and `.zshrc` aliases `sed` to it when `gsed` is present. On Debian, `coreutils` is installed by the Base profile (see below).
 
 ---
 
@@ -42,37 +46,43 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 
 ### Command Line Interfaces
 
-| Package                                                   | Description                                                                                                | Lite | macOS    | Debian |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---- | -------- | ------ |
-| [bat](https://github.com/sharkdp/bat)                     | Cat command with syntax highlighting                                                                       | ✓    | homebrew | mise   |
-| [bat-extras](https://github.com/eth-p/bat-extras)         | Bat combo with other commands (batgrep, batman, etc.)                                                      | ✓    | homebrew | shell  |
-| [chafa](https://hpjansson.org/chafa)                      | Image viewer in terminal                                                                                   | -    | homebrew | apt    |
-| [cheat](https://github.com/cheat/cheat)                   | Create and view interactive cheat sheets                                                                   | ✓    | homebrew | mise   |
-| [docker](https://www.docker.com)                          | Container runtime (Debian: CLI/engine via apt; macOS: bundled with Docker Desktop, see Applications below) | ✓    | -        | apt    |
-| [exiftool](https://exiftool.org)                          | Metadata writer and reader tool                                                                            | -    | homebrew | apt    |
-| [eza](https://eza.rocks)                                  | Modern ls replacement with colors and icons                                                                | ✓    | homebrew | mise   |
-| [fd](https://github.com/sharkdp/fd)                       | Simple, fast alternative to 'find'                                                                         | ✓    | homebrew | mise   |
-| [ffmpeg](https://ffmpeg.org)                              | Audio video manipulation tool                                                                              | -    | homebrew | apt    |
-| [fzf](https://github.com/junegunn/fzf)                    | Command-line fuzzy finder                                                                                  | ✓    | homebrew | mise   |
-| [gh](https://cli.github.com)                              | GitHub official CLI                                                                                        | -    | homebrew | mise   |
-| [glab](https://gitlab.com/gitlab-org/cli)                 | GitLab official CLI                                                                                        | -    | homebrew | mise   |
-| [glow](https://github.com/charmbracelet/glow)             | Render markdown in the CLI with pizzazz                                                                    | ✓    | homebrew | mise   |
-| [lazydocker](https://github.com/jesseduffield/lazydocker) | Simple terminal UI for docker commands                                                                     | -    | homebrew | mise   |
-| [lazygit](https://github.com/jesseduffield/lazygit)       | Simple terminal UI for git commands                                                                        | -    | homebrew | mise   |
-| [nmap](https://nmap.org)                                  | Network port scanning utility                                                                              | -    | homebrew | apt    |
-| [nvim](https://neovim.io)                                 | Hyperextensible Vim-based text editor                                                                      | -    | homebrew | mise   |
-| [pandoc](https://pandoc.org)                              | Universal markup converter                                                                                 | -    | homebrew | apt    |
-| [mise](https://mise.jdx.dev)                              | Version manager: language runtimes on both platforms, plus CLI binaries on Debian                          | ✓    | homebrew | shell  |
-| [rclone](https://rclone.org)                              | Swiss army knife of cloud storage                                                                          | ✓    | homebrew | mise   |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)          | Recursively search directories for regex patterns                                                          | ✓    | homebrew | mise   |
-| [sshs](https://github.com/quantumsheep/sshs)              | Interactive SSH client                                                                                     | ✓    | homebrew | mise   |
-| [tldr++](https://github.com/isacikgoz/tldr)               | Interactive cheatsheet tool                                                                                | -    | homebrew | mise   |
-| [tree](https://mama.indstate.edu/users/ice/tree)          | Display filesystem as tree                                                                                 | ✓    | homebrew | apt    |
-| [ttyd](https://github.com/tsl0922/ttyd)                   | Share terminal over the web                                                                                | -    | homebrew | mise   |
-| [vhs](https://github.com/charmbracelet/vhs)               | CLI home video recorder (terminal recordings)                                                              | -    | homebrew | mise   |
-| [vim](https://www.vim.org)                                | Ubiquitous text editor                                                                                     | ✓    | homebrew | apt    |
-| [watch](https://en.wikipedia.org/wiki/Watch_(command))    | Execute a program periodically                                                                             | ✓    | homebrew | apt    |
-| [yq](https://github.com/mikefarah/yq)                     | YAML processor (like jq for YAML)                                                                          | ✓    | homebrew | mise   |
+| Package                                                            | Description                                                                                                | Lite | macOS    | Debian |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ---- | -------- | ------ |
+| [bat](https://github.com/sharkdp/bat)                              | Cat command with syntax highlighting                                                                       | ✓    | homebrew | mise   |
+| [bat-extras](https://github.com/eth-p/bat-extras)                  | Bat combo with other commands (batgrep, batman, etc.)                                                      | ✓    | homebrew | shell  |
+| [chafa](https://hpjansson.org/chafa)                               | Image viewer in terminal                                                                                   | -    | homebrew | apt    |
+| [cheat](https://github.com/cheat/cheat)                            | Create and view interactive cheat sheets                                                                   | ✓    | homebrew | mise   |
+| [coreutils](https://www.gnu.org/software/coreutils)                | Basic file, shell and text manipulation utilities (Debian)                                                 | ✓    | -        | apt    |
+| [docker](https://www.docker.com)                                   | Container runtime (Debian: CLI/engine via apt; macOS: bundled with Docker Desktop, see Applications below) | ✓    | -        | apt    |
+| [exiftool](https://exiftool.org)                                   | Metadata writer and reader tool                                                                            | -    | homebrew | apt    |
+| [eza](https://eza.rocks)                                           | Modern ls replacement with colors and icons                                                                | ✓    | homebrew | mise   |
+| [fd](https://github.com/sharkdp/fd)                                | Simple, fast alternative to 'find'                                                                         | ✓    | homebrew | mise   |
+| [ffmpeg](https://ffmpeg.org)                                       | Audio video manipulation tool                                                                              | -    | homebrew | apt    |
+| [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig) | Font configuration library, provides fc-cache (Debian)                                                     | -    | -        | apt    |
+| [fzf](https://github.com/junegunn/fzf)                             | Command-line fuzzy finder                                                                                  | ✓    | homebrew | mise   |
+| [gh](https://cli.github.com)                                       | GitHub official CLI                                                                                        | -    | homebrew | mise   |
+| [glab](https://gitlab.com/gitlab-org/cli)                          | GitLab official CLI                                                                                        | -    | homebrew | mise   |
+| [glow](https://github.com/charmbracelet/glow)                      | Render markdown in the CLI with pizzazz                                                                    | ✓    | homebrew | mise   |
+| [lazydocker](https://github.com/jesseduffield/lazydocker)          | Simple terminal UI for docker commands                                                                     | -    | homebrew | mise   |
+| [lazygit](https://github.com/jesseduffield/lazygit)                | Simple terminal UI for git commands                                                                        | -    | homebrew | mise   |
+| [man](https://www.nongnu.org/man-db)                               | Manual page viewer (Debian)                                                                                | ✓    | -        | apt    |
+| [man-db](https://www.nongnu.org/man-db)                            | Manual page database and tools (Debian)                                                                    | ✓    | -        | apt    |
+| [manpages-dev](https://packages.debian.org/en/sid/manpages-dev)    | Manual pages about using GNU/Linux for development                                                         | ✓    | -        | apt    |
+| [mise](https://mise.jdx.dev)                                       | Version manager: language runtimes on both platforms, plus CLI binaries on Debian                          | ✓    | homebrew | shell  |
+| [nerd-fonts](https://github.com/ryanoasis/nerd-fonts)              | Hack and Symbols Only fonts for neovim (copied to ~/.fonts, on macOS also ~/Library/Fonts)                 | -    | shell    | shell  |
+| [nmap](https://nmap.org)                                           | Network port scanning utility                                                                              | -    | homebrew | apt    |
+| [nvim](https://neovim.io)                                          | Hyperextensible Vim-based text editor                                                                      | -    | homebrew | mise   |
+| [pandoc](https://pandoc.org)                                       | Universal markup converter                                                                                 | -    | homebrew | apt    |
+| [rclone](https://rclone.org)                                       | Swiss army knife of cloud storage                                                                          | ✓    | homebrew | mise   |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                   | Recursively search directories for regex patterns                                                          | ✓    | homebrew | mise   |
+| [sshs](https://github.com/quantumsheep/sshs)                       | Interactive SSH client                                                                                     | ✓    | homebrew | mise   |
+| [tldr++](https://github.com/isacikgoz/tldr)                        | Interactive cheatsheet tool                                                                                | -    | homebrew | mise   |
+| [tree](https://mama.indstate.edu/users/ice/tree)                   | Display filesystem as tree                                                                                 | ✓    | homebrew | apt    |
+| [ttyd](https://github.com/tsl0922/ttyd)                            | Share terminal over the web                                                                                | -    | homebrew | mise   |
+| [vhs](https://github.com/charmbracelet/vhs)                        | CLI home video recorder (terminal recordings)                                                              | -    | homebrew | mise   |
+| [vim](https://www.vim.org)                                         | Ubiquitous text editor                                                                                     | ✓    | homebrew | apt    |
+| [watch](https://en.wikipedia.org/wiki/Watch_(command))             | Execute a program periodically                                                                             | ✓    | homebrew | apt    |
+| [yq](https://github.com/mikefarah/yq)                              | YAML processor (like jq for YAML)                                                                          | ✓    | homebrew | mise   |
 
 ### GitHub CLI Extensions
 
@@ -109,37 +119,37 @@ DEVOPS_CATEGORIES=k8s ./setup/setup-debian.sh -p devops -l
 
 The **Category** column corresponds to the `DEVOPS_CATEGORIES` values described above.
 
-| Package                                                      | Description                                                                                          | Category | Lite | macOS    | Debian |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | -------- | ---- | -------- | ------ |
-| [act](https://github.com/nektos/act)                         | Run GitHub Actions locally                                                                           | misc     | -    | homebrew | mise   |
-| [actionlint](https://rhysd.github.io/actionlint)             | Static checker for GitHub Actions workflows                                                          | misc     | -    | homebrew | mise   |
-| [ansible](https://docs.ansible.com)                          | IT automation tool                                                                                   | iac      | ✓    | homebrew | uv     |
-| [ansible-lint](https://ansible.readthedocs.io/projects/lint) | Linter for Ansible playbooks (via ansible-dev-tools)                                                 | iac      | -    | homebrew | uv     |
-| [argo](https://argo-cd.readthedocs.io)                       | Argo Workflows CLI                                                                                   | k8s      | -    | homebrew | mise   |
-| [argocd](https://argo-cd.readthedocs.io)                     | Argo CD CLI for GitOps                                                                               | k8s      | -    | homebrew | mise   |
-| [chart-testing](https://github.com/helm/chart-testing)       | Helm chart linting and testing                                                                       | k8s      | -    | homebrew | mise   |
-| [coder](https://coder.com)                                   | Coder remote development CLI                                                                         | misc     | -    | homebrew | mise   |
-| [helm](https://helm.sh)                                      | Kubernetes package manager                                                                           | k8s      | ✓    | homebrew | mise   |
-| [helm-docs](https://github.com/norwoodj/helm-docs)           | Auto-generate Helm chart documentation                                                               | k8s      | ✓    | homebrew | mise   |
-| [k6](https://k6.io)                                          | Modern load testing tool                                                                             | misc     | -    | homebrew | mise   |
-| [k9s](https://k9scli.io)                                     | Kubernetes TUI                                                                                       | k8s      | -    | homebrew | mise   |
-| [kind](https://kind.sigs.k8s.io)                             | Kubernetes in Docker                                                                                 | k8s      | -    | homebrew | mise   |
-| [krew](https://sigs.k8s.io/krew)                             | kubectl plugin manager                                                                               | k8s      | ✓    | homebrew | mise   |
-| [kubectl](https://kubernetes.io/docs/reference/kubectl)      | Kubernetes command-line tool                                                                         | k8s      | ✓    | homebrew | mise   |
-| [kubectx](https://github.com/ahmetb/kubectx)                 | Kubernetes context switcher                                                                          | k8s      | ✓    | homebrew | mise   |
-| [kubens](https://github.com/ahmetb/kubectx)                  | Kubernetes namespace switcher (its own mise tool; the old apt/brew packages bundled it with kubectx) | k8s      | ✓    | homebrew | mise   |
-| [mkcert](https://github.com/FiloSottile/mkcert)              | Make locally trusted certificates                                                                    | misc     | -    | homebrew | mise   |
-| [oc](https://www.openshift.com)                              | OpenShift CLI                                                                                        | k8s      | ✓    | homebrew | mise   |
-| [oras](https://github.com/oras-project/oras)                 | OCI Registry As Storage CLI                                                                          | misc     | -    | homebrew | mise   |
-| [scw](https://github.com/scaleway/scaleway-cli)              | Scaleway CLI                                                                                         | cloud    | -    | homebrew | mise   |
-| [sshpass](https://sourceforge.net/projects/sshpass)          | Non-interactive SSH password auth                                                                    | misc     | ✓    | homebrew | apt    |
-| [teleport](https://goteleport.com)                           | Modern SSH server for clusters                                                                       | misc     | -    | homebrew | apt    |
-| [terraform](https://www.terraform.io)                        | Infrastructure as code tool                                                                          | iac      | ✓    | homebrew | mise   |
-| [uv](https://github.com/astral-sh/uv)                        | Python package installer (installs ansible on Debian)                                                | iac      | ✓    | -        | mise   |
-| [velero](https://velero.io)                                  | Kubernetes backup and migration                                                                      | k8s      | -    | homebrew | mise   |
-| [yamllint](https://yamllint.readthedocs.io)                  | Linter for YAML files                                                                                | misc     | -    | homebrew | mise   |
-
-Note: `docker` was previously (incorrectly) listed in this table -- it's actually installed by the **Base** profile (see its Applications table below), not DevOps.
+| Package                                                       | Description                                                                                            | Category | Lite | macOS    | Debian |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------- | ---- | -------- | ------ |
+| [act](https://github.com/nektos/act)                          | Run GitHub Actions locally                                                                             | misc     | -    | homebrew | mise   |
+| [actionlint](https://rhysd.github.io/actionlint)              | Static checker for GitHub Actions workflows                                                            | misc     | -    | homebrew | mise   |
+| [ansible](https://docs.ansible.com)                           | IT automation tool                                                                                     | iac      | ✓    | homebrew | uv     |
+| [ansible-lint](https://ansible.readthedocs.io/projects/lint)  | Linter for Ansible playbooks (via ansible-dev-tools)                                                   | iac      | -    | homebrew | uv     |
+| [argo](https://argo-cd.readthedocs.io)                        | Argo Workflows CLI                                                                                     | k8s      | -    | homebrew | mise   |
+| [argocd](https://argo-cd.readthedocs.io)                      | Argo CD CLI for GitOps                                                                                 | k8s      | -    | homebrew | mise   |
+| [chart-testing](https://github.com/helm/chart-testing)        | Helm chart linting and testing                                                                         | k8s      | -    | homebrew | mise   |
+| [coder](https://coder.com)                                    | Coder remote development CLI                                                                           | misc     | -    | homebrew | mise   |
+| [helm](https://helm.sh)                                       | Kubernetes package manager                                                                             | k8s      | ✓    | homebrew | mise   |
+| [helm-docs](https://github.com/norwoodj/helm-docs)            | Auto-generate Helm chart documentation                                                                 | k8s      | ✓    | homebrew | mise   |
+| [k6](https://k6.io)                                           | Modern load testing tool                                                                               | misc     | -    | homebrew | mise   |
+| [k9s](https://k9scli.io)                                      | Kubernetes TUI                                                                                         | k8s      | -    | homebrew | mise   |
+| [kind](https://kind.sigs.k8s.io)                              | Kubernetes in Docker                                                                                   | k8s      | -    | homebrew | mise   |
+| [krew](https://sigs.k8s.io/krew)                              | kubectl plugin manager                                                                                 | k8s      | ✓    | homebrew | mise   |
+| [kubectl](https://kubernetes.io/docs/reference/kubectl)       | Kubernetes command-line tool                                                                           | k8s      | ✓    | homebrew | mise   |
+| [kubectx](https://github.com/ahmetb/kubectx)                  | Kubernetes context switcher                                                                            | k8s      | ✓    | homebrew | mise   |
+| [kubens](https://github.com/ahmetb/kubectx)                   | Kubernetes namespace switcher (shipped with the kubectx formula on macOS; its own mise tool on Debian) | k8s      | ✓    | homebrew | mise   |
+| [libonig-dev](https://packages.debian.org/en/sid/libonig-dev) | Oniguruma regex library, development files (installed before ansible-dev-tools)                        | iac      | -    | -        | apt    |
+| [mkcert](https://github.com/FiloSottile/mkcert)               | Make locally trusted certificates                                                                      | misc     | -    | homebrew | mise   |
+| [oc](https://www.openshift.com)                               | OpenShift CLI                                                                                          | k8s      | ✓    | homebrew | mise   |
+| [oras](https://github.com/oras-project/oras)                  | OCI Registry As Storage CLI                                                                            | misc     | -    | homebrew | mise   |
+| [python3-dev](https://packages.debian.org/en/sid/python3-dev) | Python development files (installed before ansible-dev-tools)                                          | iac      | -    | -        | apt    |
+| [scw](https://github.com/scaleway/scaleway-cli)               | Scaleway CLI                                                                                           | cloud    | -    | homebrew | mise   |
+| [sshpass](https://sourceforge.net/projects/sshpass)           | Non-interactive SSH password auth                                                                      | misc     | ✓    | homebrew | apt    |
+| [teleport](https://goteleport.com)                            | Modern SSH server for clusters                                                                         | misc     | -    | homebrew | apt    |
+| [terraform](https://www.terraform.io)                         | Infrastructure as code tool                                                                            | iac      | ✓    | homebrew | mise   |
+| [uv](https://github.com/astral-sh/uv)                         | Python package installer (installs ansible on Debian)                                                  | iac      | ✓    | -        | mise   |
+| [velero](https://velero.io)                                   | Kubernetes backup and migration                                                                        | k8s      | -    | homebrew | mise   |
+| [yamllint](https://yamllint.readthedocs.io)                   | Linter for YAML files                                                                                  | misc     | -    | homebrew | mise   |
 
 ### kubectl Plugins (via Krew)
 
@@ -166,7 +176,7 @@ The **SecOps** profile provides security scanning, secret management, and compli
 | [age](https://github.com/FiloSottile/age)           | Simple, modern file encryption     | -    | homebrew | mise   |
 | [cosign](https://docs.sigstore.dev)                 | Container signing and verification | ✓    | homebrew | mise   |
 | [dive](https://github.com/wagoodman/dive)           | Docker image layer explorer        | -    | homebrew | mise   |
-| [gitleaks](https://github.com/gitleaks/gitleaks)    | Secret scanner for git repos       | -    | homebrew | mise   |
+| [gitleaks](https://github.com/gitleaks/gitleaks)    | Secret scanner for git repos       | ✓    | homebrew | mise   |
 | [kubescape](https://github.com/kubescape/kubescape) | Kubernetes security scanner        | -    | homebrew | mise   |
 | [kyverno](https://github.com/kyverno/kyverno)       | Kubernetes policy engine CLI       | -    | homebrew | mise   |
 | [sops](https://github.com/getsops/sops)             | Encrypted file editor              | -    | homebrew | mise   |
@@ -183,7 +193,7 @@ The **JavaScript** profile provides Node.js runtime and package managers.
 
 | Package                                  | Description                            | Lite | macOS | Debian |
 | ---------------------------------------- | -------------------------------------- | ---- | ----- | ------ |
-| [@antfu/ni](https://github.com/antfu/ni) | Package manager wrapper                | ✓    | npm   | npm    |
+| [@antfu/ni](https://github.com/antfu/ni) | Package manager wrapper                | -    | npm   | npm    |
 | [bun](https://bun.sh)                    | Fast JavaScript runtime                | -    | mise  | mise   |
 | [node](https://nodejs.org)               | JavaScript runtime                     | ✓    | mise  | mise   |
 | [npm](https://github.com/npm/cli)        | Node package manager (ships with node) | ✓    | node  | node   |
@@ -210,16 +220,16 @@ The **Go** profile provides Go language development tools and Kubernetes operato
 
 ## AI Profile
 
-The **AI** profile provides tools for running AI coding agents and large language models locally.$
+The **AI** profile provides tools for running AI coding agents and large language models locally.
 
 ### Command Line Interfaces
 
-| Package                                                  | Description                                     | Lite | macOS    | Debian |
-| -------------------------------------------------------- | ----------------------------------------------- | ---- | -------- | ------ |
-| [claude-code](https://github.com/anthropics/claude-code) | Claude Code CLI                                 | -    | homebrew | shell  |
-| [copilot-cli](https://github.com/github/copilot-cli)     | GitHub Copilot CLI                              | -    | homebrew | shell  |
-| [direnv](https://direnv.net)                             | Per-directory env loader (scoped agent secrets) | ✓    | homebrew | mise   |
-| [rtk](https://github.com/rtk-ai/rtk)                     | CLI proxy that reduces LLM token usage          | -    | homebrew | shell  |
+| Package                                                  | Description                                     | Lite | macOS         | Debian |
+| -------------------------------------------------------- | ----------------------------------------------- | ---- | ------------- | ------ |
+| [claude-code](https://github.com/anthropics/claude-code) | Claude Code CLI                                 | -    | homebrew cask | shell  |
+| [copilot-cli](https://github.com/github/copilot-cli)     | GitHub Copilot CLI                              | -    | homebrew cask | shell  |
+| [direnv](https://direnv.net)                             | Per-directory env loader (scoped agent secrets) | ✓    | homebrew      | mise   |
+| [rtk](https://github.com/rtk-ai/rtk)                     | CLI proxy that reduces LLM token usage          | -    | homebrew      | shell  |
 
 ### Applications
 
@@ -275,12 +285,13 @@ brew install <additional-tool>
 
 ### Package Sources
 
-- **homebrew** - macOS package manager (CLI tools and GUI apps)
+- **homebrew** - macOS package manager (CLI tools, via formulae)
+- **homebrew cask** - Homebrew casks: macOS GUI apps, plus the CLIs that Homebrew only ships as casks (claude-code, copilot-cli)
 - **apt** - Debian package manager (system packages)
 - **mise** - Language runtimes on both platforms; portable CLI binaries on Debian
 - **shell** - Shell script installation
-- **npm** - Node package manager
-- **pip** - Python package manager
-- **go** - Go package manager
+- **npm** - Node package manager (`npm install --global`)
+- **uv** - Python tool installer (`uv tool install`; ansible and ansible-lint on Debian)
+- **go** - Go package manager (`go install`)
 - **gh** - GitHub CLI extension
 - **krew** - kubectl plugin manager

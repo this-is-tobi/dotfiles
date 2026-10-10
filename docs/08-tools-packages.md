@@ -8,7 +8,7 @@ Use this guide to:
 - Find specific tools and their installation source
 - Understand what each tool does
 - Determine which profile includes a tool
-- Check if a tool is in lite mode
+- Check if a tool is in lite mode (the Lite column of [Installation Profiles](04-profiles.md))
 
 ## Command Line Tools
 
@@ -18,15 +18,26 @@ Essential system utilities (always installed):
 
 | Tool            | Description                         | Source       |
 | --------------- | ----------------------------------- | ------------ |
+| build-essential | Compiler toolchain and build tools  | apt          |
 | curl            | Data transfer tool (HTTP/HTTPS/FTP) | homebrew/apt |
 | wget            | Non-interactive network downloader  | homebrew/apt |
 | jq              | JSON processor and query tool       | homebrew/apt |
-| sed             | Stream editor for text manipulation | homebrew/apt |
+| git             | Distributed version control         | apt          |
+| sed             | Stream editor for text manipulation | apt          |
+| gsed            | GNU sed (macOS)                     | homebrew     |
 | gzip            | Data compression utility            | homebrew/apt |
 | tar             | Archive creation and extraction     | apt          |
 | unzip           | ZIP archive extraction              | homebrew/apt |
+| xz-utils        | XZ compression utilities            | homebrew/apt |
 | gnupg           | GPG encryption and signing          | homebrew/apt |
 | ca-certificates | SSL/TLS certificate authorities     | homebrew/apt |
+| locales         | Locale definitions                  | apt          |
+| zsh             | Z shell                             | apt          |
+| oh-my-zsh       | Zsh configuration manager           | shell        |
+
+On macOS, git comes with the Command Line Tools, zsh ships with the system and the
+BSD `sed` stays in place: GNU sed is installed as `gsed`, and `.zshrc` aliases `sed`
+to it when it is present.
 
 ### Enhanced CLI Tools
 
@@ -60,15 +71,28 @@ gh extension install meiji163/gh-notify  # Notifications TUI
 
 ### Container & Orchestration
 
-Docker and Kubernetes tools (DevOps profile):
+Docker tools (Base profile):
 
-| Tool    | Purpose                    | Related Tools            | Source        |
-| ------- | -------------------------- | ------------------------ | ------------- |
-| docker  | Container runtime          | lazydocker               | apt/cask      |
-| kubectl | Kubernetes CLI             | k9s, kubectx, stern      | homebrew/mise |
-| helm    | Kubernetes package manager | chart-testing, helm-docs | homebrew/mise |
-| kind    | Local Kubernetes           | -                        | homebrew/mise |
-| k9s     | Kubernetes TUI             | -                        | homebrew/mise |
+| Tool       | Purpose           | Related Tools | Source        |
+| ---------- | ----------------- | ------------- | ------------- |
+| docker     | Container runtime | lazydocker    | cask/apt      |
+| lazydocker | Docker TUI        | -             | homebrew/mise |
+
+On macOS `docker` is Docker Desktop (see Desktop Applications below); on Debian it is the
+Docker engine and CLI from Docker's apt repository.
+
+Kubernetes tools (DevOps profile):
+
+| Tool      | Purpose                       | Related Tools            | Source        |
+| --------- | ----------------------------- | ------------------------ | ------------- |
+| kubectl   | Kubernetes CLI                | k9s, kubectx, stern      | homebrew/mise |
+| helm      | Kubernetes package manager    | chart-testing, helm-docs | homebrew/mise |
+| helm-docs | Helm chart documentation      | helm                     | homebrew/mise |
+| kind      | Local Kubernetes              | -                        | homebrew/mise |
+| k9s       | Kubernetes TUI                | -                        | homebrew/mise |
+| krew      | kubectl plugin manager        | -                        | homebrew/mise |
+| kubectx   | Kubernetes context switcher   | kubens                   | homebrew/mise |
+| kubens    | Kubernetes namespace switcher | kubectx                  | homebrew/mise |
 
 **kubectl Plugins (via Krew):**
 ```sh
@@ -85,12 +109,11 @@ kubectl krew install view-secret   # Decode secrets
 
 IaC and configuration management (DevOps profile):
 
-| Tool         | Purpose                  | Config Files       | Source        |
-| ------------ | ------------------------ | ------------------ | ------------- |
-| terraform    | Infrastructure as code   | .tf                | homebrew/mise |
-| ansible      | Configuration management | .yml playbooks     | homebrew/uv   |
-| ansible-lint | Ansible linter           | -                  | homebrew/uv   |
-| kustomize    | Kubernetes config        | kustomization.yaml | homebrew/mise |
+| Tool         | Purpose                  | Config Files   | Source        |
+| ------------ | ------------------------ | -------------- | ------------- |
+| terraform    | Infrastructure as code   | .tf            | homebrew/mise |
+| ansible      | Configuration management | .yml playbooks | homebrew/uv   |
+| ansible-lint | Ansible linter           | -              | homebrew/uv   |
 
 ### Cloud Platform CLIs
 
@@ -117,6 +140,21 @@ Scanning and secret management (SecOps profile):
 | kyverno   | Kubernetes policies   | K8s resources         | homebrew/mise |
 | dive      | Image layer analysis  | Docker images         | homebrew/mise |
 
+### AI Tools
+
+AI coding agents and helpers (AI profile):
+
+| Tool        | Purpose                                         | Source         |
+| ----------- | ----------------------------------------------- | -------------- |
+| claude-code | Claude Code CLI                                 | cask/shell     |
+| copilot-cli | GitHub Copilot CLI                              | cask/shell     |
+| direnv      | Per-directory env loader (scoped agent secrets) | homebrew/mise  |
+| rtk         | CLI proxy that reduces LLM token usage          | homebrew/shell |
+
+On macOS, `claude-code` and `copilot-cli` are Homebrew casks (Homebrew ships them
+only as casks). Ollama is listed under Desktop Applications below; on Debian the AI
+profile installs it with its own installer script.
+
 ### Development Languages
 
 Runtime and toolchain management:
@@ -141,24 +179,27 @@ callable after `mise reshim`.
 | Tool         | Purpose                 | Source        |
 | ------------ | ----------------------- | ------------- |
 | go           | Go compiler             | mise          |
-| cobra-cli    | CLI framework           | go install    |
+| cobra-cli    | CLI framework           | go            |
 | kubebuilder  | Kubernetes API SDK      | homebrew/mise |
 | kustomize    | Kubernetes YAML overlay | homebrew/mise |
 | operator-sdk | Kubernetes operator SDK | homebrew/mise |
 
 #### Python (DevOps profile)
 
-| Tool | Purpose               | Source |
-| ---- | --------------------- | ------ |
-| uv   | Fast Python installer | mise   |
+| Tool                     | Purpose                                                          | Source |
+| ------------------------ | ---------------------------------------------------------------- | ------ |
+| uv                       | Fast Python installer (Debian only)                              | mise   |
+| libonig-dev, python3-dev | Development files installed with ansible-dev-tools (Debian only) | apt    |
 
 On Debian, ansible and ansible-dev-tools are installed with
 `uv tool install --python`, which pins an explicit self-contained interpreter
-and exposes the entry points in `~/.local/bin`. They are **not** installed via
+and exposes the entry points in `~/.local/bin`. `--with-executables-from`
+(ansible-core, ansible-lint) puts `ansible`, `ansible-playbook` and `ansible-lint`
+on the PATH. They are **not** installed via
 mise: its pipx backend uses whichever `python3` it finds on the machine, which
 cannot be pinned and breaks when the distro or Homebrew moves that interpreter
 (ansible-core requires Python >= 3.12). Override with `ANSIBLE_PYTHON`.
-On macOS both come from Homebrew.
+On macOS both come from Homebrew and uv is not installed.
 
 #### Version Manager
 
@@ -193,51 +234,51 @@ mise reshim
 
 Editors and document processors (Base profile):
 
-| Tool   | Type      | Purpose                      | Source         |
-| ------ | --------- | ---------------------------- | -------------- |
-| vim    | Editor    | Ubiquitous text editor       | homebrew/apt   |
-| nvim   | Editor    | Extensible Vim               | homebrew/shell |
-| pandoc | Converter | Universal document converter | homebrew/apt   |
-| glow   | Viewer    | Markdown renderer            | homebrew/apt   |
+| Tool   | Type      | Purpose                      | Source        |
+| ------ | --------- | ---------------------------- | ------------- |
+| vim    | Editor    | Ubiquitous text editor       | homebrew/apt  |
+| nvim   | Editor    | Extensible Vim               | homebrew/mise |
+| pandoc | Converter | Universal document converter | homebrew/apt  |
+| glow   | Viewer    | Markdown renderer            | homebrew/mise |
 
 ### Networking & Remote Access
 
 Network tools and SSH (Base/DevOps profiles):
 
-| Tool     | Purpose                  | Source         |
-| -------- | ------------------------ | -------------- |
-| nmap     | Port scanning            | homebrew/apt   |
-| sshs     | Interactive SSH client   | homebrew/shell |
-| sshpass  | Non-interactive SSH auth | homebrew/apt   |
-| teleport | Modern SSH server        | homebrew/apt   |
-| ttyd     | Terminal over web        | homebrew/apt   |
+| Tool     | Purpose                  | Source        |
+| -------- | ------------------------ | ------------- |
+| nmap     | Port scanning            | homebrew/apt  |
+| sshs     | Interactive SSH client   | homebrew/mise |
+| sshpass  | Non-interactive SSH auth | homebrew/apt  |
+| teleport | Modern SSH server        | homebrew/apt  |
+| ttyd     | Terminal over web        | homebrew/mise |
 
 ### Cloud Storage & Sync
 
 File transfer and cloud storage (Base profile):
 
-| Tool   | Purpose           | Providers                | Source       |
-| ------ | ----------------- | ------------------------ | ------------ |
-| rclone | Cloud storage CLI | AWS S3, GCS, Azure, etc. | homebrew/apt |
+| Tool   | Purpose           | Providers                | Source        |
+| ------ | ----------------- | ------------------------ | ------------- |
+| rclone | Cloud storage CLI | AWS S3, GCS, Azure, etc. | homebrew/mise |
 
 ### Monitoring & Diagnostics
 
 System and application monitoring:
 
-| Tool       | Purpose        | What it monitors | Source       |
-| ---------- | -------------- | ---------------- | ------------ |
-| watch      | Repeat command | Command output   | homebrew/apt |
-| k9s        | Kubernetes TUI | K8s resources    | homebrew/apt |
-| lazydocker | Docker TUI     | Containers       | homebrew/apt |
+| Tool       | Purpose        | What it monitors | Source        |
+| ---------- | -------------- | ---------------- | ------------- |
+| watch      | Repeat command | Command output   | homebrew/apt  |
+| k9s        | Kubernetes TUI | K8s resources    | homebrew/mise |
+| lazydocker | Docker TUI     | Containers       | homebrew/mise |
 
 ### Documentation & Learning
 
 Cheatsheets and help tools (Base profile):
 
-| Tool   | Purpose                 | Source         |
-| ------ | ----------------------- | -------------- |
-| cheat  | Interactive cheatsheets | homebrew/apt   |
-| tldr++ | Simplified man pages    | homebrew/shell |
+| Tool   | Purpose                 | Source        |
+| ------ | ----------------------- | ------------- |
+| cheat  | Interactive cheatsheets | homebrew/mise |
+| tldr++ | Simplified man pages    | homebrew/mise |
 
 ### Media & Graphics
 
@@ -253,28 +294,33 @@ Media manipulation (Base profile):
 
 Continuous integration tools (DevOps profile):
 
-| Tool          | Purpose               | Platform   | Source         |
-| ------------- | --------------------- | ---------- | -------------- |
-| act           | Local GitHub Actions  | GitHub     | homebrew/apt   |
-| actionlint    | Workflow file linting | GitHub     | homebrew/mise  |
-| argo          | Argo Workflows CLI    | Kubernetes | homebrew/apt   |
-| argocd        | Argo CD CLI           | Kubernetes | homebrew/apt   |
-| chart-testing | Helm chart testing    | Helm       | homebrew/shell |
-| k6            | Load testing          | -          | homebrew/apt   |
+| Tool          | Purpose               | Platform   | Source        |
+| ------------- | --------------------- | ---------- | ------------- |
+| act           | Local GitHub Actions  | GitHub     | homebrew/mise |
+| actionlint    | Workflow file linting | GitHub     | homebrew/mise |
+| argo          | Argo Workflows CLI    | Kubernetes | homebrew/mise |
+| argocd        | Argo CD CLI           | Kubernetes | homebrew/mise |
+| chart-testing | Helm chart testing    | Helm       | homebrew/mise |
+| k6            | Load testing          | -          | homebrew/mise |
 
 ### Utilities
 
 Miscellaneous utilities:
 
-| Tool       | Purpose                               | Source         |
-| ---------- | ------------------------------------- | -------------- |
-| tree       | Directory tree viewer                 | homebrew/apt   |
-| bat-extras | Bat utilities (batgrep, batman, etc.) | homebrew/shell |
-| mkcert     | Local SSL certificates                | homebrew/shell |
-| coder      | Remote development                    | homebrew/shell |
-| velero     | Kubernetes backup                     | homebrew/apt   |
-| vhs        | Terminal recorder                     | homebrew/apt   |
-| yamllint   | YAML linting                          | homebrew/apt   |
+| Tool                      | Purpose                                             | Source         |
+| ------------------------- | --------------------------------------------------- | -------------- |
+| tree                      | Directory tree viewer                               | homebrew/apt   |
+| bat-extras                | Bat utilities (batgrep, batman, etc.)               | homebrew/shell |
+| coreutils                 | GNU core utilities (Debian only)                    | apt            |
+| man, man-db, manpages-dev | Manual pages and viewer (Debian only)               | apt            |
+| fontconfig                | Font configuration, provides fc-cache (Debian only) | apt            |
+| nerd-fonts                | Hack and Symbols Only fonts for neovim              | shell          |
+| mkcert                    | Local SSL certificates                              | homebrew/mise  |
+| coder                     | Remote development                                  | homebrew/mise  |
+| oras                      | OCI registry client                                 | homebrew/mise  |
+| velero                    | Kubernetes backup                                   | homebrew/mise  |
+| vhs                       | Terminal recorder                                   | homebrew/mise  |
+| yamllint                  | YAML linting                                        | homebrew/mise  |
 
 ## Desktop Applications (macOS)
 
@@ -314,7 +360,7 @@ Miscellaneous utilities:
 **Homebrew (macOS):**
 ```sh
 brew install <package>          # CLI tools
-brew install --cask <app>       # Applications
+brew install --cask <app>       # Applications (and claude-code, copilot-cli)
 ```
 
 **apt (Debian/Ubuntu):**
@@ -329,7 +375,8 @@ mise use --global <tool>@<version>
 
 **npm (Node Packages):**
 ```sh
-npm install -g <package>
+npm install --global <package>
+mise reshim                     # publish the new binary as a mise shim
 ```
 
 **go (Go Packages):**
@@ -337,15 +384,19 @@ npm install -g <package>
 go install <package>@latest
 ```
 
-**pip (Python Packages):**
+**uv (Python Tools, Debian):**
 ```sh
-pip install <package>
+uv tool install --python 3.13 <package>
 ```
 
 **Shell Scripts:**
 ```sh
-curl -fsSL <url> | bash
+curl -fsSL <url> -o install.sh   # download first, then read and run it
+bash install.sh
 ```
+
+The setup scripts do the same: a remote script is downloaded first and only run once
+the download succeeded.
 
 **GitHub CLI:**
 ```sh
@@ -377,7 +428,7 @@ Quick installation commands:
 # Everything
 ./setup/setup-osx.sh -p 'base,ai,devops,go,js,secops,extras'
 
-# Lite mode (only ✓ marked tools)
+# Lite mode (only the tools marked ✓ in 04-profiles.md)
 ./setup/setup-osx.sh -l -p 'devops,js'
 ```
 
@@ -391,7 +442,7 @@ Understanding the sources:
 | apt      | Debian/Ubuntu | System packages                           | ✓              |
 | mise     | All           | Language runtimes; CLI binaries on Debian | ✓              |
 | npm      | All           | Node.js packages                          | via mise       |
-| uv       | All           | Python packages (ansible)                 | via mise       |
+| uv       | Debian        | Python tools (ansible, ansible-lint)      | via mise       |
 | go       | All           | Go packages                               | via mise       |
 | Krew     | All           | kubectl plugins                           | via kubectl    |
 | gh       | All           | GitHub CLI extensions                     | via gh         |
@@ -417,6 +468,9 @@ mise ls
 # Check npm global packages
 npm list -g --depth=0
 
+# Check uv tools (Debian)
+uv tool list
+
 # Check kubectl plugins
 kubectl plugin list
 ```
@@ -437,6 +491,9 @@ mise upgrade --bump
 
 # npm packages
 npm update -g
+
+# uv tools (Debian)
+uv tool upgrade --all
 
 # kubectl plugins
 kubectl krew upgrade
