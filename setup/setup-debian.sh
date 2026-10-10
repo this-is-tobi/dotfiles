@@ -12,7 +12,7 @@ no_color='\033[0m'
 apt_install() {
   local attempt
   for attempt in 1 2 3 4 5; do
-    if sudo apt update && sudo apt install -y "$@"; then
+    if sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y "$@"; then
       return 0
     fi
     printf "\napt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
@@ -27,6 +27,11 @@ i=1
 # Get project directories
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
+# shellcheck source=helpers/files.sh
+. "$SCRIPT_PATH/helpers/files.sh"
+# shellcheck source=helpers/remote.sh
+. "$SCRIPT_PATH/helpers/remote.sh"
+
 # Default
 INSTALL_AI="false"
 INSTALL_BASE="false"
@@ -36,7 +41,6 @@ INSTALL_JS="false"
 INSTALL_SECOPS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
-REMOVE_TMP_CONTENT="false"
 FULL_MODE_SETUP="true"
 DRY_RUN="false"
 
@@ -61,7 +65,7 @@ Following flags are available:
           -> 'secops'
         Default is no profile, this flag can be used with a CSV list (ex: -p \"base,js\").
 
-  -r    Remove all tmp files after installation.
+  -r    Deprecated and ignored: temporary files are removed by the scripts that create them.
 
   -h    Print script help.\n\n"
 
@@ -96,7 +100,7 @@ while getopts hcdlnp:r flag; do
         esac
       done;;
     r)
-      REMOVE_TMP_CONTENT="true";;
+      printf "Note: -r is deprecated and ignored, temporary files are always cleaned up.\n" >&2;;
     h | *)
       print_help
       exit 0;;
@@ -123,12 +127,29 @@ fi
 
 export FULL_MODE_SETUP=$FULL_MODE_SETUP
 
+# Tools installed by the profiles (mise shims, ~/.local/bin) must be visible to
+# every later step, whichever profiles run.
+export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+
+# sudo is used throughout. A root shell on a minimal image (a container, a fresh
+# VM) may not have it yet; anyone else has to install it first.
+if ! command -v sudo >/dev/null 2>&1; then
+  if [ "$(id -u)" -eq 0 ]; then
+    apt-get update && apt-get install -y sudo
+  else
+    printf "Error: sudo is required but not installed. Install it as root first (apt install sudo).\n" >&2
+    exit 1
+  fi
+fi
+
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
+i=$(($i + 1))
 apt_install \
   build-essential \
   ca-certificates \
   curl \
+  git \
   gzip \
   gnupg \
   jq \
@@ -140,7 +161,8 @@ apt_install \
   xz-utils
 
 # Uncomment en_US.UTF-8 for inclusion in generation and generate locales
-sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen && locale-gen
+sudo sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
+sudo locale-gen
 
 # Install zsh
 if [ ! -x "$(command -v zsh)" ]; then
@@ -149,9 +171,9 @@ if [ ! -x "$(command -v zsh)" ]; then
 fi
 
 # Make zsh the default shell
-if [[ ! "$SHELL" =~ "zsh" ]]; then
+if [[ ! "${SHELL:-}" =~ "zsh" ]]; then
   printf "\n${red}${i}.${no_color} Make zsh the default shell\n\n"
-  sudo chsh -s $(which zsh) "$USER"
+  sudo chsh -s "$(command -v zsh)" "${USER:-$(id -un)}"
 fi
 
 # Install oh-my-zsh
@@ -159,7 +181,10 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   printf "\n${red}${i}.${no_color} Install oh-my-zsh\n\n"
   i=$(($i + 1))
 
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # --unattended: the installer would otherwise switch the login shell and
+  # `exec zsh`, which ends this script right there. KEEP_ZSHRC leaves an
+  # existing ~/.zshrc alone (the dotfiles step replaces it, with a backup).
+  KEEP_ZSHRC=yes run_remote sh "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/${OMZ_REF:-master}/tools/install.sh" --unattended
 fi
 
 
@@ -168,11 +193,7 @@ if [[ "$INSTALL_BASE" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install base profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/debian/setup-base.sh
-
-  # Expose the tools the base profile just installed to the profiles that run
-  # after it.
-  export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+  "$SCRIPT_PATH/profiles/debian/setup-base.sh"
 fi
 
 
@@ -181,7 +202,7 @@ if [[ "$INSTALL_DEVOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install devops profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/debian/setup-devops.sh
+  "$SCRIPT_PATH/profiles/debian/setup-devops.sh"
 fi
 
 
@@ -190,7 +211,7 @@ if [[ "$INSTALL_SECOPS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install secops profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/debian/setup-secops.sh
+  "$SCRIPT_PATH/profiles/debian/setup-secops.sh"
 fi
 
 
@@ -199,7 +220,7 @@ if [[ "$INSTALL_GO" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install go profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/debian/setup-go.sh
+  "$SCRIPT_PATH/profiles/debian/setup-go.sh"
 fi
 
 
@@ -208,7 +229,7 @@ if [[ "$INSTALL_JS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/debian/setup-js.sh
+  "$SCRIPT_PATH/profiles/debian/setup-js.sh"
 fi
 
 
@@ -217,7 +238,7 @@ if [[ "$INSTALL_AI" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install ai profile\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/profiles/debian/setup-ai.sh
+  "$SCRIPT_PATH/profiles/debian/setup-ai.sh"
 fi
 
 
@@ -226,69 +247,71 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
   i=$(($i + 1))
 
-  mkdir -p "$HOME/.config"
-  cp "$SCRIPT_PATH/../dotfiles/.zshrc" "$HOME/.zshrc" && sed -i 's/TLDR_OS=.*/TLDR_OS=linux/g' "$HOME/.zshrc"
-  cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
-  cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
-  cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
+  DOTFILES_PATH="$(cd "$SCRIPT_PATH/.." && pwd -P)/dotfiles"
+
+  # Whatever a copy below would replace is saved under $DOTFILES_BACKUP_DIR first
+  install_file "$DOTFILES_PATH/.zshrc" "$HOME/.zshrc"
+  install_file "$DOTFILES_PATH/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
+  # Keep the identity and signing settings of the current ~/.gitconfig in
+  # ~/.gitconfig.local before it is replaced
+  "$SCRIPT_PATH/helpers/gitconfig.sh"
+  install_file "$DOTFILES_PATH/.gitconfig" "$HOME/.gitconfig"
+  install_tree "$DOTFILES_PATH/.continue" "$HOME/.continue"
+
   # Create secrets.env before the copy below replaces env.sh, so that values a
   # previous env.sh held are moved there instead of being lost.
   "$SCRIPT_PATH/helpers/secrets.sh"
   # Copies .config/mise/conf.d/00-settings.toml among the rest. It is kept in
   # conf.d/ rather than config.toml precisely so that re-running this step does
   # not clobber the tool versions the profiles pinned via `mise use --global`.
-  cp -R $SCRIPT_PATH/../dotfiles/.config/* "$HOME/.config"
+  install_tree "$DOTFILES_PATH/.config" "$HOME/.config"
 
 
   # Install the eslint fallback config, used where a project has none
-  cp "$SCRIPT_PATH/../dotfiles/eslint.config.mjs" "$HOME/eslint.config.mjs"
+  install_file "$DOTFILES_PATH/eslint.config.mjs" "$HOME/eslint.config.mjs"
   if [ -x "$(command -v npm)" ]; then
     (cd "$HOME/.config/eslint-fallback" && npm install)
   fi
 
 
-  # Install .vscode configs
+  # Install .vscode configs (VS Code, and code-server when present)
+  # extensions.json is JSONC: drop its comment lines before handing it to jq
+  install_vscode_config() {
+    local user_dir="$1" cli="$2" settings
+    settings="$(mktemp)"
+    sed "s|__HOME__|$HOME|g" "$DOTFILES_PATH/.vscode/settings.json" > "$settings"
+    install_file "$settings" "$user_dir/settings.json"
+    rm -f "$settings"
+    install_file "$DOTFILES_PATH/.vscode/mcp.json" "$user_dir/mcp.json"
+    grep -v '//' "$DOTFILES_PATH/.vscode/extensions.json" \
+      | grep -E '[^[:space:]]' \
+      | jq -r '.recommendations[]' \
+      | while IFS= read -r extension; do
+          "$cli" --install-extension "$extension" < /dev/null \
+            || printf "Warning: could not install the extension %s\n" "$extension" >&2
+        done
+  }
   if [ -x "$(command -v code)" ]; then
-    mkdir -p "$HOME/.config/Code/User"
-    cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.config/Code/User/settings.json"
-    sed -i "s|__HOME__|$HOME|g" "$HOME/.config/Code/User/settings.json"
-    cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/.config/Code/User/mcp.json"
-    VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
-      | grep -v '//' \
-      | grep -E '\S' \
-      | jq -r '.recommendations[]'))
-    for extension in ${VSCODE_EXTENSIONS[@]}; do
-      echo "$extension" | xargs -L 1 code --install-extension
-    done
+    install_vscode_config "$HOME/.config/Code/User" code
   fi
   if [ -x "$(command -v code-server)" ]; then
-    mkdir -p "$HOME/.local/share/code-server/User"
-    cp "$SCRIPT_PATH/../dotfiles/.vscode/settings.json" "$HOME/.local/share/code-server/User/settings.json"
-    sed -i "s|__HOME__|$HOME|g" "$HOME/.local/share/code-server/User/settings.json"
-    cp "$SCRIPT_PATH/../dotfiles/.vscode/mcp.json" "$HOME/.local/share/code-server/User/mcp.json"
-    VSCODE_EXTENSIONS=($(cat "$SCRIPT_PATH/../dotfiles/.vscode/extensions.json" \
-      | grep -v '//' \
-      | grep -E '\S' \
-      | jq -r '.recommendations[]'))
-    for extension in ${VSCODE_EXTENSIONS[@]}; do
-      echo "$extension" | xargs -L 1 code-server --install-extension
-    done
+    install_vscode_config "$HOME/.local/share/code-server/User" code-server
   fi
 
 
   # Install .claude config
   mkdir -p "$HOME/.claude"
   if [ -x "$(command -v rtk)" ]; then
-    rtk init -g
+    rtk init -g --auto-patch
   fi
-  cp "$SCRIPT_PATH/../dotfiles/.claude/settings.json" "$HOME/.claude/settings.json"
+  install_file "$DOTFILES_PATH/.claude/settings.json" "$HOME/.claude/settings.json"
 
 
   # Install AI agent instructions & skills (Copilot + Claude Code personal setup)
   # -P installs Claude Code plugins at user scope; it runs after the settings.json copy above, which
   # would otherwise drop the enabledPlugins/extraKnownMarketplaces keys the plugin registers there.
-  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t claude -g -P
-  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/setup-ai-agent.sh | bash -s -- -t copilot -g -c
+  run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t claude -g -P
+  run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t copilot -g -c
 
 
   # Configure Claude Code MCP servers
@@ -303,18 +326,10 @@ if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install cli completions\n\n"
   i=$(($i + 1))
 
-  $SCRIPT_PATH/helpers/completions.sh
-  ZSH_COMPLETIONS_DIR="${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions"
+  "$SCRIPT_PATH/helpers/completions.sh"
+  # .zshrc adds this directory to fpath once it exists
+  ZSH_COMPLETIONS_DIR="${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions"
   if [ ! -d "$ZSH_COMPLETIONS_DIR" ]; then
     git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS_DIR"
   fi
-  sed -i 's|^# fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src|g' "$HOME/.zshrc"
-fi
-
-
-if [[ "$REMOVE_TMP_CONTENT" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Remove tmp files\n\n"
-  i=$(($i + 1))
-
-  rm -rf /tmp/*
 fi
