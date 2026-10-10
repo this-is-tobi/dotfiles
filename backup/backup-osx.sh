@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# A backup holds keys, tokens and history: everything it creates is private to the user
+umask 077
+
 # Colorize terminal
 red='\e[0;31m'
 no_color='\033[0m'
@@ -43,9 +46,12 @@ while getopts hfno: flag; do
       DRY_RUN="true";;
     o)
       BACKUP_DIR="${OPTARG}/backup_$NOW";;
-    h | *)
+    h)
       print_help
       exit 0;;
+    *)
+      print_help
+      exit 1;;
   esac
 done
 
@@ -61,6 +67,11 @@ RCLONE_ARGS=(
   --progress
 )
 [ "$DRY_RUN" = "true" ] && RCLONE_ARGS+=(--dry-run)
+
+# mkdir that does nothing in a dry run, so -n leaves no empty directories behind
+make_dir() {
+  [ "$DRY_RUN" = "true" ] || mkdir -p "$1"
+}
 
 # Run an rclone command without letting a single failure (e.g. a stale
 # symlink) abort the rest of the backup; failures are collected and reported
@@ -80,6 +91,11 @@ RCLONE_FILTER_ARGS=(
   --exclude 'Thumbs.db'
   --exclude '*.tmp'
   --exclude '*.log'
+  # earlier backups, and the one being written when it sits inside a source
+  --exclude 'backup_*/**'
+  # regenerable caches
+  --exclude '.cache/**'
+  --exclude '.local/share/mise/**'
   # JS / Node
   --exclude 'node_modules/**'
   # Python
@@ -114,7 +130,7 @@ ETC_FILES=(
   /etc/hosts
   /etc/resolv.conf
 )
-mkdir -p "${BACKUP_DIR}/etc"
+make_dir "${BACKUP_DIR}/etc"
 for src in "${ETC_FILES[@]}"; do
   [ -e "$src" ] || continue
   safe_rclone copyto "$src" "${BACKUP_DIR}/etc/$(basename "$src")" "${RCLONE_ARGS[@]}"
@@ -125,13 +141,15 @@ done
 printf "\n${red}${i}.${no_color} Export gpg keys\n\n"
 ((i++))
 
-EMAIL="this-is-tobi@proton.me"
+# BACKUP_GPG_EMAIL picks the key to export; it defaults to the git identity of this machine
+EMAIL="${BACKUP_GPG_EMAIL:-$(git config --get user.email 2>/dev/null || true)}"
 GPG_BACKUP_DIR="$HOME/.gnupg/backup"
 
-KEY_ID=$(gpg --list-secret-keys --keyid-format=long "$EMAIL" 2>/dev/null | grep 'sec' | awk '{print $2}' | cut -d'/' -f2) || true
+KEY_ID=""
+[ -n "$EMAIL" ] && KEY_ID=$(gpg --list-secret-keys --keyid-format=long "$EMAIL" 2>/dev/null | grep 'sec' | awk '{print $2}' | cut -d'/' -f2) || true
 
 if [ -z "$KEY_ID" ]; then
-  echo "No GPG key found for email: $EMAIL"
+  echo "No GPG key to export (looked for: ${EMAIL:-no email, set BACKUP_GPG_EMAIL})"
 elif [ "$DRY_RUN" = "true" ]; then
   echo "Dry run: would export gpg key $KEY_ID to $GPG_BACKUP_DIR"
 else
@@ -168,7 +186,7 @@ DOT_FILES=(
   "$HOME/.tsh"
   "$HOME/.zshrc"
 )
-mkdir -p "${BACKUP_DIR}/dotfiles"
+make_dir "${BACKUP_DIR}/dotfiles"
 for src in "${DOT_FILES[@]}"; do
   [ -e "$src" ] || continue
   dest="${BACKUP_DIR}/dotfiles/$(basename "$src")"
@@ -239,7 +257,7 @@ done
 printf "\n${red}${i}.${no_color} Backup home directory\n\n"
 ((i++))
 
-mkdir -p "${BACKUP_DIR}/home"
+make_dir "${BACKUP_DIR}/home"
 if [ "$BACKUP_FULL" = "true" ]; then
   HOME_DIRS=(
     "$HOME/Desktop"
@@ -267,7 +285,7 @@ if [ -d "$HOME/Library/Application Support/BraveSoftware" ]; then
   printf "\n${red}${i}.${no_color} Backup brave files\n\n"
   ((i++))
 
-  mkdir -p "${BACKUP_DIR}/brave"
+  make_dir "${BACKUP_DIR}/brave"
   safe_rclone copy "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/Default" \
     "${BACKUP_DIR}/brave/Default" "${RCLONE_ARGS[@]}" "${RCLONE_FILTER_ARGS[@]}" \
     --exclude 'Cache/**' \
@@ -282,7 +300,9 @@ if [ "$DRY_RUN" = "true" ]; then
   printf "\n${red}Dry run complete.${no_color} Nothing was copied.\n"
   printf "  -> would have targeted: %s\n" "${BACKUP_DIR}"
 else
+  chmod 700 "${BACKUP_DIR}"
   printf "\n${red}Backup complete.${no_color}\n"
+  printf "  -> not encrypted: it holds keys and tokens, keep it private\n"
   printf "  -> location: %s\n" "${BACKUP_DIR}"
   printf "  -> size:     %s\n" "$(du -sh "${BACKUP_DIR}" | cut -f1)"
 fi
