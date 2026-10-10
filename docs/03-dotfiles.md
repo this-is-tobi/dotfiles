@@ -49,14 +49,13 @@ The main Zsh configuration file that:
 - PATH modifications may need adjustment for your system
 - Plugin list can be customized
 
-#### `.config/dotfiles/env.sh`
-Custom environment variables file for:
-- API keys (e.g., `CONTEXT7_API_KEY`)
-- Custom PATH additions
-- Project-specific variables
+#### `.config/dotfiles/env.sh` and `secrets.env`
+`env.sh` is sourced by `.zshrc` and is managed by the setup (overwritten on every run, so don't edit it). It only loads `~/.config/dotfiles/secrets.env`, the local file for:
+- API keys and tokens (e.g., `CONTEXT7_API_KEY`)
+- Per-machine variables
 - Credentials that shouldn't be in version control
 
-**Important:** This file is sourced by `.zshrc` and should be created after installation.
+`secrets.env` holds plain `KEY=value` lines. The setup creates it from `secrets.env.example` (mode `600`) when it first copies the dotfiles and never overwrites it. See [Managing Secrets](07-ai.md#managing-secrets).
 
 #### `.config/dotfiles/functions.sh`
 Custom utility functions including:
@@ -220,7 +219,7 @@ Before installation, the setup scripts automatically backup existing dotfiles:
 
 ### DO Customize
 - User-specific settings (name, email, paths)
-- API keys and credentials (in `env.sh`)
+- API keys and credentials (in `secrets.env`)
 - Color schemes and themes
 - Plugin selections
 - Key bindings
@@ -235,11 +234,11 @@ Before installation, the setup scripts automatically backup existing dotfiles:
 
 Some dotfiles contain placeholders that need to be replaced:
 
-| Placeholder              | Description      | File         |
-| ------------------------ | ---------------- | ------------ |
-| `Your Name`              | Your full name   | `.gitconfig` |
-| `your.email@example.com` | Your email       | `.gitconfig` |
-| `your_api_key_here`      | Context7 API key | `env.sh`     |
+| Placeholder              | Description      | File          |
+| ------------------------ | ---------------- | ------------- |
+| `Your Name`              | Your full name   | `.gitconfig`  |
+| `your.email@example.com` | Your email       | `.gitconfig`  |
+| `CONTEXT7_API_KEY=`      | Context7 API key | `secrets.env` |
 
 ## Advanced: Symlinking
 
@@ -270,5 +269,5 @@ Some dotfiles need specific permissions:
 chmod +x ~/.config/dotfiles/functions.sh
 
 # Protect sensitive files
-chmod 600 ~/.config/dotfiles/env.sh
+chmod 600 ~/.config/dotfiles/secrets.env
 ```

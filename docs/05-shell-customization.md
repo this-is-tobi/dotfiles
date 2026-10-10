@@ -289,12 +289,11 @@ myfunction() {
 
 ### Environment Variables
 
-Use `.config/dotfiles/env.sh` for custom environment variables:
+Use `~/.config/dotfiles/secrets.env` for secrets and per-machine variables. It is loaded into every zsh session by `env.sh` (managed by the setup, don't edit it), is created once with mode `600` and is never overwritten:
 
 ```sh
-export MY_VAR="value"
-export PATH="$HOME/my-bin:$PATH"
-export CONTEXT7_API_KEY="your_key"
+MY_VAR=value
+CONTEXT7_API_KEY=your_key
 ```
 
 ## Terminal Multiplexer Integration
