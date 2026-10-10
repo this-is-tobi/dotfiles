@@ -1,10 +1,10 @@
 [alias]
 	aa = add -A
-	aop = "!f() { git aa && git oopn && git push -f; }; f"
+	aop = "!f() { git aa && git oopn && git push --force-with-lease; }; f"
 	ap = add -p
 	br = branch
 	bv = "br -vv"
-	bp = "branch --merged >/tmp/merged-branches && vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
+	bp = "!f() { t=$(mktemp) && git branch --merged | grep -vE '^[*+]|^[[:space:]]*(main|master|develop)$' > \"$t\"; ${EDITOR:-vi} \"$t\" && xargs -r git branch -d < \"$t\"; rm -f \"$t\"; }; f"
 	ci = commit
 	co = checkout
 	sw = switch
@@ -16,7 +16,7 @@
 	lg = log --oneline --decorate --graph
 	oops = commit --amend
 	oopn = "oops --no-edit"
-	sre = "!f() { git log -S$1 --pickaxe-regex ; }; f"
+	sre = "!f() { git log -S\"$1\" --pickaxe-regex; }; f"
 	st = status
 	unstage = reset HEAD
 	us = unstage
@@ -30,7 +30,6 @@
 	tool = meld
 [branch]
 	autosetuprebase = always
-	rebase = preserve
 [credential]
 	helper = cache --timeout=3600
 [color]
