@@ -231,6 +231,9 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   cp "$SCRIPT_PATH/../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
   cp "$SCRIPT_PATH/../dotfiles/.gitconfig" "$HOME/.gitconfig"
   cp -R $SCRIPT_PATH/../dotfiles/.continue/* "$HOME/.continue"
+  # Create secrets.env before the copy below replaces env.sh, so that values a
+  # previous env.sh held are moved there instead of being lost.
+  "$SCRIPT_PATH/helpers/secrets.sh"
   # Copies .config/mise/conf.d/00-settings.toml among the rest. It is kept in
   # conf.d/ rather than config.toml precisely so that re-running this step does
   # not clobber the tool versions the profiles pinned via `mise use --global`.
@@ -290,10 +293,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   # Configure Claude Code MCP servers
   if [ -x "$(command -v claude)" ]; then
-    claude mcp add --transport http context7 https://mcp.context7.com/mcp -H 'CONTEXT7_API_KEY: ${CONTEXT7_API_KEY}' -s user
-    claude mcp add kubernetes -s user -- npx -y kubernetes-mcp-server@latest
-    claude mcp add argocd -s user -e ARGOCD_BASE_URL=https://gitops.ohmlab.fr -e ARGOCD_API_TOKEN='${ARGOCD_API_TOKEN}' -- npx -y argocd-mcp@latest stdio
-    claude mcp add playwright -s user -- npx -y @playwright/mcp@latest
+    "$SCRIPT_PATH/helpers/claude-mcp.sh"
   fi
 fi
 

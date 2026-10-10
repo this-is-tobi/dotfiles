@@ -274,9 +274,9 @@ code ~/.vscode/settings.json
 1. **Check server status:**
 - `Cmd+Shift+P` → "MCP: Show Server Status"
 
-2. **Verify environment variables:**
+2. **Verify secrets:** VS Code asks for MCP keys the first time a server starts. Claude Code and the shell read them from `~/.config/dotfiles/secrets.env`:
 ```sh
-echo $CONTEXT7_API_KEY
+[ -n "$CONTEXT7_API_KEY" ] && echo set || echo missing
 ```
 
 3. **Restart VS Code:**
