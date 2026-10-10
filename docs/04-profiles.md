@@ -131,6 +131,7 @@ The **Category** column corresponds to the `DEVOPS_CATEGORIES` values described 
 | [kubens](https://github.com/ahmetb/kubectx)                  | Kubernetes namespace switcher (its own mise tool; the old apt/brew packages bundled it with kubectx) | k8s      | ✓    | homebrew | mise   |
 | [mkcert](https://github.com/FiloSottile/mkcert)              | Make locally trusted certificates                                                                    | misc     | -    | homebrew | mise   |
 | [oc](https://www.openshift.com)                              | OpenShift CLI                                                                                        | k8s      | ✓    | homebrew | mise   |
+| [oras](https://github.com/oras-project/oras)                 | OCI Registry As Storage CLI                                                                          | misc     | -    | homebrew | mise   |
 | [scw](https://github.com/scaleway/scaleway-cli)              | Scaleway CLI                                                                                         | cloud    | -    | homebrew | mise   |
 | [sshpass](https://sourceforge.net/projects/sshpass)          | Non-interactive SSH password auth                                                                    | misc     | ✓    | homebrew | apt    |
 | [teleport](https://goteleport.com)                           | Modern SSH server for clusters                                                                       | misc     | -    | homebrew | apt    |

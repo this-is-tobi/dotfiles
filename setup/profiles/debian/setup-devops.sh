@@ -148,6 +148,7 @@ install_misc_full() {
     coder@latest \
     k6@latest \
     mkcert@latest \
+    oras@latest \
     yamllint@latest
 
   # Teleport stays on its own apt repository: tsh is one binary of a suite that

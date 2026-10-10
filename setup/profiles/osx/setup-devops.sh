@@ -94,6 +94,7 @@ install_misc_full() {
     coder/coder/coder \
     k6 \
     mkcert \
+    oras \
     teleport \
     yamllint
 }
