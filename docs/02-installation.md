@@ -197,22 +197,20 @@ exec zsh
 source ~/.zshrc
 ```
 
-### 2. Configure Environment Variables
+### 2. Add Your Secrets
 
-Edit the environment file to add your API keys and custom settings:
+The first time the setup copies the dotfiles (`-d`) it creates `~/.config/dotfiles/secrets.env` (mode `600`) from [`secrets.env.example`](../dotfiles/.config/dotfiles/secrets.env.example), and it never overwrites that file afterwards. Uncomment and fill in the keys you use:
 
 ```sh
-vim ~/.config/dotfiles/env.sh
+vim ~/.config/dotfiles/secrets.env
 ```
 
-Example configuration:
 ```sh
 # Context7 API key for documentation access
-export CONTEXT7_API_KEY="your_api_key_here"
-
-# Add other custom environment variables
-# export MY_VAR="value"
+CONTEXT7_API_KEY=your_api_key_here
 ```
+
+The file holds plain `KEY=value` lines and is loaded into every zsh session by `env.sh`, which the setup manages (don't edit it). If you used to put values in `env.sh`, the setup moves them into `secrets.env` the first time you re-run it. Open a new shell, then run `setup/helpers/claude-mcp.sh` (or re-run the setup) so Claude Code registers the MCP servers that need those keys. See [Managing Secrets](07-ai.md#managing-secrets) for how each tool consumes them.
 
 ### 3. Review Installed Tools
 
@@ -273,10 +271,13 @@ mise doctor
 
 Tool downloads resolve versions through the GitHub API, which rate-limits
 unauthenticated requests. On a shared IP or in CI this surfaces as HTTP 403 and
-is the most common cause of a failed run — export a token to raise the limit:
+is the most common cause of a failed run — export a token to raise the limit
+(for a one-off run, or permanently as `MISE_GITHUB_TOKEN` in
+`~/.config/dotfiles/secrets.env`; unlike `GITHUB_TOKEN`, it does not change
+which account the `gh` CLI uses):
 
 ```sh
-export GITHUB_TOKEN=<your-token>
+export MISE_GITHUB_TOKEN=<your-token>
 ```
 
 ### oh-my-zsh Already Installed
