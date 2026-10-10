@@ -116,14 +116,14 @@ Provides GitHub API integration for:
     "type": "http",
     "url": "https://mcp.context7.com/mcp",
     "headers": {
-      "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
+      "CONTEXT7_API_KEY": "${input:context7-api-key}"
     }
   }
 }
 ```
 Provides up-to-date documentation access for libraries and frameworks.
 
-**Requires:** `CONTEXT7_API_KEY` environment variable in `.config/dotfiles/env.sh`
+**Requires:** a [Context7](https://context7.com/) API key. VS Code asks for it the first time the server starts (`context7-api-key` is a password `input` declared in `mcp.json`) and stores it securely.
 
 **Kubernetes MCP Server:**
 ```json
@@ -270,17 +270,17 @@ Modify or add command patterns in `settings.json`:
 
 ## Environment Variables
 
-Some configurations require environment variables:
+Some configurations require secrets:
 
 ### Context7 API Key
 
-Add to `.config/dotfiles/env.sh`:
+VS Code prompts for the key the first time the Context7 server starts and stores it securely, so nothing needs to be exported for it. Claude Code and the shell read the same key from `~/.config/dotfiles/secrets.env` (see [Managing Secrets](07-ai.md#managing-secrets)):
 
 ```sh
-export CONTEXT7_API_KEY="your_api_key_here"
+CONTEXT7_API_KEY=your_api_key_here
 ```
 
-Get your API key from [Context7](https://context7.io/).
+Get your API key from [Context7](https://context7.com/).
 
 ### Kubernetes Configuration
 
@@ -340,7 +340,7 @@ The VS Code configuration integrates with:
 - All functions available in VS Code terminal
 
 **Environment:**
-- `env.sh` variables available in terminal
+- `secrets.env` variables available in terminal
 - oh-my-zsh plugins active in terminal
 - Completions work in integrated terminal
 
