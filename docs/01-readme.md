@@ -24,21 +24,22 @@ Dotfiles are configuration files in Unix-like systems that start with a dot (`.`
 ### Profile-Based Installation
 Choose from multiple installation profiles to match your workflow:
 - **Base** - Essential development tools
-- **AI** - Machine learning and AI tools
+- **AI** - AI coding assistants and their tooling (Claude Code, Copilot CLI, Ollama, rtk, direnv)
 - **DevOps** - Container orchestration, CI/CD, infrastructure as code
 - **SecOps** - Security scanning, secret management, compliance tools
 - **Go** - Go language development environment
-- **JavaScript** - Node.js, npm, and modern JS tooling
+- **JavaScript** - Node.js, npm, Bun, pnpm, Yarn and modern JS tooling
 - **Extras** - Personal productivity applications (macOS only)
 
 ### Automated Setup
-- One-command installation for your entire development environment
+- One script per platform installs your entire development environment from a clone of the repository
 - Lite mode for minimal installations
-- Automatic dependency resolution
-- Package installation from multiple sources (Homebrew, apt, npm, pip, etc.)
+- Dry run (`-n`) to preview the resolved settings without installing anything
+- Profiles run in a fixed order, and those based on [mise](https://mise.jdx.dev) install it when it is missing
+- Package installation from multiple sources (Homebrew, apt, mise, uv, npm, etc.)
 
 ### Backup & Restore
-Dedicated backup scripts to save your dotfiles and configurations to local or remote locations.
+Dedicated backup scripts copy your dotfiles and configurations into a private local directory (`backup_<timestamp>`). The result is not encrypted, see [Backup & Restore](./09-backup-restore.md).
 
 ### Custom Utilities
 - Shell functions for common tasks
@@ -56,7 +57,7 @@ Package sources differ per platform by design:
 - **macOS** - Homebrew is the package manager for CLI tools and GUI apps.
 - **Debian/Ubuntu** - apt covers system packages (shared libraries, daemons, man
   infrastructure); mise covers portable CLI binaries.
-- **Both** - mise manages language runtimes (node, go, bun, pnpm, yarn, uv).
+- **Both** - mise manages language runtimes (node, go, bun, pnpm, yarn).
 
 ## Project Structure
 
@@ -64,18 +65,27 @@ Package sources differ per platform by design:
 dotfiles/
 ├── backup/          # Backup scripts for different platforms
 ├── dotfiles/        # Template configuration files
-├── setup/           # Installation scripts and profiles
+├── setup/           # Installation scripts, helpers and profiles
 └── docs/            # Documentation (you are here!)
 ```
 
 ## Quick Start
 
+The setup scripts read their profiles and dotfiles from the repository, so clone it first, then run the script for your platform with the flags you want:
+
+```sh
+git clone https://github.com/this-is-tobi/dotfiles.git
+cd dotfiles
+```
+
 For macOS:
 ```sh
-curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-osx.sh | bash
+./setup/setup-osx.sh -p base,devops -d -c
 ```
 
 For Debian/Ubuntu:
 ```sh
-curl -fsSL https://raw.githubusercontent.com/this-is-tobi/dotfiles/main/setup/setup-debian.sh | bash
+./setup/setup-debian.sh -p base,devops -d -c
 ```
+
+`-p` selects the profiles, `-d` copies the dotfiles and `-c` installs the CLI completions. The scripts cannot be piped into bash (`curl ... | bash`): they look for their helpers, profiles and dotfiles next to themselves and stop immediately otherwise. See the [Installation Guide](./02-installation.md) for prerequisites, every flag and the environment overrides.
