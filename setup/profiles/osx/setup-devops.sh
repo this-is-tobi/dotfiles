@@ -23,7 +23,7 @@ devops_wants() {
 
 install_k8s_lite() {
   printf "\n\n${red}[devops/k8s] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     helm \
     norwoodj/tap/helm-docs \
     krew \
@@ -44,14 +44,14 @@ install_k8s_lite() {
 
 install_iac_lite() {
   printf "\n\n${red}[devops/iac] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     ansible \
     terraform
 }
 
 install_misc_lite() {
   printf "\n\n${red}[devops/misc] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     sshpass
 }
 

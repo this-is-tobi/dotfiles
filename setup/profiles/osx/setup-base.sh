@@ -5,11 +5,18 @@ set -euo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Get current script path (this file lives in setup/profiles/osx/)
+SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
+
+# shellcheck source=../../helpers/remote.sh
+. "$SCRIPT_PATH/helpers/remote.sh"
+# shellcheck source=../../helpers/fonts.sh
+. "$SCRIPT_PATH/helpers/fonts.sh"
 
 install_lite_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[base] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     bat \
     bat-extras \
     cheat \
@@ -30,18 +37,18 @@ install_lite_setup() {
   # Install homebrew graphic app packages
   printf "\n\n${red}[base] =>${no_color} Install homebrew packages (graphic)\n\n"
   brew install --cask \
-    docker \
+    docker
 
 
   # Install addition cheatsheets
-  curl -fsSL https://raw.githubusercontent.com/this-is-tobi/tools/main/shell/clone-subdir.sh | bash -s -- \
+  run_remote bash "$TOOLS_RAW_BASE/shell/clone-subdir.sh" \
     -u "https://github.com/this-is-tobi/cheatsheets" -s "sheets" -o "$HOME/.config/cheat/cheatsheets/personal" -d
 }
 
 install_additional_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[base] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     chafa \
     exiftool \
     ffmpeg \
@@ -59,9 +66,9 @@ install_additional_setup() {
 
   # Install gh extensions
   printf "\n\n${red}[base] =>${no_color} Install gh extensions\n\n"
-  gh extension install \
-    dlvhdr/gh-dash \
-    meiji163/gh-notify
+  for extension in dlvhdr/gh-dash meiji163/gh-notify; do
+    gh extension list | grep -q "$extension" || gh extension install "$extension"
+  done
 
 
   # Install homebrew graphic app packages
@@ -77,13 +84,8 @@ install_additional_setup() {
 
   # Install neovim fonts
   printf "\n\n${red}[base] =>${no_color} Install neovim fonts\n\n"
-  mkdir -p ~/.fonts
-  # -o: force overwrite. Both zips ship a README.md/LICENSE, so the second
-  # unzip always hits an overwrite prompt; on non-interactive stdin that
-  # prompt reads EOF and unzip exits 1 (a "warning" exit code) even though
-  # it correctly skips the file and continues - which set -e still aborts on.
-  curl -fsSL -o /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip && unzip -o /tmp/Hack.zip -d ~/.fonts
-  curl -fsSL -o /tmp/NerdFontsSymbolsOnly.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip && unzip -o /tmp/NerdFontsSymbolsOnly.zip -d ~/.fonts
+  install_nerd_fonts
+  mkdir -p ~/Library/Fonts
   cp ~/.fonts/*.ttf ~/Library/Fonts/
   fc-cache -fv
 }

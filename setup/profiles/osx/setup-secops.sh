@@ -9,7 +9,7 @@ no_color='\033[0m'
 install_lite_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[secops] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     cosign \
     gitleaks \
     trivy
@@ -18,7 +18,7 @@ install_lite_setup() {
 install_additional_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[secops] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     age \
     dive \
     kubescape \
