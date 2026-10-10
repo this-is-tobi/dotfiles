@@ -5,6 +5,9 @@
 # on Debian. Proxies need no configuration here: mise reads HTTP_PROXY,
 # HTTPS_PROXY and ALL_PROXY straight from the environment.
 
+# shellcheck source=remote.sh
+. "$(dirname "${BASH_SOURCE[0]}")/remote.sh"
+
 # Fallbacks so this file is safe to source under `set -u` before the caller has
 # defined its own palette.
 red="${red:-\e[0;31m}"
@@ -47,7 +50,7 @@ ensure_mise() {
     if [ -x "$(command -v brew)" ]; then
       brew install mise
     else
-      curl -fsSL https://mise.run | sh
+      run_remote sh https://mise.run
     fi
   fi
 }

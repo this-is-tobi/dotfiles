@@ -9,14 +9,14 @@ no_color='\033[0m'
 install_lite_setup() {
   # Install homebrew graphic app packages
   printf "\n\n${red}[extras] =>${no_color} Install homebrew packages (graphic)\n\n"
-  brew update && brew install --cask \
+  brew install --cask \
     vlc
 }
 
 install_additional_setup() {
   # Install homebrew graphic app packages
   printf "\n\n${red}[extras] =>${no_color} Install homebrew packages (graphic)\n\n"
-  brew update && brew install --cask \
+  brew install --cask \
     audacity \
     discord \
     raspberry-pi-imager \

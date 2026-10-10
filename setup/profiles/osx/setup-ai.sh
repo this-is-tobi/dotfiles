@@ -9,21 +9,22 @@ no_color='\033[0m'
 install_lite_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     direnv
 }
 
 install_additional_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew update && brew install --formula \
-    claude-code \
-    copilot-cli \
+  brew install --formula \
     rtk-ai/tap/rtk
 
-  # Install homebrew graphic app packages
-  printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (graphic)\n\n"
-  brew update && brew install --cask \
+  # Install homebrew cask packages
+  # claude-code and copilot-cli are CLIs, but Homebrew only ships them as casks
+  printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cask)\n\n"
+  brew install --cask \
+    claude-code \
+    copilot-cli \
     ollama
 }
 

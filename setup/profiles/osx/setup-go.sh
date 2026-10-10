@@ -24,7 +24,7 @@ install_lite_setup() {
 install_additional_setup() {
   # Install homebrew cli packages
   printf "\n\n${red}[go] =>${no_color} Install go\n\n"
-  brew update && brew install --formula \
+  brew install --formula \
     kubebuilder \
     kustomize \
     operator-sdk

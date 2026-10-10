@@ -74,6 +74,10 @@ install_k8s_lite() {
 # `uv tool install --python` pins an explicit, self-contained interpreter that
 # neither apt nor brew can move, and puts the entry points in ~/.local/bin
 # (already on PATH) instead of a venv that has to be activated first.
+# The `ansible` package is only a bundle: its own entry point is
+# `ansible-community`, so the executables of the ansible-core it pulls in
+# (ansible, ansible-playbook, ...) have to be requested explicitly, and the same
+# goes for ansible-lint inside ansible-dev-tools.
 ANSIBLE_PYTHON="${ANSIBLE_PYTHON:-3.13}"
 
 install_iac_lite() {
@@ -84,7 +88,7 @@ install_iac_lite() {
 
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible\n\n"
-    uv tool install --python "$ANSIBLE_PYTHON" ansible
+    uv tool install --python "$ANSIBLE_PYTHON" --with-executables-from ansible-core ansible
   fi
 }
 
@@ -126,7 +130,7 @@ install_iac_full() {
   if [ ! -x "$(command -v ansible-lint)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible-dev-tools\n\n"
     # Same interpreter as ansible above so both toolchains agree.
-    uv tool install --python "$ANSIBLE_PYTHON" ansible-dev-tools
+    uv tool install --python "$ANSIBLE_PYTHON" --with-executables-from ansible-lint ansible-dev-tools
   fi
 }
 
