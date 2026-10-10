@@ -14,7 +14,8 @@
   },
   "effortLevel": "high",
   "attribution": {
-    "commit": ""
+    "commit": "",
+    "pr": ""
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -30,20 +31,18 @@
   },
   "permissions": {
     "deny": [
-      "Read(.env)",
-      "Read(**/.env.*)",
-      "Read(**/*.pem)",
-      "Read(**/*.key)",
-      "Read(**/secrets/**)",
-      "Edit(.env)",
-      "Edit(**/.env.*)",
-      "Edit(**/*.pem)",
-      "Edit(**/*.key)",
-      "Edit(**/secrets/**)",
+      "Read(//**/.env)",
+      "Read(//**/.env.*)",
+      "Read(//**/*.pem)",
+      "Read(//**/*.key)",
+      "Read(//**/secrets/**)",
       "Read(~/.config/dotfiles/secrets.env)",
-      "Edit(~/.config/dotfiles/secrets.env)",
+      "Read(~/.continue/.env)",
       "Read(~/.claude.json)",
-      "Edit(~/.claude.json)"
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.kube/**)"
     ]
   }
 }

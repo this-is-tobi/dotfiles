@@ -304,12 +304,13 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   if [ -x "$(command -v rtk)" ]; then
     rtk init -g --auto-patch
   fi
-  install_file "$DOTFILES_PATH/.claude/settings.json" "$HOME/.claude/settings.json"
+  # Merged, not copied: Claude Code and /plugin write into this file too. The repository
+  # owns hooks, attribution, plugins and the deny rules; the rest stays as it is.
+  "$SCRIPT_PATH/helpers/claude-settings.sh" "$DOTFILES_PATH/.claude/settings.json"
 
 
   # Install AI agent instructions & skills (Copilot + Claude Code personal setup)
-  # -P installs Claude Code plugins at user scope; it runs after the settings.json copy above, which
-  # would otherwise drop the enabledPlugins/extraKnownMarketplaces keys the plugin registers there.
+  # -P installs Claude Code plugins at user scope (and registers them in the settings.json merged above).
   run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t claude -g -P
   run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t copilot -g -c
 
