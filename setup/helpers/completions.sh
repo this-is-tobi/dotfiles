@@ -8,7 +8,7 @@ no_color='\033[0m'
 # invoked as an absolute path from a caller whose cwd may be the repo's
 # parent directory rather than inside the repo, where `git rev-parse
 # --show-toplevel` would fail)
-REPO_ROOT="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
+REPO_ROOT="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
 
 # Set completion directory
 export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
@@ -215,3 +215,8 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 [ -x "$(command -v yq)" ] \
   && printf "\n${red}[completion] =>${no_color} Install yq completion\n" \
   && yq completion zsh > $COMPLETION_DIR/_yq
+
+
+# The checks above end with `[ -x ... ] && ...`: a missing tool is fine, so
+# do not let the last one decide the exit status the callers see
+exit 0
