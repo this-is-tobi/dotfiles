@@ -63,15 +63,12 @@
     "jsonc",
     "json5"
   ],
-  // fallback config used when a project has no eslint config of its own
-  // (mirrors lua/plugins/eslint.lua in the nvim config); the config itself
-  // dispatches to a local eslint.config.* if one is found, so this is safe
-  // to set globally even for projects that already have their own config.
-  // __HOME__ is substituted for the real home directory by the setup scripts.
+  // projects without an eslint config of their own fall back to
+  // ~/eslint.config.mjs, which ESLint finds by itself when looking up from the
+  // linted file (a project's own config always comes first); nodePath provides
+  // eslint to projects that do not install it. __HOME__ is substituted for the
+  // real home directory by the setup scripts.
   "eslint.workingDirectories": [{ "mode": "auto" }],
-  "eslint.options": {
-    "overrideConfigFile": "__HOME__/.config/eslint-fallback/eslint.config.mjs"
-  },
   "eslint.nodePath": "__HOME__/.config/eslint-fallback/node_modules",
   // stylelint
   "css.validate": false,
