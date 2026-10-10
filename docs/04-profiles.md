@@ -65,7 +65,6 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [mise](https://mise.jdx.dev)                              | Version manager: language runtimes on both platforms, plus CLI binaries on Debian                          | ✓    | homebrew | shell  |
 | [rclone](https://rclone.org)                              | Swiss army knife of cloud storage                                                                          | ✓    | homebrew | mise   |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | Recursively search directories for regex patterns                                                          | ✓    | homebrew | mise   |
-| [skate](https://github.com/charmbracelet/skate)           | Personal key-value store                                                                                   | -    | homebrew | mise   |
 | [sshs](https://github.com/quantumsheep/sshs)              | Interactive SSH client                                                                                     | ✓    | homebrew | mise   |
 | [tldr++](https://github.com/isacikgoz/tldr)               | Interactive cheatsheet tool                                                                                | -    | homebrew | mise   |
 | [tree](https://mama.indstate.edu/users/ice/tree)          | Display filesystem as tree                                                                                 | ✓    | homebrew | apt    |

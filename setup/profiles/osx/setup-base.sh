@@ -52,7 +52,6 @@ install_additional_setup() {
     nmap \
     nvim \
     pandoc \
-    charmbracelet/tap/skate \
     isacikgoz/taps/tldr \
     ttyd \
     vhs

@@ -238,7 +238,6 @@ Cheatsheets and help tools (Base profile):
 | ------ | ----------------------- | -------------- |
 | cheat  | Interactive cheatsheets | homebrew/apt   |
 | tldr++ | Simplified man pages    | homebrew/shell |
-| skate  | Key-value store         | homebrew/shell |
 
 ### Media & Graphics
 
