@@ -18,13 +18,24 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 . "$SCRIPT_PATH/helpers/apt.sh"
 
 
+# bat-extras is a set of bash scripts. Its release zip carries them already
+# built, so nothing of it runs during the install, and the zip must have the
+# sha256 of the reviewed release. The scripts go to ~/.local/bin (on PATH) and
+# their man pages to ~/.local/share/man, without root.
+BAT_EXTRAS_VERSION="2024.08.24"
+BAT_EXTRAS_SHA256="d79c085b9d0af7f56c3f69d766a83fe26405faac999c4ed7cdfc27417d2c736f"
+
+# Each step is checked: set -e does not apply to a function called from an `if`
 install_bat_extras() (
-  local build_dir
-  build_dir="$(mktemp -d)"
-  # sudo: the install step runs as root and leaves root-owned build files behind
-  trap 'sudo rm -rf "$build_dir"' EXIT
-  git clone -b "$(curl -fsSL https://api.github.com/repos/eth-p/bat-extras/releases/latest | jq -r '.tag_name')" --depth 1 https://github.com/eth-p/bat-extras "$build_dir"
-  sudo "$build_dir/build.sh" --install
+  local tmp
+  tmp="$(mktemp -d)" || exit 1
+  trap 'rm -rf "$tmp"' EXIT
+  fetch_verified "https://github.com/eth-p/bat-extras/releases/download/v$BAT_EXTRAS_VERSION/bat-extras-$BAT_EXTRAS_VERSION.zip" \
+    "$BAT_EXTRAS_SHA256" "$tmp/bat-extras.zip" || exit 1
+  unzip -q "$tmp/bat-extras.zip" -d "$tmp/bat-extras" || exit 1
+  mkdir -p "$HOME/.local/bin" "$HOME/.local/share/man/man1" || exit 1
+  install -m 755 "$tmp"/bat-extras/bin/* "$HOME/.local/bin/" || exit 1
+  install -m 644 "$tmp"/bat-extras/man/*.1 "$HOME/.local/share/man/man1/"
 )
 
 install_lite_setup() {
@@ -60,12 +71,12 @@ install_lite_setup() {
     aqua:quantumsheep/sshs@latest
 
 
-  # Install bat-extras for additional bat commands
-  if [ ! -f /usr/local/bin/batman ]; then
-    printf "\n\n${red}[base] =>${no_color} Install bat-extras\n\n"
-    # A private temporary directory: the build runs as root, so it must not be
-    # a path another user could pre-create. bat-extras is a convenience, so a
-    # failure (GitHub API rate limit, offline mirror) only warns.
+  # Install bat-extras for additional bat commands, unless this version is there.
+  # Its scripts carry their version, which is what the check reads.
+  if ! grep -qsF "\"$BAT_EXTRAS_VERSION\"" "$HOME/.local/bin/batman"; then
+    printf "\n\n${red}[base] =>${no_color} Install bat-extras %s\n\n" "$BAT_EXTRAS_VERSION"
+    # bat-extras is a convenience, so a failure (offline, a checksum mismatch)
+    # only warns.
     if ! install_bat_extras; then
       printf "Warning: bat-extras could not be installed, skipping it\n" >&2
     fi
