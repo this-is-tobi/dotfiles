@@ -135,6 +135,21 @@ if ! command -v sudo >/dev/null 2>&1; then
   fi
 fi
 
+# Ask for the sudo password once, up front, then keep the credentials fresh in
+# the background until the script exits: a long run (mise downloads, Docker)
+# outlasts sudo's timestamp (15 minutes by default), and would otherwise stop at
+# a password prompt halfway, or fail where nobody can answer it.
+if [ "$(id -u)" -ne 0 ]; then
+  if ! sudo -v; then
+    printf "Error: sudo could not validate your credentials. Run this script from an interactive terminal, or allow %s to use sudo without a password.\n" "${USER:-$(id -un)}" >&2
+    exit 1
+  fi
+  # -n: the refresh never prompts, it stops when sudo would need the password again
+  ( while sleep 60 && kill -0 "$$" 2>/dev/null; do sudo -n -v || exit 0; done ) > /dev/null 2>&1 &
+  sudo_keepalive_pid=$!
+  trap 'kill "$sudo_keepalive_pid" 2>/dev/null' EXIT
+fi
+
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 i=$(($i + 1))
