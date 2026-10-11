@@ -153,6 +153,7 @@ These variables are read from the environment, so set them in front of the comma
 | `TOOLS_REF`            | `main`                           | Tag or commit SHA of the [tools](https://github.com/this-is-tobi/tools) repository, which provides the downloaded helper scripts |
 | `OMZ_REF`              | `master`                         | Git ref of the oh-my-zsh installer                                                                                               |
 | `HOMEBREW_INSTALL_REF` | `HEAD`                           | Git ref of the Homebrew installer (macOS)                                                                                        |
+| `HOMEBREW_NO_ASK`      | `1`                              | Skips the confirmation Homebrew asks before each install, so a run needs no input (macOS). A value you set is kept               |
 | `DEVOPS_CATEGORIES`    | `all`                            | Devops categories to install, comma-separated (`k8s`, `iac`, `cloud`, `misc`)                                                    |
 | `ANSIBLE_PYTHON`       | `3.13`                           | Python that `uv` pins for ansible and ansible-lint (Debian)                                                                      |
 | `TELEPORT_VERSION`     | `v18`                            | Teleport release channel (Debian, see below)                                                                                     |

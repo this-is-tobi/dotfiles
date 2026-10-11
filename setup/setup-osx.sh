@@ -184,6 +184,11 @@ fi
 
 export FULL_MODE_SETUP=$FULL_MODE_SETUP
 
+# Recent Homebrew versions ask "Do you want to proceed? [y/n]" before every install, which
+# stops an unattended run. The profile flags already say what to install, so skip the
+# question unless HOMEBREW_NO_ASK was set by the caller.
+export HOMEBREW_NO_ASK="${HOMEBREW_NO_ASK-1}"
+
 # Tools installed by the profiles (mise shims, ~/.local/bin) must be visible to
 # every later step, whichever profiles run.
 export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
