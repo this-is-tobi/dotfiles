@@ -19,5 +19,20 @@
   ["chat.tools.terminal.autoApprove", "bunx"],
   ["chat.tools.terminal.autoApprove", "pnpm"],
   ["chat.tools.terminal.autoApprove", "go"],
-  ["chat.tools.terminal.autoApprove", "/^go\\b.*(install|get)\\b/"]
+  ["chat.tools.terminal.autoApprove", "/^go\\b.*(install|get)\\b/"],
+  // read-only allow lists that also approved plugins named after a verb (kubectl get-all,
+  // helm list-x) and helm env, which prints HELM_KUBETOKEN
+  ["chat.tools.terminal.autoApprove", "/^kubectl\\s+(get|describe|logs|top|explain|api-resources|api-versions|version|cluster-info|events|diff|auth\\s+can-i|config\\s+(view|get-contexts|current-context)|rollout\\s+(status|history))\\b/"],
+  ["chat.tools.terminal.autoApprove", "/^helm\\s+(list|ls|status|history|search|show|template|lint|version|env|repo\\s+list|get\\s+(notes|metadata))\\b/"],
+  // guards replaced by ones that also match -o=yaml, grouped short options (-nf, -Pi, -uo),
+  // long options and the files they missed
+  ["chat.tools.terminal.autoApprove", "/^kubectl\\b(?=.*\\bsecrets?\\b)(?=.*(\\s-o\\s*(yaml|json|jsonpath|go-template|template)|--output[= ]\\s*(yaml|json|jsonpath|go-template|template)))/"],
+  ["chat.tools.terminal.autoApprove", "/^kubectl\\b.*\\s--raw\\b/"],
+  ["chat.tools.terminal.autoApprove", "/^awk\\b.*(system|getline|ENVIRON|\\s-f\\b|--file|@include|@load|\\||>>)/"],
+  ["chat.tools.terminal.autoApprove", "/^sed\\b.*-i\\b/"],
+  ["chat.tools.terminal.autoApprove", "/^jq\\b.*(\\$ENV|\\benv\\b|--rawfile|--slurpfile|--argfile|\\s-f\\b|--from-file|input_filename)/"],
+  ["chat.tools.terminal.autoApprove", "/^yq\\b.*(\\benv\\(|strenv\\(|\\bload\\(|load_str\\(|\\s-i\\b|--inplace|--from-file)/"],
+  ["chat.tools.terminal.autoApprove", "/^sort\\b.*-(o|S)\\b/"],
+  ["chat.tools.terminal.autoApprove", "/(^|[\\s/=\\'\"])\\.(env(\\.\\S+)?|netrc|npmrc|pypirc|git-credentials|vault-token)([\\s\\'\"]|$)/"],
+  ["chat.tools.terminal.autoApprove", "/(^|[\\s/=\\'\"])(\\.ssh|\\.aws|\\.gnupg|\\.kube|\\.docker/config\\.json|\\.config/gh/hosts\\.yml|secrets\\.env|id_(rsa|dsa|ecdsa|ed25519)|[^\\s/\\'\"]+\\.(pem|key|p12|pfx))([/\\s\\'\"]|$)/"]
 ]
