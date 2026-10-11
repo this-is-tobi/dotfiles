@@ -13,7 +13,7 @@ The dotfiles include a VS Code user configuration located in `dotfiles/.vscode/`
 When the setup copies the dotfiles (`-d`) and the `code` command is on the `PATH`, it:
 - copies `settings.json` and `mcp.json` to the VS Code user directory (`~/Library/Application Support/Code/User/` on macOS, `~/.config/Code/User/` on Debian; on Debian `~/.local/share/code-server/User/` is filled as well when `code-server` is installed). A file whose content differs is first saved under `~/.dotfiles-backup/<timestamp>/`
 - replaces the `__HOME__` placeholder of `settings.json` with your home directory (used by `eslint.nodePath`)
-- installs every extension listed in `extensions.json` with `code --install-extension`; one that fails prints a warning and the setup goes on with the next
+- installs the extensions listed in `extensions.json` that are not installed yet (`code --list-extensions` is read once, then `code --install-extension` runs for each missing one); one that fails prints a warning and the setup goes on with the next
 
 ## Configuration Files
 
