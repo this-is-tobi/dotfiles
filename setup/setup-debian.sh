@@ -285,7 +285,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
     local user_dir="$1" cli="$2" settings
     settings="$(mktemp)"
     sed "s|__HOME__|$HOME|g" "$DOTFILES_PATH/.vscode/settings.json" > "$settings"
-    "$SCRIPT_PATH/helpers/vscode-settings.sh" "$settings" "$user_dir/settings.json"
+    "$SCRIPT_PATH/helpers/vscode-settings.sh" "$settings" "$user_dir/settings.json" "$DOTFILES_PATH/.vscode/settings-retired.json"
     rm -f "$settings"
     install_file "$DOTFILES_PATH/.vscode/mcp.json" "$user_dir/mcp.json"
     "$SCRIPT_PATH/helpers/vscode-extensions.sh" "$cli" "$DOTFILES_PATH/.vscode/extensions.json"
