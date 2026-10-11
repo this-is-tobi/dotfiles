@@ -53,7 +53,9 @@ The main Zsh configuration file that:
 
 **Customization Notes:**
 - Homebrew is found on both Apple Silicon and Intel; the direnv plugin only loads when direnv is installed, and the `sed` alias only exists when `gsed` is
-- PATH modifications may need adjustment for your system
+- `PATH` and `fpath` keep one copy of each entry, so nested shells do not stack them; `go install` targets `~/go/bin` (`GOBIN`)
+- History: a command typed with a leading space, or a line that assigns or passes a token or a password, is not written to `~/.zsh_history` (see [History](05-shell-customization.md#history))
+- Locale: only `LANG=en_US.UTF-8` is set, not `LC_ALL`
 - Plugin list can be customized
 - `-d` replaces the file (the previous version is backed up). Put what is specific to one machine in `~/.zshrc.local`: it is sourced last when it exists, and the setup never writes it
 
@@ -73,21 +75,28 @@ Custom utility functions (run `lsfn` for the full list) including:
 - Certificate checking (`check_cert`)
 - Kubernetes secret decoding (`dks`)
 - Password generation (`randompass`)
+- Merging a GitHub pull request by fast-forward, signatures kept (`ffmerge`)
 
 #### `.config/dotfiles/functions-completion.sh`
-Auto-completion definitions for custom functions, particularly for the `tools` function.
+zsh completion of the `tools` function: the script names of the tools repository, cached for a day under `~/.cache/dotfiles/`.
 
 ### Git Configuration
 
 #### `.gitconfig`
 Shared Git configuration with:
 - Useful aliases
-- Default branch settings
+- Default branch settings, and `pull.rebase`
+- `transfer.fsckObjects`: every object a fetch, a clone or a push to this machine brings in is checked, and a corrupt or malformed one is refused
+- `fetch.prune` (remote-tracking branches deleted on the remote go away), `push.autoSetupRemote` (the first `git push` of a new branch creates and tracks it), `rebase.autoStash` and `rebase.updateRefs` (a rebase also moves the branches stacked on the rebased one)
+- `diff.algorithm = histogram` and `merge.conflictStyle = zdiff3` (conflicts also show the common ancestor)
 - Diff tool setting (`meld`, which the setup does not install)
+- Credentials: `https://github.com` and `https://gist.github.com` go through `gh auth git-credential` (your `gh auth login`); without `gh`, and for every other host, a password is kept in memory for an hour (`credential-cache`), never written to disk
 - Color schemes
 - An include of `~/.gitconfig.local`, placed last so that it wins
 
-It holds no identity and does not sign commits: both are per machine.
+It holds no identity and does not sign commits: both are per machine. Any of these settings can be changed in `~/.gitconfig.local`, which wins.
+
+It expects git 2.38 or later (macOS, Debian 12, Ubuntu 24.04 and newer have it). An older git ignores `rebase.updateRefs` and `push.autoSetupRemote`, but merges, rebases and checkouts stop with `unknown style 'zdiff3' given for 'merge.conflictstyle'` before 2.35 (Debian 11, Ubuntu 22.04), and `~/.gitconfig.local` cannot fix that because git stops on the first value it reads: install a newer git, or change the value to `diff3` in `~/.gitconfig` on that machine (again after each `-d`).
 
 #### `~/.gitconfig.local`
 The per-machine part of the Git configuration. `-d` creates it once and never overwrites it. Before an existing `~/.gitconfig` is replaced, the setup copies its `user.name`, `user.email`, `user.signingkey`, `commit.gpgsign`, `gpg.format` and `gpg.ssh.allowedSignersFile` into the new file. When there is nothing to carry over, it asks for your name and email, or, without a terminal, prints how to set them:
@@ -183,7 +192,7 @@ Mattermost application theme settings. The setup scripts do not copy it: apply i
 
 #### `.oh-my-zsh/this-is-tobi.zsh-theme`
 Copied by `-d` to `~/.oh-my-zsh/custom/themes/`. Custom oh-my-zsh theme that combines:
-- gnzh theme styling
+- gnzh theme styling (two-line prompt)
 - kube-ps1 code, embedded in the theme (no plugin needed), for Kubernetes context display
 - Git status information
 - Custom prompt format
