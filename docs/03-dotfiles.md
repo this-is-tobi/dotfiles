@@ -38,6 +38,8 @@ The `dotfiles/` directory contains template configuration files for various appl
 └── eslint.config.mjs                # Home-level ESLint fallback, re-exports .config/eslint-fallback
 ```
 
+Next to `dotfiles/`, the root of the repository holds `renovate.json`: it lets [Renovate](https://docs.renovatebot.com/) propose updates of the MCP server versions pinned in `.vscode/mcp.json` and `setup/helpers/claude-mcp.sh` (see [mcp.json](06-vscode-config.md#mcpjson)).
+
 ## Key Configuration Files
 
 ### Shell Configuration
@@ -135,10 +137,11 @@ Recommended VS Code extensions for this environment, installed by `-d` with `cod
 Personal Claude Code settings, merged into `~/.claude/settings.json` during setup. The file is not simply copied, because Claude Code and its commands (`/config`, `/plugin`) write to it too:
 - The keys the repository owns win: `hooks`, `attribution`, `extraKnownMarketplaces`, `enabledPlugins` and `permissions`. The `permissions.deny` rules and the `PreToolUse` hooks are added to those already in the file.
 - Every other key (e.g. `effortLevel`) is only a default, applied when the file does not set it.
+- A `PreToolUse` hook whose command is the bare `rtk hook claude` (what `rtk init -g` and earlier versions of this file write) is dropped, since the repository's hook replaces it.
 - The previous file is backed up under `~/.dotfiles-backup/` when the merge changes anything.
 
 It sets:
-- `rtk hook claude` PreToolUse hook for token-optimized shell output
+- A PreToolUse hook for token-optimized shell output, `if command -v rtk >/dev/null 2>&1; then rtk hook claude; fi`: it only runs rtk when rtk is installed, where a bare `rtk hook claude` fails with "command not found" on every Bash call
 - `effortLevel` model reasoning effort
 - `attribution.commit` and `attribution.pr` set to `""` to disable the `Co-Authored-By: Claude` commit trailer and the pull request description line
 - `enabledPlugins` and `extraKnownMarketplaces` for the plugins installed at user scope
