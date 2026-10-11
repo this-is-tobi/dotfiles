@@ -23,15 +23,40 @@
 	root = rev-parse --show-toplevel
 [push]
 	default = simple
+	# the first push of a new branch creates it on the remote and tracks it
+	autoSetupRemote = true
+[fetch]
+	# drop the remote-tracking branches deleted on the remote
+	prune = true
+[transfer]
+	# check every object a fetch, a clone or a push to this machine brings in, and
+	# refuse a corrupt or malformed one (fetch.fsckObjects and receive.fsckObjects follow it)
+	fsckObjects = true
 [status]
 	showUntrackedFiles = all
 [diff]
+	algorithm = histogram
 	wordRegex = .
 	tool = meld
-[branch]
-	autosetuprebase = always
+[merge]
+	# conflicts also show the common ancestor (needs git 2.35 or later)
+	conflictStyle = zdiff3
+[rebase]
+	autoStash = true
+	# a rebase also moves the branches stacked on the rebased one (git 2.38 or later)
+	updateRefs = true
 [credential]
+	# hosts other than GitHub: a password typed once is kept in memory for an hour,
+	# never written to disk
 	helper = cache --timeout=3600
+# GitHub through the gh login. The empty helper drops the ones above for these hosts
+# (and a system one such as osxkeychain); without gh, the memory cache is used instead.
+[credential "https://github.com"]
+	helper =
+	helper = "!f() { if command -v gh >/dev/null 2>&1; then exec gh auth git-credential \"$@\"; else exec git credential-cache --timeout=3600 \"$@\"; fi; }; f"
+[credential "https://gist.github.com"]
+	helper =
+	helper = "!f() { if command -v gh >/dev/null 2>&1; then exec gh auth git-credential \"$@\"; else exec git credential-cache --timeout=3600 \"$@\"; fi; }; f"
 [color]
 	ui = true
 [rerere]

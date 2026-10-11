@@ -451,11 +451,19 @@ git config --file ~/.gitconfig.local user.email "you@example.com"
 
 ### Git Credentials Not Saved
 
-**Problem:** Git asks for password every time
+**Problem:** Git asks for a username and password over HTTPS
 
 **Solutions:**
 
-1. **Use SSH:**
+1. **GitHub: log in with gh.** For `https://github.com` and `https://gist.github.com`, the shared `~/.gitconfig` hands credentials to `gh auth git-credential`, so git uses the token of your gh login and never asks:
+```sh
+gh auth login
+gh auth status
+git config --get-urlmatch credential.helper https://github.com   # the gh helper
+```
+Without `gh` on the machine, git asks once and keeps the password in memory for an hour, like for other hosts.
+
+2. **Use SSH:**
 ```sh
 # Generate SSH key
 ssh-keygen -t ed25519 -C "your@email.com"
@@ -465,14 +473,53 @@ cat ~/.ssh/id_ed25519.pub
 # Copy and add to GitHub.com → Settings → SSH Keys
 ```
 
-2. **Configure credential helper:** the shared `~/.gitconfig` sets `cache --timeout=3600`, so HTTPS passwords are forgotten after an hour. Credential helpers add up, so a persistent one in `~/.gitconfig.local` is used alongside it:
+3. **Other hosts: a persistent credential helper.** The shared `~/.gitconfig` uses `cache --timeout=3600` for them: a password stays in memory for an hour and is never written to disk. Helpers add up, so one set in `~/.gitconfig.local` is used alongside it. Prefer the system keychain to `store`, which writes passwords in clear to `~/.git-credentials`:
 ```sh
 # macOS
 git config --file ~/.gitconfig.local credential.helper osxkeychain
 
-# Linux
-git config --file ~/.gitconfig.local credential.helper store
+# Linux: libsecret (GNOME keyring), when git-credential-libsecret is built or packaged
+git config --file ~/.gitconfig.local credential.helper libsecret
 ```
+
+### Clone or Fetch Fails With an fsck Error
+
+**Problem:** `git clone` or `git fetch` stops with `fatal: fsck error in packed object` or `error: object <sha>: <check>: ...` (for example `zeroPaddedFilemode`, `badTimezone`, `missingSpaceBeforeDate`)
+
+**Solution:** The shared `~/.gitconfig` sets `transfer.fsckObjects`, so git checks every object it receives and refuses a malformed one. Some old repositories hold objects that a recent git considers malformed though they are harmless. Once you trust the repository, skip that one check (the name is the word after the SHA in the message), or the checks for this command only:
+```sh
+# in the repository, for that one check
+git config fetch.fsck.zeroPaddedFilemode ignore
+# for a clone
+git clone -c fetch.fsck.zeroPaddedFilemode=ignore <url>
+# every check, this command only
+git -c transfer.fsckObjects=false clone <url>
+```
+
+### `unknown style 'zdiff3'`
+
+**Problem:** `git merge`, `git rebase` or `git checkout` stops with `fatal: unknown style 'zdiff3' given for 'merge.conflictstyle'`
+
+**Solution:** That git is older than 2.35 (Debian 11, Ubuntu 22.04). Install a newer git, or change the value in `~/.gitconfig` on that machine (it comes back with the next `-d`): git stops on the first value it reads, so an override in `~/.gitconfig.local` does not help.
+```sh
+git --version
+git config --global merge.conflictStyle diff3
+```
+
+### `ffmerge` Refuses to Merge
+
+**Problem:** `ffmerge` stops before pushing
+
+**Solution:** It says why; nothing was changed. The usual cases:
+- `<head> is not based on the current origin/<base>`: the base branch moved since the branch was created. Rebase, push, and wait for the checks before running it again:
+```sh
+git switch <head> && git fetch origin && git rebase origin/<base> && git push --force-with-lease
+```
+- `GitHub does not show every commit ... as verified`: sign the listed commits (`git rebase --exec 'git commit --amend --no-edit -S' origin/<base>`, then push), and check that the signing key is on your GitHub account as a signing key and that the commit email is one of your verified emails
+- `checks are still running`: wait with the `gh pr checks <pr> --watch` command it prints
+- `origin is ..., but PR #<n> belongs to ...`: `gh` resolved another remote (an `upstream`); run it in a clone whose `origin` is the repository of the PR
+
+`the push was refused` happens after the checks: either `origin/<base>` moved in the meantime (run it again), or a branch rule forbids pushing to the base branch, which then has to allow you to bypass it.
 
 ## Kubernetes Issues
 
