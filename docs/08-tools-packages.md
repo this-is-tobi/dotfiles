@@ -209,7 +209,7 @@ On macOS both come from Homebrew and uv is not installed.
 
 | Tool | Manages                                              | Source         |
 | ---- | ---------------------------------------------------- | -------------- |
-| mise | Language runtimes (both); CLI binaries (Debian only) | homebrew/shell |
+| mise | Language runtimes (both); CLI binaries (Debian only) | homebrew/apt   |
 
 mise manages language runtimes on both platforms, and portable CLI binaries on
 Debian. On macOS, Homebrew is the package manager for CLI tools.
@@ -528,7 +528,10 @@ Re-running a setup profile has the same effect, since each one installs its
 tools with `@latest`.
 
 Upgrading mise itself follows whichever way it was installed: `brew upgrade
-mise` on macOS, `mise self-update` on Debian.
+mise` on macOS, `sudo apt-get install --only-upgrade mise` (or a full
+`apt upgrade`) on Debian, where it comes from mise's signed apt repository.
+A copy installed earlier with the `mise.run` script, in `~/.local/bin`, updates
+with `mise self-update`.
 
 ## Further Resources
 
