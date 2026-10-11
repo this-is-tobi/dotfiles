@@ -139,6 +139,7 @@ Each entry goes to `dotfiles/<basename>`:
 - `.copilot` - Copilot CLI configuration (`pkg`, `ide` and `session-state` excluded)
 - `.docker` - Docker client configuration (`scout`, `sbom`, `scan`, `desktop`, `buildx`, `mutagen` and `run` excluded)
 - `.gitconfig`
+- `.gitconfig.local` - your git identity and signing settings for this machine (the repository does not ship it)
 - `.gnupg` - the GPG keyring
 - `.kube` - Kubernetes configuration (`cache` and `http-cache` excluded)
 - `.mc` - MinIO client configuration
@@ -146,6 +147,7 @@ Each entry goes to `dotfiles/<basename>`:
 - `.ssh` - SSH keys and configuration
 - `.tsh` - Teleport profiles
 - `.zshrc`
+- `.zshrc.local` - your machine-specific shell configuration (the repository does not ship it)
 
 To keep one of them out of your backups, remove it from the `DOT_FILES` list in `backup/backup.sh`.
 
@@ -186,8 +188,7 @@ The copies already run 12 files at a time with 24 checkers. In a local-disk test
 
 ### Not backed up
 - **Package lists.** The scripts do not record installed packages (see [Package Restore](#package-restore))
-- `~/.gitconfig.local`, the per-machine git identity and signing settings: only the shared `~/.gitconfig` is copied
-- `~/.bashrc`, `~/.profile` and every shell file other than `~/.zshrc`
+- `~/.bashrc`, `~/.profile` and every shell file other than `~/.zshrc` and `~/.zshrc.local`
 - `~/.oh-my-zsh` (the theme and plugins are reinstalled by the setup)
 - `~/.continue` (including a `.env` you may keep there) and, on macOS, the VS Code user directory `~/Library/Application Support/Code/User`
 - Anything under `/etc` other than the two files above, and anything outside the lists above
@@ -217,13 +218,15 @@ backup_2026-10-10T13-26-17/
 │   ├── .copilot/
 │   ├── .docker/
 │   ├── .gitconfig
+│   ├── .gitconfig.local
 │   ├── .gnupg/
 │   ├── .kube/
 │   ├── .mc/
 │   ├── .npmrc
 │   ├── .ssh/
 │   ├── .tsh/
-│   └── .zshrc
+│   ├── .zshrc
+│   └── .zshrc.local
 ├── rta/                       (only when an rta store exists)
 │   ├── kv.age
 │   └── kv.recipients
@@ -309,13 +312,25 @@ git clone https://github.com/this-is-tobi/dotfiles.git
 cd dotfiles
 ```
 
-2. **Run setup script** (profiles and dotfiles need the cloned repository):
+2. **Restore your local files** before the setup. It never overwrites `~/.gitconfig.local` or `~/.zshrc.local`, and when `~/.gitconfig.local` is already there it does not ask for your git identity:
+```sh
+for f in .gitconfig.local .zshrc.local; do
+  if [ -f "$BACKUP/dotfiles/$f" ]; then cp -p "$BACKUP/dotfiles/$f" ~/"$f"; fi
+done
+```
+When the backup has no `.gitconfig.local`, the setup asks for your name and email. To set them yourself:
+```sh
+git config --file ~/.gitconfig.local user.name "Your Name"
+git config --file ~/.gitconfig.local user.email "you@example.com"
+```
+
+3. **Run setup script** (profiles and dotfiles need the cloned repository):
 ```sh
 ./setup/setup-osx.sh -p 'base,devops,js' -d  # Your profiles
 ```
 With `-d` the setup installs the repository's dotfiles. A file it replaces is first saved under `~/.dotfiles-backup/<timestamp>/`.
 
-3. **Restore credentials and tool state** (the repository does not ship them):
+4. **Restore credentials and tool state** (the repository does not ship them):
 ```sh
 for item in .ssh .gnupg .aws .kube .docker .mc .tsh; do
   [ -d "$BACKUP/dotfiles/$item" ] || continue
@@ -329,7 +344,7 @@ done
   && cp -Rp "$BACKUP/dotfiles/.claude/projects/." ~/.claude/projects/
 ```
 
-4. **Restore your secrets file:**
+5. **Restore your secrets file:**
 ```sh
 mkdir -p ~/.config/dotfiles
 cp -p "$BACKUP/dotfiles/.config/dotfiles/secrets.env" ~/.config/dotfiles/secrets.env
@@ -337,21 +352,15 @@ chmod 600 ~/.config/dotfiles/secrets.env
 ```
 The setup already installed the repository's `~/.config`. Copy back from `$BACKUP/dotfiles/.config/` only what you customized (for example `gh` or `lazygit`); copying the whole directory would replace the managed files, such as `env.sh`, with older versions.
 
-5. **Restore the rta store** (only if you use one):
+6. **Restore the rta store** (only if you use one):
 ```sh
 RTA_DATA="${RTA_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/rta}"
 mkdir -p "$RTA_DATA" && chmod 700 "$RTA_DATA"
 cp -p "$BACKUP/rta/kv.age" "$BACKUP/rta/kv.recipients" "$RTA_DATA/"
 ```
-Then make sure what opens it is back: `~/.config/rta/kv.identity` (copy it from `$BACKUP/dotfiles/.config/rta/`) or your SSH key from `$BACKUP/dotfiles/.ssh/`. `rta kv list` then shows the keys, names only.
+Then make sure what opens it is back: your SSH key, restored with `~/.ssh` in step 4 (and `RTA_KV_IDENTITY` if you set it in the `~/.zshrc.local` of step 2), or `~/.config/rta/kv.identity`, which you copy from `$BACKUP/dotfiles/.config/rta/` (mode `600`). `rta kv list` then shows the keys, names only.
 
-6. **Check permissions:** `~/.ssh`, `~/.gnupg`, the private keys and `~/.kube/config` must not be readable by others, see [Permissions](#permissions).
-
-7. **Git identity:** `~/.gitconfig.local` is not part of the backup. The setup asks for your name and email when it creates it. To set them yourself:
-```sh
-git config --file ~/.gitconfig.local user.name "Your Name"
-git config --file ~/.gitconfig.local user.email "you@example.com"
-```
+7. **Check permissions:** `~/.ssh`, `~/.gnupg`, the private keys and `~/.kube/config` must not be readable by others, see [Permissions](#permissions).
 
 8. **Reload shell:**
 ```sh
@@ -365,6 +374,9 @@ Restore only specific configurations:
 ```sh
 # Just shell config (the setup's -d would otherwise install the repository version)
 cp "$BACKUP/dotfiles/.zshrc" ~/
+
+# Just your machine-specific shell config and git identity
+cp -p "$BACKUP/dotfiles/.zshrc.local" "$BACKUP/dotfiles/.gitconfig.local" ~/
 
 # Just Git config
 cp "$BACKUP/dotfiles/.gitconfig" ~/
@@ -589,6 +601,7 @@ A backup contains:
 - SSH private keys (`.ssh`), the GPG keyring (`.gnupg`) and the exported GPG private keys (`gpg/`)
 - Cloud and cluster credentials (`.aws`, `.kube`, `.tsh`, `.docker`, `.mc`, `.npmrc`)
 - Everything in `~/.config`, including `~/.config/dotfiles/secrets.env`
+- `~/.zshrc.local`, with whatever you export there
 - Claude Code settings and conversation history, and Copilot CLI configuration
 
 The scripts only keep other local users out (`umask 077`, backup directory mode `700`). They do not encrypt.
