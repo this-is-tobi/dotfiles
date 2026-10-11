@@ -15,6 +15,8 @@ The backup scripts copy your dotfiles, credentials, configurations and a few imp
 
 Both scripts copy files with [rclone](https://rclone.org), which the base profile installs.
 
+`backup-osx.sh` and `backup-debian.sh` are short entry points to `backup/backup.sh`, which does the backup for both systems. They only set the system, which decides two things: the home directories that `-f` adds and whether the Brave profile has a step of its own (macOS). Everything else, flags included, is the same on both. `backup.sh` can also be run directly: it picks the system from `uname` (`Darwin` is macOS, `Linux` is Debian/Ubuntu), and `BACKUP_OS=osx` or `BACKUP_OS=debian` forces one.
+
 ### macOS: backup-osx.sh
 
 **Location:** `backup/backup-osx.sh`
@@ -134,7 +136,7 @@ Each entry goes to `dotfiles/<basename>`:
 - `.tsh` - Teleport profiles
 - `.zshrc`
 
-To keep one of them out of your backups, remove it from the `DOT_FILES` list in the script.
+To keep one of them out of your backups, remove it from the `DOT_FILES` list in `backup/backup.sh`.
 
 ### 4. rta secrets store
 - Only when an [rta](https://github.com/this-is-tobi/rta) store exists (`$RTA_DATA_DIR`, else `$XDG_DATA_HOME/rta`, else `~/.local/share/rta`): `kv.age`, the encrypted store, and `kv.recipients`, the public keys that can open it, go to `rta/`. Nothing else from rta's data directory is copied (grants, audit log and plugin cache can be rebuilt)
@@ -147,7 +149,8 @@ Each directory goes to `home/<name>`:
 - **Debian:** `~/dev` by default. With `-f`: `~/Desktop`, `~/dev`, `~/Documents`, `~/Downloads`, `~/Music`, `~/Pictures` and `~/Videos`
 
 ### 6. Brave (macOS only)
-- If `~/Library/Application Support/BraveSoftware` exists, the `Default` profile is copied to `brave/Default` (`Cache`, `Code Cache`, `GPUCache`, `DawnCache`, `Crashpad` and the service worker caches `Service Worker/CacheStorage` and `Service Worker/ScriptCache` excluded)
+- If the `Default` profile exists (`~/Library/Application Support/BraveSoftware/Brave-Browser/Default`), it is copied to `brave/Default` (`Cache`, `Code Cache`, `GPUCache`, `DawnCache`, `Crashpad` and the service worker caches `Service Worker/CacheStorage` and `Service Worker/ScriptCache` excluded)
+- On Debian/Ubuntu Brave keeps its profiles in `~/.config/BraveSoftware`, which step 3 copies with the rest of `~/.config` (and its exclusions)
 
 ### Always excluded
 Every directory copy skips OS metadata (`.DS_Store`, `Thumbs.db`), `*.tmp`, `*.log`, earlier backups (`backup_*`, so a backup written under a source directory never copies itself), `.cache`, `.local/share/mise` and regenerable project output: `node_modules`, `__pycache__`, `*.pyc`, `.venv`, `venv`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `.tox`, `.turbo`, `.angular`, `.svelte-kit`, `.output`, `.terraform`, `.terragrunt-cache`, `target`, `dist`, `build`, `.next`, `.nuxt`, `.gradle`, `.parcel-cache` and `coverage`. These patterns have no leading `/`, so they match at any depth: a project folder named `build` or `dist` is skipped too. Symbolic links are followed (their target is copied).
@@ -576,7 +579,7 @@ The scripts only keep other local users out (`umask 077`, backup directory mode 
 
 **Best practices:**
 - Keep backups on storage only you can access, and encrypt them before they go to a cloud folder, a NAS or a server
-- Remove entries you do not want from the `DOT_FILES` list of the script
+- Remove entries you do not want from the `DOT_FILES` list of `backup/backup.sh`
 - Delete backups you no longer need: they hold the keys and tokens of their day
 - The GPG export stays in `~/.gnupg/backup/` on the machine after each run: store the key safely, then remove it from there if you do not want a second copy
 - Use secret management tools (1Password, Vault) rather than long-lived tokens in files
@@ -616,8 +619,8 @@ chmod 600 ~/.config/dotfiles/secrets.env
 
 **Check permissions:**
 ```sh
-# Ensure script is executable
-chmod +x backup/backup-osx.sh
+# Ensure the scripts are executable
+chmod +x backup/*.sh
 
 # Check destination is writable
 mkdir -p ~/backups && touch ~/backups/test && rm ~/backups/test
