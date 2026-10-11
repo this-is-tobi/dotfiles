@@ -9,7 +9,7 @@ The backup scripts copy your dotfiles, credentials, configurations and a few imp
 - Keep timestamped snapshots of your configuration
 - Migrate to a new computer
 
-> **Backups are not encrypted.** A backup holds `~/.ssh`, `~/.gnupg` (plus an exported GPG private key), `~/.aws`, `~/.kube`, `~/.docker`, `~/.npmrc`, `~/.config/dotfiles/secrets.env` and your Claude Code history. The scripts run with `umask 077` and set the backup directory to mode `700`, so other local users cannot read it, but nothing is encrypted. Keep it on storage only you can access, and encrypt it (see [Encryption](#encryption)) before it leaves the machine: cloud-synced folders, a NAS, a git remote.
+> **Backups are not encrypted.** A backup holds `~/.ssh`, `~/.gnupg` (plus an exported GPG private key), `~/.aws`, `~/.kube`, `~/.docker`, `~/.npmrc`, `~/.config/dotfiles/secrets.env`, rta's key file if you have one, and your Claude Code history. The scripts run with `umask 077` and set the backup directory to mode `700`, so other local users cannot read it, but nothing is encrypted. Keep it on storage only you can access, and encrypt it (see [Encryption](#encryption)) before it leaves the machine: cloud-synced folders, a NAS, a git remote.
 
 ## Backup Scripts
 
@@ -153,7 +153,9 @@ To keep one of them out of your backups, remove it from the `DOT_FILES` list in 
 
 ### 4. rta secrets store
 - Only when an [rta](https://github.com/this-is-tobi/rta) store exists (`$RTA_DATA_DIR`, else `$XDG_DATA_HOME/rta`, else `~/.local/share/rta`): `kv.age`, the encrypted store, and `kv.recipients`, the public keys that can open it, go to `rta/`. Nothing else from rta's data directory is copied (grants, audit log and plugin cache can be rebuilt)
-- What opens the store is not in this step: the generated key `~/.config/rta/kv.identity` travels with `.config` in step 3, and an SSH key with `~/.ssh`. Whoever holds the backup has both the store and a way to open it, so keep the backup private (it is not encrypted)
+- The keys that open the store are in the backup too, copied in step 3, and how safe that is depends on which key you use:
+  - `~/.config/rta/kv.identity`, the key that `rta kv init --generate` creates, has no passphrase. It is copied with `~/.config` on purpose, so that a restore can open the store, but it also means that **whoever holds the backup can read every secret in the store**. Keep the backup private (it is not encrypted)
+  - An SSH key that has a passphrase, copied with `~/.ssh`, cannot open the store without that passphrase. Locking the store to such keys, and moving `kv.identity` away, makes the backup alone useless for reading the store: see the **Passphrase** and **A daily key and a backup key** paragraphs of [Keeping secrets in rta](07-ai.md#keeping-secrets-in-rta-optional). Backups made before that change still hold a `kv.age` that the old key opens: delete them once a new backup exists
 
 ### 5. Home directories
 Each directory goes to `home/<name>`:
@@ -214,6 +216,7 @@ backup_2026-10-10T13-26-17/
 │   │   ├── lazygit/
 │   │   ├── mise/
 │   │   ├── nvim/
+│   │   ├── rta/               (kv.identity, if you have one)
 │   │   └── ...
 │   ├── .copilot/
 │   ├── .docker/
@@ -600,7 +603,7 @@ find ~/backups/dotfiles -maxdepth 1 -name 'backup_*' -mtime +7 -exec rm -rf {} +
 A backup contains:
 - SSH private keys (`.ssh`), the GPG keyring (`.gnupg`) and the exported GPG private keys (`gpg/`)
 - Cloud and cluster credentials (`.aws`, `.kube`, `.tsh`, `.docker`, `.mc`, `.npmrc`)
-- Everything in `~/.config`, including `~/.config/dotfiles/secrets.env`
+- Everything in `~/.config`, including `~/.config/dotfiles/secrets.env` and rta's `kv.identity`, which opens the rta store copied next to it unless you locked the store to passphrase-protected keys (see [rta secrets store](#4-rta-secrets-store))
 - `~/.zshrc.local`, with whatever you export there
 - Claude Code settings and conversation history, and Copilot CLI configuration
 
@@ -611,7 +614,7 @@ The scripts only keep other local users out (`umask 077`, backup directory mode 
 - Remove entries you do not want from the `DOT_FILES` list of `backup/backup.sh`
 - Delete backups you no longer need: they hold the keys and tokens of their day
 - The GPG export is written only into the backup. A `~/.gnupg/backup/` directory left by earlier versions of the scripts is still copied with `~/.gnupg`: delete it once a backup holds `gpg/`
-- Use secret management tools (1Password, Vault) rather than long-lived tokens in files
+- Use secret management tools (1Password, Vault, the rta store) rather than long-lived tokens in files
 
 ### Permissions
 
