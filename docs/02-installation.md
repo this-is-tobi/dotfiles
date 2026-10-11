@@ -226,7 +226,7 @@ RUN ... && DEVOPS_CATEGORIES=k8s ./setup/setup-debian.sh -l -p devops
 - `~/.gitconfig.local`, created once and never overwritten: it carries `user.name`, `user.email` and the signing settings over from an existing `~/.gitconfig`, otherwise it asks for them (terminal only)
 - `~/.config/dotfiles/secrets.env`, created once from `secrets.env.example` (mode `600`) and never overwritten
 - `~/eslint.config.mjs`, the home-level ESLint fallback, then `npm install` in `~/.config/eslint-fallback`, which only runs when `npm` is on `PATH` (the `js` profile installs it)
-- The VS Code user `settings.json` and `mcp.json` plus the recommended extensions, when the `code` command is on `PATH` (Debian also handles `code-server`)
+- The VS Code user `settings.json` (merged: what you added stays) and `mcp.json` plus the recommended extensions that are missing, when the `code` command is on `PATH` (Debian also handles `code-server`)
 - `~/.claude/settings.json`, merged rather than copied (after `rtk init -g --auto-patch` when rtk is installed), then the Claude Code and Copilot instructions and plugins from the tools repository (pinned with `TOOLS_REF`) and the Claude Code MCP servers when `claude` is on `PATH`
 
 A destination whose content differs is saved under `~/.dotfiles-backup/<timestamp>/` before it is replaced, see [Backing Up Existing Dotfiles](03-dotfiles.md#backing-up-existing-dotfiles). The destinations are described in [Dotfiles Structure](03-dotfiles.md).
@@ -336,7 +336,7 @@ vim "$HOME/Library/Application Support/Code/User/settings.json"
 vim ~/.config/Code/User/settings.json
 ```
 
-`~/.zshrc`, `~/.gitconfig` and `~/.config/dotfiles/env.sh` are replaced by the next `-d` run (the previous version is saved under `~/.dotfiles-backup/`), so keep your own changes in `~/.gitconfig.local` and `~/.config/dotfiles/secrets.env`, or re-apply them from the backup.
+`~/.zshrc`, `~/.gitconfig` and `~/.config/dotfiles/env.sh` are replaced by the next `-d` run (the previous version is saved under `~/.dotfiles-backup/`), so keep your own changes in `~/.zshrc.local`, `~/.gitconfig.local` and `~/.config/dotfiles/secrets.env`, or re-apply them from the backup. The backup directories are never deleted by the setup: each run that replaces a file adds a new one.
 
 ## Troubleshooting
 

@@ -55,7 +55,7 @@ The main Zsh configuration file that:
 - Homebrew is found on both Apple Silicon and Intel; the direnv plugin only loads when direnv is installed, and the `sed` alias only exists when `gsed` is
 - PATH modifications may need adjustment for your system
 - Plugin list can be customized
-- `-d` replaces the file (the previous version is backed up), so re-apply your changes afterwards
+- `-d` replaces the file (the previous version is backed up). Put what is specific to one machine in `~/.zshrc.local`: it is sourced last when it exists, and the setup never writes it
 
 #### `.config/dotfiles/env.sh` and `secrets.env`
 `env.sh` is sourced by `.zshrc` and is managed by the setup (overwritten on every run, so don't edit it). It only loads `~/.config/dotfiles/secrets.env`, the local file for:
@@ -102,7 +102,7 @@ Commit signing is optional and configured the same way, e.g. `git config --file 
 ### VS Code Configuration
 
 #### `.vscode/settings.json`
-VS Code user settings, installed by `-d` when the `code` command is available to `~/Library/Application Support/Code/User/settings.json` on macOS and `~/.config/Code/User/settings.json` on Linux. The setup replaces the `__HOME__` placeholder with your home directory. The settings cover:
+VS Code user settings, merged by `-d` when the `code` command is available into `~/Library/Application Support/Code/User/settings.json` on macOS and `~/.config/Code/User/settings.json` on Linux. The setup replaces the `__HOME__` placeholder with your home directory. VS Code writes into the same file (every "always allow" for a command or a URL, the trusted schema domains, the models you pick), so the file is not overwritten: a key the repository sets wins and objects are merged key by key, every other key of yours stays. The file is left alone when the merge changes nothing; when it does, the previous file is backed up and the result is plain JSON, as the comments stay in the repository. The settings cover:
 - GitHub Copilot instruction references
 - Editor formatting preferences
 - Language-specific settings
@@ -249,9 +249,9 @@ During setup, you can choose which files to install by modifying the setup scrip
 
 ### Backing Up Existing Dotfiles
 
-The setup scripts back up before they replace. Each file `-d` writes goes through the same check: when the destination exists and its content differs, the current version is first saved under `~/.dotfiles-backup/<timestamp>/`, keeping its path relative to your home directory (e.g. `~/.dotfiles-backup/20261010120000/.zshrc`, or `.../.config/dotfiles/env.sh`), and the script prints where. The directory is private (mode `700`) and only created when something is saved. Files that are already identical are left untouched, so running the setup again creates no backup. Set `DOTFILES_BACKUP_DIR` to use another directory.
+The setup scripts back up before they replace. Each file `-d` writes goes through the same check: when the destination exists and its content differs, the current version is first saved under `~/.dotfiles-backup/<timestamp>/`, keeping its path relative to your home directory (e.g. `~/.dotfiles-backup/20261010120000/.zshrc`, or `.../.config/dotfiles/env.sh`), and the script prints where, with the number of lines the old file had that the new one does not (a hint to run `diff` on the two when it is not 0). The directory is private (mode `700`) and only created when something is saved. Files that are already identical are left untouched, so running the setup again creates no backup. Set `DOTFILES_BACKUP_DIR` to use another directory.
 
-This covers the files the setup copies or merges itself, including the VS Code settings and `~/.claude/settings.json`. The instructions that the remote AI agent installer writes under `~/.claude` and `~/.copilot` follow that script's own rules (see [AI Assistants](07-ai.md)), and `~/.gitconfig.local` and `secrets.env` are never overwritten in the first place.
+This covers the files the setup copies or merges itself. `~/.claude/settings.json` and the VS Code `settings.json` are merged, so what you added there stays; the other files are replaced, so what you added to them only survives in the backup (for the shell, use `~/.zshrc.local` and `~/.gitconfig.local`). The instructions that the remote AI agent installer writes under `~/.claude` and `~/.copilot` follow that script's own rules (see [AI Assistants](07-ai.md)), and `~/.gitconfig.local` and `secrets.env` are never overwritten in the first place.
 
 For a full backup of your machine's configuration, use the backup scripts, which are separate from this mechanism:
 

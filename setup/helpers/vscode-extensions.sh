@@ -10,6 +10,10 @@
 
 set -eo pipefail
 
+HELPER_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+# shellcheck source-path=SCRIPTDIR source=jsonc.sh
+. "$HELPER_PATH/jsonc.sh"
+
 CLI="${1:?usage: vscode-extensions.sh <editor cli> <extensions.json>}"
 EXTENSIONS_FILE="${2:?usage: vscode-extensions.sh <editor cli> <extensions.json>}"
 
@@ -19,7 +23,6 @@ installed="$("$CLI" --list-extensions 2>/dev/null | tr '[:upper:]' '[:lower:]' |
 added=0
 present=0
 
-# extensions.json is JSONC: drop its comment lines before handing it to jq
 while IFS= read -r extension; do
   if printf '%s\n' "$installed" | grep -qxF -- "$(printf '%s' "$extension" | tr '[:upper:]' '[:lower:]')"; then
     present=$((present + 1))
@@ -30,6 +33,6 @@ while IFS= read -r extension; do
   else
     printf "Warning: could not install the %s extension %s\n" "$(basename "$CLI")" "$extension" >&2
   fi
-done < <(grep -v '//' "$EXTENSIONS_FILE" | grep -E '[^[:space:]]' | jq -r '.recommendations[]')
+done < <(jsonc_to_json "$EXTENSIONS_FILE" | jq -r '.recommendations[]')
 
 printf "%s extensions: %d installed, %d already present\n" "$(basename "$CLI")" "$added" "$present"
