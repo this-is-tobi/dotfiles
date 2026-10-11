@@ -27,7 +27,8 @@ BAT_EXTRAS_SHA256="d79c085b9d0af7f56c3f69d766a83fe26405faac999c4ed7cdfc27417d2c7
 
 # Each step is checked: set -e does not apply to a function called from an `if`
 install_bat_extras() (
-  local tmp
+  # Not local: bash 3.2 drops a function's locals before the EXIT trap of its
+  # subshell runs, and the subshell keeps these variables to itself anyway.
   tmp="$(mktemp -d)" || exit 1
   trap 'rm -rf "$tmp"' EXIT
   fetch_verified "https://github.com/eth-p/bat-extras/releases/download/v$BAT_EXTRAS_VERSION/bat-extras-$BAT_EXTRAS_VERSION.zip" \

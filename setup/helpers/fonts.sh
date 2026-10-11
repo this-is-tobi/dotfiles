@@ -4,7 +4,8 @@
 # Install the nerd fonts neovim needs into ~/.fonts, downloading through a
 # private temporary directory that is always removed afterwards.
 install_nerd_fonts() (
-  local tmp font
+  # Not local: bash 3.2 drops a function's locals before the EXIT trap of its
+  # subshell runs, and the subshell keeps these variables to itself anyway.
   tmp="$(mktemp -d)"
   trap 'rm -rf "$tmp"' EXIT
   mkdir -p "$HOME/.fonts"
