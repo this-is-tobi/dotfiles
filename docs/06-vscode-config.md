@@ -87,7 +87,7 @@ The setup installs only `general.instructions.md` into `~/.copilot/instructions/
 
 > `chat.instructionsFilesLocations`, `chat.agentSkillsLocations`, `chat.agentFilesLocations` and `chat.promptFilesLocations` are deprecated by VS Code and only read by the Local agent. The Agent Host looks in its default locations instead: `~/.copilot/instructions`, `~/.copilot/copilot-instructions.md`, `~/.claude/rules`, `~/.copilot/skills`, `~/.claude/skills`, `~/.agents/skills`, `~/.copilot/agents` and `~/.claude/agents`. The entries stay in the file for the Local agent; drop them once it is no longer used.
 
-> `chat.useClaudeHooks` (off by default) makes VS Code read the hooks of `~/.claude/settings.json`, which include `rtk hook claude`, a hook written for Claude Code's Bash tool. Check that you want it to run in Copilot sessions too. With `chat.useClaudeMdFile` on, `~/.claude/CLAUDE.md` and `~/.copilot/copilot-instructions.md` can load the same guidance twice.
+> `chat.useClaudeHooks` (off by default) makes VS Code read the hooks of `~/.claude/settings.json`, which include `rtk hook claude` (run only when `rtk` is installed), a hook written for Claude Code's Bash tool. Check that you want it to run in Copilot sessions too. With `chat.useClaudeMdFile` on, `~/.claude/CLAUDE.md` and `~/.copilot/copilot-instructions.md` can load the same guidance twice.
 
 **Copilot Features:**
 ```json
