@@ -84,6 +84,8 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [watch](https://en.wikipedia.org/wiki/Watch_(command))             | Execute a program periodically                                                                             | ✓    | homebrew | apt    |
 | [yq](https://github.com/mikefarah/yq)                              | YAML processor (like jq for YAML)                                                                          | ✓    | homebrew | mise   |
 
+On Debian, bat-extras is installed from its release zip, pinned to one version and checked against its sha256, into `~/.local/bin` (man pages in `~/.local/share/man`), without root and without running its build script. A copy that an older version of the setup built into `/usr/local/bin` stays there unused, since `~/.local/bin` comes first in `PATH`; remove it with `sudo rm /usr/local/bin/{batdiff,batgrep,batman,batpipe,batwatch,bat-modules,prettybat}`.
+
 ### GitHub CLI Extensions
 
 | Extension                                          | Description                      | Lite | macOS | Debian |
