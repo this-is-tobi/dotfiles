@@ -9,6 +9,9 @@
 #   - policy keys come from the repository and win: hooks, attribution,
 #     extraKnownMarketplaces, enabledPlugins and permissions. Their lists are
 #     unioned with what is already there, so rules and hooks added locally stay.
+#   - a hook command the repository replaced (the bare "rtk hook claude", which
+#     fails on every Bash call where rtk is not installed, and which rtk init -g
+#     writes) is dropped: the repository's guarded hook does the same job.
 #   - every other key (effortLevel, ...) is only a default: it is applied when
 #     the file does not set it, so a personal choice is never reset.
 # A file that is not a JSON object is replaced by the repository's. Either way the
@@ -42,6 +45,12 @@ trap 'rm -f "$merged"' EXIT
 jq -s '
   def dedupe: reduce .[] as $item ([]; if index([$item]) then . else . + [$item] end);
   def list: if type == "array" then . else [] end;
+  def retired_hooks: ["rtk hook claude"];
+  def drop_retired_hooks: map(
+    if type == "object" and (.hooks | type) == "array"
+      then .hooks |= map(select((type == "object" and (.command | IN(retired_hooks[]))) | not))
+        | select(.hooks != [])
+      else . end);
 
   .[0] as $live
   | .[1] as $repo
@@ -52,7 +61,7 @@ jq -s '
       then .permissions.deny = (((($live.permissions?.deny? // []) | list) + $policy.permissions.deny) | dedupe)
       else . end
   | if $policy.hooks.PreToolUse
-      then .hooks.PreToolUse = (((($live.hooks?.PreToolUse? // []) | list) + $policy.hooks.PreToolUse) | dedupe)
+      then .hooks.PreToolUse = (((($live.hooks?.PreToolUse? // []) | list | drop_retired_hooks) + $policy.hooks.PreToolUse) | dedupe)
       else . end
 ' "$LIVE_SETTINGS" "$REPO_SETTINGS" > "$merged"
 
