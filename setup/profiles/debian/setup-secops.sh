@@ -43,7 +43,7 @@ ensure_mise
 # Install lite setup
 install_lite_setup
 
-# Install full setup
-if [ "$FULL_MODE_SETUP" = "true" ]; then
+# Install full setup (the default, -l of the setup script turns it off)
+if [ "${FULL_MODE_SETUP:-true}" = "true" ]; then
   install_additional_setup
 fi
