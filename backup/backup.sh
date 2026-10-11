@@ -264,6 +264,7 @@ fi
 printf "\n${red}${i}.${no_color} Backup dotfiles\n\n"
 ((i++))
 
+# The *.local files are the per-machine part that the repository does not ship
 DOT_FILES=(
   "$HOME/.aws"
   "$HOME/.claude"
@@ -271,6 +272,7 @@ DOT_FILES=(
   "$HOME/.copilot"
   "$HOME/.docker"
   "$HOME/.gitconfig"
+  "$HOME/.gitconfig.local"
   "$HOME/.gnupg"
   "$HOME/.kube"
   "$HOME/.mc"
@@ -278,6 +280,7 @@ DOT_FILES=(
   "$HOME/.ssh"
   "$HOME/.tsh"
   "$HOME/.zshrc"
+  "$HOME/.zshrc.local"
 )
 make_dir "${BACKUP_DIR}/dotfiles"
 for src in "${DOT_FILES[@]}"; do
