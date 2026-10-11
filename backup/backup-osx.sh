@@ -17,12 +17,14 @@ NOW=$(date +'%Y-%m-%dT%H-%M-%S')
 BACKUP_DIR="$(pwd)/backup_$NOW"
 BACKUP_FULL="false"
 DRY_RUN="false"
+EXCLUDE_FILE="${BACKUP_EXCLUDE_FILE:-}"
 
 # Declare script helper
 TEXT_HELPER="\nThis script aims to copy importants files and directory before a restauration.
 Following flags are available:
 
-  -f    (Optional) Perform a full backup of the entire home directory (for personnal use).
+  -f    (Optional) Also back up Desktop, Documents, Downloads, Movies, Music and Pictures,
+        not only ~/dev (for personnal use).
         Default is '$BACKUP_FULL'.
 
   -n    (Optional) Dry run: show what would be copied without copying anything.
@@ -31,14 +33,18 @@ Following flags are available:
   -o    (Optional) Output directory.
         Default is '$(pwd)'.
 
+  -x    (Optional) File of extra rclone exclude patterns, one per line (e.g. 'ci/act/docker/**'),
+        applied to every directory copy. Keeps personal junk out of this script.
+        Default is the BACKUP_EXCLUDE_FILE environment variable ('${EXCLUDE_FILE:-unset}').
+
   -h    Print script help.\n\n"
 
 print_help() {
-  printf '%s' "$TEXT_HELPER"
+  printf '%b' "$TEXT_HELPER"
 }
 
 # Parse options
-while getopts hfno: flag; do
+while getopts hfno:x: flag; do
   case "${flag}" in
     f)
       BACKUP_FULL="true";;
@@ -46,6 +52,8 @@ while getopts hfno: flag; do
       DRY_RUN="true";;
     o)
       BACKUP_DIR="${OPTARG}/backup_$NOW";;
+    x)
+      EXCLUDE_FILE="${OPTARG}";;
     h)
       print_help
       exit 0;;
@@ -57,11 +65,15 @@ done
 
 BACKUP_DIR="${BACKUP_DIR%/}"
 
+if [ -n "$EXCLUDE_FILE" ] && [ ! -f "$EXCLUDE_FILE" ]; then
+  printf "${red}Error:${no_color} exclude file not found: %s\n" "$EXCLUDE_FILE" >&2
+  exit 1
+fi
+
 # rclone args
 RCLONE_ARGS=(
   --transfers 12
   --checkers 24
-  --buffer-size 64M
   --no-check-dest
   --copy-links
   --progress
@@ -98,12 +110,22 @@ RCLONE_FILTER_ARGS=(
   --exclude '.local/share/mise/**'
   # JS / Node
   --exclude 'node_modules/**'
+  --exclude '.turbo/**'
+  --exclude '.angular/**'
+  --exclude '.svelte-kit/**'
+  --exclude '.output/**'
   # Python
   --exclude '__pycache__/**'
   --exclude '*.pyc'
   --exclude '.venv/**'
   --exclude 'venv/**'
   --exclude '.pytest_cache/**'
+  --exclude '.mypy_cache/**'
+  --exclude '.ruff_cache/**'
+  --exclude '.tox/**'
+  # Infrastructure as code (providers and modules come back with init)
+  --exclude '.terraform/**'
+  --exclude '.terragrunt-cache/**'
   # Build artifacts
   --exclude 'target/**'
   --exclude 'dist/**'
@@ -114,12 +136,16 @@ RCLONE_FILTER_ARGS=(
   --exclude '.parcel-cache/**'
   --exclude 'coverage/**'
 )
+if [ -n "$EXCLUDE_FILE" ]; then
+  RCLONE_FILTER_ARGS+=(--exclude-from "$EXCLUDE_FILE")
+fi
 
 # Settings
 printf "\nScript settings:
   -> backup target dir: ${red}${BACKUP_DIR}${no_color}
   -> full backup: ${red}${BACKUP_FULL}${no_color}
   -> dry run: ${red}${DRY_RUN}${no_color}\n"
+[ -z "$EXCLUDE_FILE" ] || printf "  -> extra excludes: ${red}${EXCLUDE_FILE}${no_color}\n"
 
 
 # Backup /etc files
@@ -292,7 +318,9 @@ if [ -d "$HOME/Library/Application Support/BraveSoftware" ]; then
     --exclude 'Code Cache/**' \
     --exclude 'GPUCache/**' \
     --exclude 'DawnCache/**' \
-    --exclude 'Crashpad/**'
+    --exclude 'Crashpad/**' \
+    --exclude 'Service Worker/CacheStorage/**' \
+    --exclude 'Service Worker/ScriptCache/**'
 fi
 
 # Summary
