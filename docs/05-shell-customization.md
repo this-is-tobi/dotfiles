@@ -129,6 +129,15 @@ SGVsbG8gV29ybGQ=
 # Decode
 $ b64d "SGVsbG8gV29ybGQ="
 Hello World
+
+# A secret: no argument, the value is asked for and not echoed
+$ b64e
+Value (hidden):
+c2VjcmV0
+
+# From a pipe or a file, encoded byte for byte (echo adds a newline, printf does not)
+$ printf '%s' "$TOKEN" | b64e
+$ b64e < cert.pem
 ```
 
 #### URL Encoding/Decoding
@@ -140,7 +149,13 @@ hello%20world
 # Decode
 $ urld "hello%20world"
 hello world
+
+# Without an argument: standard input, or a hidden prompt in a terminal
+$ echo "hello world" | urle
+hello%20world
 ```
+
+`urle` and `urld` drop the newline that ends their input, so `echo ... | urle` encodes the text only.
 
 #### Kubernetes Secret Decoding
 ```sh

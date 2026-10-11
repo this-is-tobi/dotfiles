@@ -30,6 +30,22 @@ lsfn() {
 	done
 }
 
+# Writes the value an encoding function works on: its argument when there is one,
+# otherwise standard input, read without echo when it is a terminal. Without an
+# argument a secret stays out of the shell history and of the process list.
+_fn_input() {
+	if (( $# )); then
+		printf '%s' "$1"
+	elif [ -t 0 ]; then
+		local value
+		read -rs "value?Value (hidden): " || return 1
+		printf '\n' >&2
+		printf '%s' "$value"
+	else
+		cat
+	fi
+}
+
 b64d() {
 	case "$1" in
 	-h | --help)
@@ -37,9 +53,10 @@ b64d() {
 		printf "  Decode base64 string.\n\n"
 		printf "Usage:\n"
 		printf "  b64d <string>   base64 decode the given string.\n"
+		printf "  b64d            base64 decode standard input, or ask for the string (hidden) in a terminal.\n"
 		;;
 	*)
-		echo -n "$1" | base64 -d
+		_fn_input "$@" | base64 -d
 		;;
 	esac
 }
@@ -51,9 +68,10 @@ b64e() {
 		printf "  Encode base64 string.\n\n"
 		printf "Usage:\n"
 		printf "  b64e <string>   base64 encode the given string.\n"
+		printf "  b64e            base64 encode standard input as is, or ask for the string (hidden) in a terminal.\n"
 		;;
 	*)
-		echo -n "$1" | base64
+		_fn_input "$@" | base64
 		;;
 	esac
 }
@@ -294,10 +312,13 @@ urld() {
 		printf "  Url decode the given string.\n\n"
 		printf "Usage:\n"
 		printf "  urld <url>   url decode the given string.\n"
+		printf "  urld         url decode standard input, or ask for the string (hidden) in a terminal.\n"
 		;;
 	*)
+		local encoded
+		encoded="$(_fn_input "$@")" || return 1
 		# %xx -> \xxx for printf, with literal backslashes escaped first so they are not interpreted
-		local encoded="${1//\\/\\\\}"
+		encoded="${encoded//\\/\\\\}"
 		printf '%b\n' "${encoded//\%/\\x}"
 		;;
 	esac
@@ -310,9 +331,12 @@ urle() {
 		printf "  Url encode the given string.\n\n"
 		printf "Usage:\n"
 		printf "  urle <url>   url encode the given string.\n"
+		printf "  urle         url encode standard input, or ask for the string (hidden) in a terminal.\n"
 		;;
 	*)
-		jq -rn --arg x "$1" '$x | @uri'
+		# through stdin rather than a jq argument, which the process list would show; the
+		# newline that ends piped input (echo ... | urle) is not part of the value
+		_fn_input "$@" | jq -sRr 'rtrimstr("\n") | @uri'
 		;;
 	esac
 }
