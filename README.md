@@ -84,6 +84,20 @@ Without `-p` only the common packages and oh-my-zsh are installed. For prerequis
 - [tools](https://github.com/this-is-tobi/tools) - Shell scripts and GitHub Copilot instructions
 - [cheatsheets](https://github.com/this-is-tobi/cheatsheets) - Personal cheat sheets collection
 
+## Merging Pull Requests
+
+Commits here are signed, and GitHub's "Rebase and merge" re-creates them without their signatures. Pull requests are therefore merged with `ffmerge` (a shell function of these dotfiles), which fast-forwards the base branch to the head of the PR with a plain `git push`:
+
+```sh
+# on the branch of the PR, when main moved since it was created
+git fetch origin && git rebase origin/main && git push --force-with-lease
+
+ffmerge -n    # dry run: checks, commits and steps, nothing changes
+ffmerge       # merge the PR of the current branch, after confirmation
+```
+
+It refuses a PR whose commits GitHub does not show as verified, whose required checks did not pass, or that is not rebased on its base branch. It works in any GitHub repository: see [The ffmerge Function](./docs/05-shell-customization.md#the-ffmerge-function).
+
 ## Contributing
 
 This is a personal dotfiles repository, but feel free to fork and adapt to your needs.

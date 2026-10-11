@@ -12,6 +12,7 @@ lsfn() {
 		cheat_glow
 		check_cert
 		dks
+		ffmerge
 		kbp
 		randompass
 		secrets
@@ -138,6 +139,212 @@ dks() {
 		fi
 		;;
 	esac
+}
+
+ffmerge() {
+	local dry_run=0 assume_yes=0 keep_branch=0 pr=""
+	while (( $# )); do
+		case "$1" in
+		-h | --help)
+			printf "Description:\n"
+			printf "  Merge a GitHub pull request by fast-forwarding its base branch to the head of the PR.\n"
+			printf "  The commits are pushed as they are, so they keep their signatures and the history stays\n"
+			printf "  linear (\"Rebase and merge\" re-creates them, unsigned).\n\n"
+			printf "Usage:\n"
+			printf "  ffmerge [-n] [-y] [-k] [pr_number]   merge the PR (default: the PR of the current branch).\n"
+			printf "    -n   dry run: run every check and print what would be done, change nothing.\n"
+			printf "    -y   do not ask for confirmation.\n"
+			printf "    -k   keep the head branch (deleted by default, after the PRs based on it are retargeted).\n\n"
+			printf "  Refused when the PR is not open, comes from a fork, is not rebased on its base branch,\n"
+			printf "  has a commit GitHub does not show as verified, or its required checks did not pass (all\n"
+			printf "  its checks when the base branch requires none). The push is never forced.\n"
+			return 0
+			;;
+		-n | --dry-run) dry_run=1 ;;
+		-y | --yes) assume_yes=1 ;;
+		-k | --keep-branch) keep_branch=1 ;;
+		-*)
+			echo "ffmerge: unknown option '$1' (see ffmerge -h)." >&2
+			return 1
+			;;
+		*)
+			if [[ -n $pr || ! $1 =~ '^[0-9]+$' ]]; then
+				echo "ffmerge: expected one pull request number, got '$1'." >&2
+				return 1
+			fi
+			pr="$1"
+			;;
+		esac
+		shift
+	done
+
+	local tool
+	for tool in gh git jq; do
+		if ! command -v "$tool" >/dev/null 2>&1; then
+			echo "ffmerge: $tool is required." >&2
+			return 1
+		fi
+	done
+
+	local pr_json number state head head_sha base cross url
+	pr_json="$(gh pr view ${pr:+"$pr"} --json number,state,headRefName,headRefOid,baseRefName,isCrossRepository,url)" || return 1
+	IFS=$'\t' read -r number state head head_sha base cross url <<< "$(jq -r '[.number, .state, .headRefName, .headRefOid, .baseRefName, (.isCrossRepository | tostring), .url] | @tsv' <<< "$pr_json")"
+	if [[ $state != OPEN ]]; then
+		echo "ffmerge: PR #$number is $state, not open." >&2
+		return 1
+	fi
+	if [[ $cross != false ]]; then
+		echo "ffmerge: PR #$number comes from a fork: only a branch of this repository can be fast-forwarded into $base." >&2
+		return 1
+	fi
+
+	# The base branch is pushed to origin, so origin has to be the repository of the PR
+	# (gh may have resolved another remote, an upstream for instance)
+	local repo="${${url#*://}%/pull/*}" origin
+	if ! origin="$(git config --get remote.origin.url)"; then
+		echo "ffmerge: this repository has no origin remote." >&2
+		return 1
+	fi
+	origin="${origin#*://}"
+	origin="${origin#*@}"
+	origin="${origin/://}"
+	origin="${${origin%/}%.git}"
+	if [[ ${(L)origin} != "${(L)repo}" ]]; then
+		echo "ffmerge: origin is $origin, but PR #$number belongs to $repo." >&2
+		return 1
+	fi
+	local host="${repo%%/*}" nwo="${repo#*/}"
+
+	git fetch --quiet --no-tags origin "+refs/heads/${base}:refs/remotes/origin/${base}" "+refs/heads/${head}:refs/remotes/origin/${head}" || return 1
+	local base_sha
+	base_sha="$(git rev-parse --verify --quiet "refs/remotes/origin/$base^{commit}")" || return 1
+	if [[ "$(git rev-parse --verify --quiet "refs/remotes/origin/$head^{commit}")" != "$head_sha" ]]; then
+		echo "ffmerge: $head moved since GitHub reported it at ${head_sha:0:7}: run ffmerge again." >&2
+		return 1
+	fi
+	if ! git merge-base --is-ancestor "$base_sha" "$head_sha"; then
+		echo "ffmerge: $head is not based on the current origin/$base, so $base cannot be fast-forwarded to it." >&2
+		echo "Rebase it and push it, then run ffmerge again once its checks passed:" >&2
+		echo "  git switch $head && git fetch origin && git rebase origin/$base && git push --force-with-lease" >&2
+		return 1
+	fi
+	local -a commits
+	commits=(${(f)"$(git rev-list --reverse "$base_sha..$head_sha")"})
+	if (( ! ${#commits} )); then
+		echo "ffmerge: origin/$base already contains $head, there is nothing to merge." >&2
+		return 1
+	fi
+
+	# GitHub's verdict rather than a local one: it is what its "Verified" badge and a
+	# signed-commits rule go by, and it needs no copy of the signers' keys here
+	local compare sha ok reason verdict
+	local -A verification
+	local -a unverified
+	compare="$(gh api --hostname "$host" --paginate "repos/$nwo/compare/$base_sha...$head_sha?per_page=100")" || return 1
+	while IFS=$'\t' read -r sha ok reason; do
+		[[ -n $sha ]] && verification[$sha]="${ok}:${reason}"
+	done <<< "$(jq -r '.commits[] | [.sha, (.commit.verification.verified | tostring), (.commit.verification.reason // "unknown")] | @tsv' <<< "$compare")"
+	for sha in "${commits[@]}"; do
+		verdict="${verification[$sha]-false:missing from the GitHub comparison}"
+		[[ $verdict == true:* ]] || unverified+=("$(git log -1 --format='%h %s' "$sha") (${verdict#*:})")
+	done
+	if (( ${#unverified} )); then
+		echo "ffmerge: GitHub does not show every commit of PR #$number as verified:" >&2
+		printf '  %s\n' "${unverified[@]}" >&2
+		return 1
+	fi
+
+	local checks checks_rc=0 checks_scope=required
+	checks="$(gh pr checks "$number" --required 2>&1)" || checks_rc=$?
+	if (( checks_rc != 0 && checks_rc != 8 )) && [[ $checks == *"no required checks reported"* ]]; then
+		# nothing is required on the base branch: hold the PR to every check it has instead
+		checks_scope=all checks_rc=0
+		checks="$(gh pr checks "$number" 2>&1)" || checks_rc=$?
+	fi
+	if (( checks_rc != 0 && checks_rc != 8 )) && [[ $checks == *"no checks reported"* ]]; then
+		checks_scope=none checks_rc=0
+	fi
+	if (( checks_rc == 8 )); then
+		echo "ffmerge: checks are still running on PR #$number:" >&2
+		printf '%s\n' "$checks" >&2
+		echo "Wait for them with: gh pr checks $number --watch$([[ $checks_scope == required ]] && echo ' --required')" >&2
+		return 1
+	elif (( checks_rc != 0 )); then
+		echo "ffmerge: the checks of PR #$number did not pass:" >&2
+		printf '%s\n' "$checks" >&2
+		return 1
+	fi
+
+	# PRs stacked on the head branch would be closed by its deletion: they move to the base first
+	local list
+	local -a dependents
+	list="$(gh pr list --base "$head" --state open --limit 100 --json number)" || return 1
+	dependents=(${(f)"$(jq -r '.[].number' <<< "$list")"})
+
+	echo "${COLOR_BLUE}PR #$number${COLOR_OFF} $url"
+	echo "  fast-forward $base (${base_sha:0:7}) to $head (${head_sha:0:7}), ${#commits} commit(s), all verified by GitHub:"
+	git log --reverse --format='    %h %s' "$base_sha..$head_sha"
+	case $checks_scope in
+	required) echo "  required checks passed" ;;
+	all) echo "  checks passed (the base branch requires none, so all of them were considered)" ;;
+	none) echo "  ${COLOR_YELLOW}no checks ran on this PR${COLOR_OFF}" ;;
+	esac
+	echo "Steps:"
+	echo "  git push origin ${head_sha}:refs/heads/${base}"
+	local n
+	for n in "${dependents[@]}"; do
+		echo "  gh pr edit $n --base $base"
+	done
+	(( keep_branch )) || echo "  git push origin --delete $head (once GitHub shows PR #$number merged)"
+	if (( dry_run )); then
+		echo "Dry run: nothing was changed."
+		return 0
+	fi
+	if (( ! assume_yes )); then
+		local answer
+		printf "Go ahead? [y/N] " >&2
+		read -r answer
+		if [[ $answer != [yY] && $answer != [yY][eE][sS] ]]; then
+			echo "Nothing was changed."
+			return 1
+		fi
+	fi
+
+	# A plain push: it is refused unless it fast-forwards origin/<base>
+	if ! git push origin "${head_sha}:refs/heads/${base}"; then
+		echo "ffmerge: the push was refused (origin/$base moved, or a rule on $base forbids direct pushes); nothing else was changed." >&2
+		return 1
+	fi
+	local rc=0
+	for n in "${dependents[@]}"; do
+		if ! gh pr edit "$n" --base "$base"; then
+			echo "ffmerge: could not retarget PR #$n to $base, so $head is kept." >&2
+			keep_branch=1 rc=1
+		fi
+	done
+
+	# GitHub marks the PR merged once it has processed the push; deleting the head
+	# branch before that would close the PR instead
+	local final_state tries=0
+	while :; do
+		final_state="$(gh pr view "$number" --json state | jq -r '.state')"
+		[[ $final_state == MERGED ]] && break
+		(( ++tries >= 15 )) && break
+		sleep 2
+	done
+	if (( ! keep_branch )); then
+		if [[ $final_state == MERGED ]]; then
+			git push origin --delete "refs/heads/$head" || rc=1
+		else
+			echo "ffmerge: GitHub does not show PR #$number as merged yet, so $head is kept: delete it once it does (git push origin --delete $head)." >&2
+			rc=1
+		fi
+	fi
+	echo "PR #$number: ${final_state:-unknown}"
+	if [[ "$(git symbolic-ref --quiet --short HEAD)" == "$head" ]]; then
+		echo "You are still on $head: git switch $base && git pull --ff-only && git branch -d $head"
+	fi
+	return $rc
 }
 
 kbp() {

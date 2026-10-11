@@ -252,6 +252,32 @@ $ tools clone-subdir.sh -h
 $ tools clone-subdir.sh -u https://github.com/user/repo -s subdir -o output
 ```
 
+### The `ffmerge` Function
+
+`ffmerge` merges a GitHub pull request by fast-forwarding its base branch to the head of the PR, with a plain `git push`. The commits that land on the base branch are the ones of the PR, so they keep their signatures (GitHub's "Rebase and merge" re-creates them, and they are no longer signed) and the history stays linear. GitHub then marks the PR merged by itself. It works in any GitHub repository where `origin` is the repository of the PR and needs `gh` (logged in), `git` and `jq`.
+
+```sh
+ffmerge             # the PR of the current branch
+ffmerge 42          # PR #42
+ffmerge -n 42       # dry run: every check, then what would be done; nothing changes
+ffmerge -y 42       # no confirmation prompt
+ffmerge -k 42       # keep the head branch
+```
+
+It stops, without changing anything, when:
+- the PR is not open, or comes from a fork
+- `origin` is not the repository of the PR
+- the head branch moved since GitHub reported it
+- the head branch does not contain the current `origin/<base>`. It prints how to rebase it: `git rebase origin/<base>`, then `git push --force-with-lease`, and once the checks passed again, `ffmerge` again
+- a commit between `origin/<base>` and the head is not verified by GitHub (its "Verified" badge: signed, with a key on the author's account). The commits are listed with the reason GitHub gives (`unsigned`, `unknown_key`, ...)
+- the required checks of the PR did not pass (`gh pr checks <pr> --required`). When the base branch requires none, every check of the PR has to pass. When checks are still running, it prints `gh pr checks <pr> --watch` to wait for them
+
+Otherwise it shows the commits and the steps, and asks for confirmation. Then:
+1. `git push origin <head sha>:refs/heads/<base>`: never forced, so it is refused if `origin/<base>` moved in the meantime, and nothing else happens. A branch rule that forbids pushing to the base branch (a rule requiring pull requests, for instance) refuses it as well, unless you are allowed to bypass it
+2. The open PRs whose base is the head branch are moved to `<base>` (`gh pr edit <n> --base <base>`), so that deleting the branch does not close them. Since the merged commits kept their SHAs, those PRs need no rebase
+3. Once GitHub shows the PR merged, the head branch is deleted on `origin` (unless `-k`). If it does not within about 30 seconds, the branch is kept and `ffmerge` says how to delete it later
+4. It prints the state of the PR (`MERGED`), and, when you are still on the head branch, how to switch back to the base branch
+
 ## CLI Completions
 
 CLI completions come from three places:
