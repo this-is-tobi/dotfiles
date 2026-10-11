@@ -114,18 +114,19 @@ The setup installs only `general.instructions.md` into `~/.copilot/instructions/
 
 `github.copilot.enable` activates Copilot for every language except `plaintext` and the source control input box (`scminput`).
 
-#### Tool Auto-Approval
+#### Tool Auto-Approval and Sandbox
 
-The agent asks before running a terminal command, editing a file or fetching a URL. The file relaxes this for safe cases only:
+The agent asks before running a terminal command, editing a file or fetching a URL. The file relaxes this for safe cases only, and adds an OS sandbox around the terminal:
 
 ```jsonc
 {
+  "chat.agent.sandbox.enabled": "on",
   "chat.tools.global.autoApprove": false,
   "chat.tools.terminal.autoApprove": {
-    "ls": true,
     "git status": true,
-    "kubectl": true,
-    "/^kubectl\\b.*(delete|apply|patch|\\bexec\\b|scale|create|edit)/": false,
+    "/^kubectl\\s+(get|describe|logs|top|...)\\b/": true,
+    "/^kubectl\\b(?=.*\\bsecrets?\\b)(?=.*(\\s-o\\s*(yaml|json|...)))/": false,
+    "/\\$\\{?[A-Za-z0-9_]*(TOKEN|SECRET|PASSWORD|API_?KEY|...)/i": { "approve": false, "matchCommandLine": true },
     "rm": false,
     "curl": false
     // ... see the file for the complete list
@@ -133,23 +134,30 @@ The agent asks before running a terminal command, editing a file or fetching a U
   "chat.tools.edits.autoApprove": {
     "**/*": true,
     "**/.git/**": false,
-    "**/.env*": false
+    "**/.github/workflows/**": false
     // ...
   },
   "chat.tools.urls.autoApprove": { "https://artifacthub.io": true }
 }
 ```
 
+**The sandbox is the boundary.** VS Code states that the approval rules only read the command text, and that aliases, quote concatenation or subshells can slip past them. `chat.agent.sandbox.enabled` (macOS and Linux, default `off`, a preview feature) runs the agent's terminal commands in an OS sandbox; one the sandbox blocks can still be run outside it after you confirm (`chat.agent.sandbox.allowUnsandboxedCommands`), and network access stays open unless you restrict it. The approval rules below are a convenience on top, so they are written to name what a command can reach, not only what it is called.
+
 How `chat.tools.terminal.autoApprove` reads:
-- A key is a command name or, between slashes, a regular expression. `true` approves without asking, `false` always asks. The object form `{ "approve": false, "matchCommandLine": true }` matches the whole command line instead of a single command
-- **Read-only commands are approved**: file and system information (`ls`, `cat`, `head`, `tail`, `wc`, `stat`, `du`, ...), text processing (`awk`, `sed`, `jq`, `yq`, `sort`), search (`find`, `grep`, `tree`), read-only network tools (`ping`, `dig`, `host`, ...), `git status|log|show|diff`, and `kubectl`, `helm`, `docker`, `bun`, `bunx`, `pnpm`, `go`
-- **Regular expressions switch the mutating forms back to asking**: `sed -i`, `find -delete|-exec`, `grep -f|-P`, `sort -o`, `kubectl delete|apply|patch|exec|...`, `helm install|upgrade|uninstall|...`, `docker run|exec|rm|push|...` and `go install|get`
-- **Injection guards**: a command line containing `(...)`, `{...}` or backticks always asks
-- **Always asks**: `rm`, `dd`, `kill`, `ps`, `top`, remote access (`ssh`, `scp`, `sftp`, `rsync`, `nc`, `socat`, ...), `curl`, `wget`, `chmod`, `chown`, `sudo`, `su`, `eval`, `xargs`, and the destructive PowerShell commands
+- A key is a command name or, between slashes, a regular expression. `true` approves without asking, `false` always asks, and a `false` rule wins. The object form `{ "approve": false, "matchCommandLine": true }` matches the whole command line instead of a single command
+- **VS Code's own rules already approve read-only commands** (`ls`, `cat`, `head`, `tail`, `grep`, `find`, `sed`, `tree`, `date`, read-only `git`, `docker`, `npm`, `yarn` and `pnpm` subcommands) and already ask for `rm`, `curl`, `wget`, `chmod`, `chown`, `jq`, `xargs` and `eval`. The file only adds what differs
+- **Added as read-only**: `awk`, `jq`, `yq`, `sort`, `diff`, system information (`uname`, `whoami`, `id`, `lsof`, ...), network lookups (`ping`, `dig`, `host`, ...), `git status|log|show|diff`, `yamllint`
+- **Allow lists instead of a whole tool**: `kubectl get|describe|logs|top|events|...`, `helm list|status|template|show|...` and `go build|test|vet|list|...` run by themselves; `kubectl exec|delete|apply|...`, `helm install|get values|...`, `go run|get|install` ask. `kubectl` never prints a secret's value (`get secret -o yaml|json|jsonpath` asks) or the raw API
+- **Guards on what a tool can reach**: `awk` cannot call the shell, read files or the environment, `jq` and `yq` cannot read the environment or other files, and `yq -i`, `sed -i` ask. `timeout` always asks, as it runs whatever it is given
+- **Secrets**: a command line that names a secret file (`.env*`, `.netrc`, `~/.ssh`, `~/.aws`, `~/.kube`, `secrets.env`, `*.pem`, `*.key`, ...) or a variable that looks like one (`$GITHUB_TOKEN`, `${ARGOCD_API_TOKEN}`, ...) always asks. This matters because `secrets.env` is loaded into every shell, so a plain `echo $TOKEN` would otherwise run without asking
+- **Injection guards**: a command line containing `(...)`, `{...}` or backticks always asks, which also makes any `awk` program with an action ask
+- **Always asks**: `rm`, `dd`, `kill`, `ps`, `top`, remote access (`ssh`, `scp`, `sftp`, `rsync`, `nc`, `socat`, ...), `curl`, `wget`, `chmod`, `chown`, `sudo`, `su`, `eval`, `xargs`
 
-`chat.tools.global.autoApprove` stays `false`, so there is no "approve everything" switch. `chat.tools.edits.autoApprove` approves edits everywhere except `.vscode/*.json`, `.git/**`, `.env*`, `package.json` and similar files, and `chat.tools.urls.autoApprove` only trusts `artifacthub.io`.
+`chat.tools.global.autoApprove` stays `false`, so there is no "approve everything" switch. `chat.tools.edits.autoApprove` approves edits everywhere except what runs by itself later or steers the next agent session: `.vscode/*.json`, `.git/**`, `.env*`, package manifests and lock files, `.github/workflows`, `.github/{actions,instructions,agents,skills,hooks}`, `copilot-instructions.md`, `AGENTS.md`, `CLAUDE.md`, `.claude/**`, `.husky`, `.devcontainer`, `.mcp.json`, `.envrc`, `mise.toml`, `.pre-commit-config.yaml`, keys (`*.pem`, `*.key`) and `secrets/**`. `chat.tools.urls.autoApprove` only trusts `artifacthub.io`.
 
-**Warning:** Only approve commands you trust! Write operations should require confirmation. `cat`, `head`, `tail`, `grep` and `sed` are approved, so the terminal tool can read any file, secrets included, without asking.
+**Review the diff.** Whatever is auto-approved, read the changes in the diff editor before you commit. A prompt injection in a file, a web page or a tool output can steer the agent, and stopping a request does not undo a command that already ran.
+
+**Not set on purpose:** `security.workspace.trust.untrustedFiles` is left at VS Code's `prompt`, workspace trust stays on (restricted mode disables the agent in a folder you have not trusted, and the MCP servers of that folder with it), and the telemetry of the extensions that do not follow VS Code's own level is turned off where they offer a setting (`sonarlint.disableTelemetry`). Continue's telemetry moved to its own settings page, so switch it off there.
 
 #### MCP Settings
 
@@ -364,7 +372,7 @@ Modify or add entries in `chat.tools.terminal.autoApprove` in `settings.json`:
 }
 ```
 
-**Warning:** Only approve commands you trust! Write operations should require confirmation.
+**Warning:** Only approve commands you trust. Prefer a regular expression that names the read-only forms (as the file does for `kubectl`) over approving a whole tool, and keep the sandbox on.
 
 ## Environment Variables
 
@@ -498,7 +506,8 @@ Outside the setup, VS Code also offers the recommendations of `.vscode/extension
 ### Security
 - Use `inputs` or `secrets.env` for secrets, never a value written in a committed file
 - Don't commit API keys to git
-- Review auto-approve commands carefully
+- Review auto-approve commands carefully, allow read-only forms rather than whole tools, and keep `chat.agent.sandbox.enabled` on
+- Review the diff of every agent edit before committing
 
 ### Organization
 - Use workspace settings for project-specific config

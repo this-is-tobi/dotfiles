@@ -34,9 +34,10 @@
   },
   "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
   "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.enableImages": true,
+  "terminal.integrated.enableKittyKeyboardProtocol": true,
   // general
   "editor.unicodeHighlight.invisibleCharacters": false,
-  "security.workspace.trust.untrustedFiles": "open",
   "workbench.startupEditor": "none",
   // git
   "git.autofetch": true,
@@ -119,6 +120,7 @@
     "https://json.schemastore.org/chart.json": "**/helm/Chart.yaml"
   },
   "redhat.telemetry.enabled": false,
+  "sonarlint.disableTelemetry": true,
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
@@ -156,6 +158,7 @@
   "diffEditor.ignoreTrimWhitespace": false,
   "gitlens.ai.model": "vscode",
   "claudeCode.preferredLocation": "sidebar",
+  "claudeCode.hideOnboarding": true,
   // copilot
   "github.copilot.chat.agent.autoFix": true,
   "github.copilot.chat.reviewAgent.enabled": true,
@@ -170,9 +173,9 @@
     "plaintext": false,
     "scminput": false
   },
-  // The chat.*Locations settings below (instructions, skills, agents) are deprecated by
-  // VS Code and only read by the Local agent; the Agent Host reads these folders by
-  // default. Drop them once the Local agent is no longer used.
+  // The chat.*Locations settings below add folders to the ones each agent already reads
+  // (the Local agent reads only the folders listed here). Glob patterns in them are
+  // deprecated, plain folder paths are fine.
   // instructions — ~/.copilot/instructions/ loaded in every repo
   "chat.instructionsFilesLocations": {
     ".github/instructions": true,
@@ -210,70 +213,63 @@
     ".github/agents": true,
     "~/.copilot/agents": true
   },
-  "github.copilot.chat.tools.memory.enabled": true,
   "github.copilot.chat.backgroundAgent.enabled": true,
   "chat.agent.maxRequests": 100,
+  // security: terminal commands the agent runs go through an OS sandbox (macOS and
+  // Linux; the default is off). The approval rules below only look at the command text,
+  // and aliases, quote concatenation or subshells can slip past them: the sandbox is
+  // the boundary, the rules are a convenience. A command the sandbox blocks can still
+  // be run outside it after confirmation (chat.agent.sandbox.allowUnsandboxedCommands).
+  "chat.agent.sandbox.enabled": "on",
   "chat.tools.edits.autoApprove": {
     "**/*": true,
     "**/.vscode/*.json": false,
     "**/.git/**": false,
     "**/{package.json,package-lock.json,server.xml,build.rs,web.config,.gitattributes,.env}": false,
     "**/.env*": false,
-    "**/*.{csproj,fsproj,vbproj}": false
+    "**/*.{csproj,fsproj,vbproj}": false,
+    // anything that runs by itself later, or steers the next agent session
+    "**/.github/workflows/**": false,
+    "**/.github/{actions,instructions,agents,skills,hooks}/**": false,
+    "**/.github/copilot-instructions.md": false,
+    "**/{AGENTS.md,CLAUDE.md}": false,
+    "**/.claude/**": false,
+    "**/.husky/**": false,
+    "**/.devcontainer/**": false,
+    "**/{.mcp.json,.envrc,mise.toml,.mise.toml,.pre-commit-config.yaml,lefthook.yml}": false,
+    // keys and secrets
+    "**/*.{pem,key,p12,pfx}": false,
+    "**/secrets/**": false
   },
+  // Terminal commands the agent runs without asking, on top of VS Code's built-in rules
+  // (read-only commands such as ls, cat, grep, find, sed, and read-only git, docker, npm,
+  // yarn and pnpm subcommands run by themselves; rm, curl, wget, chmod, chown and jq need
+  // approval). A false rule always wins. Allow what is read-only, and name what a command
+  // can reach (the environment, files with secrets), not only what it is called.
   "chat.tools.terminal.autoApprove": {
     // ── filesystem / info ─────────────────────────────────────────────────
-    "cd": true,
-    "echo": true,
-    "ls": true,
-    "pwd": true,
-    "cat": true,
-    "head": true,
-    "tail": true,
-    "findstr": true,
-    "wc": true,
-    "tr": true,
-    "cut": true,
-    "cmp": true,
-    "diff": true,
-    "which": true,
     "type": true,
-    "basename": true,
-    "dirname": true,
-    "realpath": true,
-    "readlink": true,
-    "stat": true,
-    "file": true,
-    "du": true,
-    "df": true,
+    "diff": true,
     "lsof": true,
     "uname": true,
     "hostname": true,
     "whoami": true,
     "id": true,
     "uptime": true,
-    "sleep": true,
+    "timeout": false, // runs any command it is given
     // ── text processing ───────────────────────────────────────────────────
     "awk": true,
-    "sed": true,
+    "/^awk\\b.*(system|getline|ENVIRON|\\s-f\\b|--file|@include|@load|\\||>>)/": false, // no shell, file reads, environment or pipes from inside awk
     "/^sed\\b.*-i\\b/": false, // block in-place edits
     "jq": true,
+    "/^jq\\b.*(\\$ENV|\\benv\\b|--rawfile|--slurpfile|--argfile|\\s-f\\b|--from-file|input_filename)/": false, // no environment or file reads
     "yq": true,
-    "column": true,
-    "/^column\\b.*-c\\s+[0-9]{4,}/": false,
-    // ── search / find ─────────────────────────────────────────────────────
-    "find": true,
-    "/^find\\b.*-(delete|exec|execdir|fprint|fprintf|fls|ok|okdir)\\b/": false,
-    "grep": true,
-    "/^grep\\b.*-(f|P)\\b/": false,
+    "/^yq\\b.*(\\benv\\(|strenv\\(|\\bload\\(|load_str\\(|\\s-i\\b|--inplace|--from-file)/": false, // no environment, file loads or in-place edits
     "sort": true,
     "/^sort\\b.*-(o|S)\\b/": false,
-    "tree": true,
-    "/^tree\\b.*-o\\b/": false,
-    // ── date / time ───────────────────────────────────────────────────────
-    "date": true,
-    "/^date\\b.*(-s|--set)\\b/": false,
-    "timeout": true,
+    // ── search / find ─────────────────────────────────────────────────────
+    "/^find\\b.*-(delete|exec|execdir|fprint|fprintf|fls|ok|okdir)\\b/": false,
+    "/^grep\\b.*-(f|P)\\b/": false,
     // ── network read-only ─────────────────────────────────────────────────
     "ping": true,
     "dig": true,
@@ -286,43 +282,24 @@
     "git log": true,
     "git show": true,
     "git diff": true,
-    // ── kubernetes: read-only auto-approved, mutations require confirmation
-    "kubectl": true,
-    "/^kubectl\\b.*(delete|apply|patch|\\bexec\\b|port-forward|\\brun\\b|scale|rollout\\s+restart|create|edit|replace|drain|taint|cordon|uncordon|label|annotate|set\\s+image)/": false,
-    // ── helm: query/template auto-approved, cluster mutations require confirmation
-    "helm": true,
-    "/^helm\\b.*(install|upgrade|uninstall|delete|rollback)/": false,
-    // ── docker: inspection auto-approved, run/exec/push/destructive require confirmation
-    "docker": true,
-    "/^docker\\b.*(\\brun\\b|\\bexec\\b|\\brm\\b|\\brmi\\b|prune|\\bpush\\b|\\bsave\\b|login|logout|swarm|secret|\\bnetwork\\s+(create|rm|remove)\\b|\\bvolume\\s+(create|rm|remove)\\b)/": false,
-    // ── js / ts runtimes ─────────────────────────────────────────────────
-    "bun": true,
-    "bunx": true,
-    "pnpm": true,
-    // ── go ───────────────────────────────────────────────────────────────
-    "go": true,
-    "/^go\\b.*(install|get)\\b/": false, // block fetching/installing packages
-    // ── PowerShell read-only ─────────────────────────────────────────────
-    "Get-ChildItem": true,
-    "Get-Content": true,
-    "Get-Date": true,
-    "Get-Random": true,
-    "Get-Location": true,
-    "Write-Host": true,
-    "Write-Output": true,
-    "Split-Path": true,
-    "Join-Path": true,
-    "Start-Sleep": true,
-    "Where-Object": true,
-    "/^Select-[a-z0-9]/i": true,
-    "/^Measure-[a-z0-9]/i": true,
-    "/^Compare-[a-z0-9]/i": true,
-    "/^Format-[a-z0-9]/i": true,
-    "/^Sort-[a-z0-9]/i": true,
+    // ── kubernetes: read-only verbs, secret values are never printed ─────
+    "/^kubectl\\s+(get|describe|logs|top|explain|api-resources|api-versions|version|cluster-info|events|diff|auth\\s+can-i|config\\s+(view|get-contexts|current-context)|rollout\\s+(status|history))\\b/": true,
+    "/^kubectl\\b(?=.*\\bsecrets?\\b)(?=.*(\\s-o\\s*(yaml|json|jsonpath|go-template|template)|--output[= ]\\s*(yaml|json|jsonpath|go-template|template)))/": false,
+    "/^kubectl\\b.*\\s--raw\\b/": false,
+    // ── helm: query and template only (helm get values can print secrets) ─
+    "/^helm\\s+(list|ls|status|history|search|show|template|lint|version|env|repo\\s+list|get\\s+(notes|metadata))\\b/": true,
+    // ── go: build, test and inspect (go run, get and install ask) ─────────
+    "/^go\\s+(version|env|list|vet|fmt|build|test|doc|mod\\s+(graph|why|verify))\\b/": true,
+    // ── linters ───────────────────────────────────────────────────────────
+    "yamllint": true,
     // ── shell injection guards ────────────────────────────────────────────
     "/\\(.+\\)/": { "approve": false, "matchCommandLine": true },
     "/\\{.+\\}/": { "approve": false, "matchCommandLine": true },
     "/`.+`/": { "approve": false, "matchCommandLine": true },
+    // ── secrets: a command that names a secret file or variable asks first ─
+    "/(^|[\\s/=\\'\"])\\.(env(\\.\\S+)?|netrc|npmrc|pypirc|git-credentials|vault-token)([\\s\\'\"]|$)/": { "approve": false, "matchCommandLine": true },
+    "/(^|[\\s/=\\'\"])(\\.ssh|\\.aws|\\.gnupg|\\.kube|\\.docker/config\\.json|\\.config/gh/hosts\\.yml|secrets\\.env|id_(rsa|dsa|ecdsa|ed25519)|[^\\s/\\'\"]+\\.(pem|key|p12|pfx))([/\\s\\'\"]|$)/": { "approve": false, "matchCommandLine": true },
+    "/\\$\\{?[A-Za-z0-9_]*(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|CREDENTIAL|PRIVATE_?KEY)/i": { "approve": false, "matchCommandLine": true },
     // ── always blocked: destructive / remote access / privilege ───────────
     "rm": false,
     "del": false,
@@ -351,25 +328,7 @@
     "su": false,
     // code execution / injection
     "eval": false,
-    "xargs": false,
-    // PowerShell destructive
-    "Remove-Item": false,
-    "ri": false,
-    "rd": false,
-    "rmdir": false,
-    "Stop-Process": false,
-    "spps": false,
-    "taskkill": false,
-    "taskkill.exe": false,
-    "Invoke-RestMethod": false,
-    "Invoke-WebRequest": false,
-    "irm": false,
-    "iwr": false,
-    "Set-ItemProperty": false,
-    "sp": false,
-    "Set-Acl": false,
-    "Invoke-Expression": false,
-    "iex": false
+    "xargs": false
   },
   "chat.tools.global.autoApprove": false,
   "chat.mcp.autostart": "newAndOutdated",

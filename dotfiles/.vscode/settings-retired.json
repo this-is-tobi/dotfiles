@@ -1,0 +1,23 @@
+// Settings the repository stopped wanting. The setup deletes these from the user's
+// settings.json before it applies the repository's own keys (see vscode-settings.sh).
+// Each entry is a path: the setting name, then the keys below it for an object setting.
+[
+  // removed from the Copilot extension: VS Code reports it as an unknown setting
+  ["github.copilot.chat.tools.memory.enabled"],
+  // back to VS Code's own prompt for files opened from outside a trusted folder
+  ["security.workspace.trust.untrustedFiles"],
+  // allow-everything rules replaced by read-only allow lists (kubectl, helm, go) or by
+  // VS Code's built-in read-only rules (docker, pnpm); bun, bunx and the old deny lists
+  // went with them, anything not allowed now simply asks
+  ["chat.tools.terminal.autoApprove", "kubectl"],
+  ["chat.tools.terminal.autoApprove", "/^kubectl\\b.*(delete|apply|patch|\\bexec\\b|port-forward|\\brun\\b|scale|rollout\\s+restart|create|edit|replace|drain|taint|cordon|uncordon|label|annotate|set\\s+image)/"],
+  ["chat.tools.terminal.autoApprove", "helm"],
+  ["chat.tools.terminal.autoApprove", "/^helm\\b.*(install|upgrade|uninstall|delete|rollback)/"],
+  ["chat.tools.terminal.autoApprove", "docker"],
+  ["chat.tools.terminal.autoApprove", "/^docker\\b.*(\\brun\\b|\\bexec\\b|\\brm\\b|\\brmi\\b|prune|\\bpush\\b|\\bsave\\b|login|logout|swarm|secret|\\bnetwork\\s+(create|rm|remove)\\b|\\bvolume\\s+(create|rm|remove)\\b)/"],
+  ["chat.tools.terminal.autoApprove", "bun"],
+  ["chat.tools.terminal.autoApprove", "bunx"],
+  ["chat.tools.terminal.autoApprove", "pnpm"],
+  ["chat.tools.terminal.autoApprove", "go"],
+  ["chat.tools.terminal.autoApprove", "/^go\\b.*(install|get)\\b/"]
+]
