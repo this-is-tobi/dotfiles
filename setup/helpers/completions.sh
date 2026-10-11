@@ -43,7 +43,7 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 # Install cheat completion
 [ -x "$(command -v cheat)" ] \
   && printf "\n${red}[completion] =>${no_color} Install cheat completion\n" \
-  && curl -fsSL -o $COMPLETION_DIR/_cheat https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh
+  && cheat --completion zsh > $COMPLETION_DIR/_cheat
 
 
 # Install cobra completion
@@ -166,12 +166,6 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
   && mise completion zsh > $COMPLETION_DIR/_mise
 
 
-# Install scw completion
-[ -x "$(command -v scw)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install scw completion\n" \
-  && scw autocomplete install shell=zsh
-
-
 # Install teleport completion
 [ -x "$(command -v teleport)" ] \
   && printf "\n${red}[completion] =>${no_color} Install teleport completion\n" \
@@ -187,22 +181,10 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
   && tsh --completion-script-zsh > $COMPLETION_DIR/_tsh
 
 
-# Install terraform completion
-[ -x "$(command -v terraform)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install terraform completion\n" \
-  && terraform -install-autocomplete
-
-
 # Install trivy completion
 [ -x "$(command -v trivy)" ] \
   && printf "\n${red}[completion] =>${no_color} Install trivy completion\n" \
   && trivy completion zsh > $COMPLETION_DIR/_trivy
-
-
-# Install vault completion
-[ -x "$(command -v vault)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install vault completion\n" \
-  && vault -autocomplete-install
 
 
 # Install velero completion

@@ -96,6 +96,14 @@ command -v direnv &>/dev/null && plugins+=(direnv)
 
 source $ZSH/oh-my-zsh.sh
 
+# terraform and vault complete through their own binary. Their -install-autocomplete
+# flags append these lines to ~/.zshrc, so they are kept here instead.
+if (( $+commands[terraform] || $+commands[vault] )); then
+  autoload -U +X bashcompinit && bashcompinit
+  (( $+commands[terraform] )) && complete -o nospace -C terraform terraform
+  (( $+commands[vault] )) && complete -o nospace -C vault vault
+fi
+
 # aliases
 alias cs="cheat_glow"
 alias dsp="docker system prune -a -f"
