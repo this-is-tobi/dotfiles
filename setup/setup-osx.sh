@@ -317,10 +317,17 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   install_tree "$DOTFILES_PATH/.config" "$HOME/.config"
 
 
-  # Install the eslint fallback config, used where a project has none
+  # Install the eslint fallback config, used where a project has none. npm ci
+  # installs the exact versions of the committed package-lock.json, without
+  # running the install scripts of the dependencies. It is skipped when
+  # node_modules was installed from that same lockfile.
   install_file "$DOTFILES_PATH/eslint.config.mjs" "$HOME/eslint.config.mjs"
   if [ -x "$(command -v npm)" ]; then
-    (cd "$HOME/.config/eslint-fallback" && npm install --no-audit --no-fund --loglevel=error)
+    eslint_dir="$HOME/.config/eslint-fallback"
+    if ! cmp -s "$eslint_dir/package-lock.json" "$eslint_dir/node_modules/.dotfiles-package-lock.json"; then
+      (cd "$eslint_dir" && npm ci --ignore-scripts --no-audit --no-fund --loglevel=error \
+        && cp package-lock.json node_modules/.dotfiles-package-lock.json)
+    fi
   fi
 
 
