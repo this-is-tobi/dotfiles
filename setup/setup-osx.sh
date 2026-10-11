@@ -22,22 +22,20 @@ fi
 . "$SCRIPT_PATH/helpers/files.sh"
 # shellcheck source=helpers/remote.sh
 . "$SCRIPT_PATH/helpers/remote.sh"
+# shellcheck source=helpers/profiles.sh
+. "$SCRIPT_PATH/helpers/profiles.sh"
+
+# The profiles are the scripts of profiles/osx (see helpers/profiles.sh)
+profiles_init "$SCRIPT_PATH/profiles/osx"
 
 # Default
-INSTALL_AI="false"
-INSTALL_BASE="false"
-INSTALL_DEVOPS="false"
-INSTALL_EXTRAS="false"
-INSTALL_GO="false"
-INSTALL_JS="false"
-INSTALL_SECOPS="false"
 INSTALL_COMPLETIONS="false"
 COPY_DOTFILES="false"
 FULL_MODE_SETUP="true"
 DRY_RUN="false"
 
-# Declare script helper
-TEXT_HELPER="\nThis script aims to install a full setup for osx.
+print_help() {
+  printf "\nThis script aims to install a full setup for osx.
 Following flags are available:
 
   -c    Install cli completions.
@@ -46,24 +44,17 @@ Following flags are available:
 
   -l    Run with lite mode, only major tools will be installed.
 
-  -n    Dry run: print resolved settings and exit without installing anything.
+  -n    Dry run: print the resolved settings, then every command that would change
+        the machine instead of running it (checks that only read it still run).
 
   -p    Install additional packages according to the given profile, available profiles are :
-          -> 'ai'
-          -> 'base'
-          -> 'devops'
-          -> 'extras' (for personnal use)
-          -> 'go'
-          -> 'js'
-          -> 'secops'
-        Default is no profile, this flag can be used with a CSV list (ex: -p \"base,js\").
+"
+  profiles_help
+  printf "        Default is no profile, this flag can be used with a CSV list (ex: -p \"base,js\").
 
   -r    Deprecated and ignored: temporary files are removed by the scripts that create them.
 
   -h    Print script help.\n\n"
-
-print_help() {
-  printf "$TEXT_HELPER"
 }
 
 # Parse options
@@ -78,21 +69,7 @@ while getopts hcdlnp:r flag; do
     n)
       DRY_RUN="true";;
     p)
-      IFS=',' read -ra PROFILES <<< "$OPTARG"
-      for profile in "${PROFILES[@]}"; do
-        case "$profile" in
-          ai) INSTALL_AI="true";;
-          base) INSTALL_BASE="true";;
-          devops) INSTALL_DEVOPS="true";;
-          extras) INSTALL_EXTRAS="true";;
-          go) INSTALL_GO="true";;
-          js) INSTALL_JS="true";;
-          secops) INSTALL_SECOPS="true";;
-          *)
-            printf "Error: unknown profile '%s'. Valid profiles: ai, base, devops, extras, go, js, secops\n" "$profile" >&2
-            exit 1;;
-        esac
-      done;;
+      profiles_select "$OPTARG" || exit 1;;
     r)
       printf "Note: -r is deprecated and ignored, temporary files are always cleaned up.\n" >&2;;
     h | *)
@@ -104,20 +81,16 @@ done
 
 # Settings
 printf "\nScript settings:
-  -> install ${red}full setup${no_color}: ${red}$FULL_MODE_SETUP${no_color}
-  -> install ${red}[ai]${no_color} profile: ${red}$INSTALL_AI${no_color}
-  -> install ${red}[base]${no_color} profile: ${red}$INSTALL_BASE${no_color}
-  -> install ${red}[devops]${no_color} profile: ${red}$INSTALL_DEVOPS${no_color}
-  -> install ${red}[extras]${no_color} profile: ${red}$INSTALL_EXTRAS${no_color}
-  -> install ${red}[go]${no_color} profile: ${red}$INSTALL_GO${no_color}
-  -> install ${red}[js]${no_color} profile: ${red}$INSTALL_JS${no_color}
-  -> install ${red}[secops]${no_color} profile: ${red}$INSTALL_SECOPS${no_color}
-  -> copy ${red}dotfiles${no_color}: ${red}$COPY_DOTFILES${no_color}
+  -> install ${red}full setup${no_color}: ${red}$FULL_MODE_SETUP${no_color}\n"
+profiles_settings
+printf "  -> copy ${red}dotfiles${no_color}: ${red}$COPY_DOTFILES${no_color}
   -> install ${red}cli completions${no_color}: ${red}$INSTALL_COMPLETIONS${no_color}\n"
 
+# A dry run goes through every step: the profiles and helpers it starts print
+# the commands instead of running them (helpers/run.sh)
 if [[ "$DRY_RUN" = "true" ]]; then
-  printf "\n${red}Dry run:${no_color} exiting without installing anything.\n"
-  exit 0
+  export DOTFILES_DRY_RUN=1
+  printf "\n${red}Dry run:${no_color} nothing is installed or changed, the commands are printed instead.\n"
 fi
 
 
@@ -179,14 +152,22 @@ install_homebrew() {
 }
 
 if ! xcode-select -p >/dev/null 2>&1; then
-  confirm_or_exit "Command Line Tools"
-  install_clt
+  if dry_run; then
+    printf "[dry-run] ask to install the Command Line Tools, then install them with softwareupdate\n"
+  else
+    confirm_or_exit "Command Line Tools"
+    install_clt
+  fi
 fi
 
 if ! command -v brew >/dev/null 2>&1; then
   if ! load_brew; then
-    confirm_or_exit "Homebrew"
-    install_homebrew
+    if dry_run; then
+      printf "[dry-run] ask to install Homebrew, then install it with its install script\n"
+    else
+      confirm_or_exit "Homebrew"
+      install_homebrew
+    fi
   fi
 fi
 
@@ -205,8 +186,8 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 i=$(($i + 1))
-brew update || printf "brew update failed, continuing with the local formulae index\n"
-brew install --formula \
+run brew update || printf "brew update failed, continuing with the local formulae index\n"
+run brew install --formula \
   ca-certificates \
   curl \
   gnupg \
@@ -229,67 +210,8 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
 fi
 
 
-# Install base profile
-if [[ "$INSTALL_BASE" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install base profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-base.sh"
-fi
-
-
-# Install extras profile
-if [[ "$INSTALL_EXTRAS" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install extras profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-extras.sh"
-fi
-
-
-# Install devops profile
-if [[ "$INSTALL_DEVOPS" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install devops profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-devops.sh"
-fi
-
-
-# Install secops profile
-if [[ "$INSTALL_SECOPS" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install secops profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-secops.sh"
-fi
-
-
-# Install go profile
-if [[ "$INSTALL_GO" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install go profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-go.sh"
-fi
-
-
-# Install js profile
-if [[ "$INSTALL_JS" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install javascript profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-js.sh"
-fi
-
-
-# Install ai profile
-if [[ "$INSTALL_AI" = "true" ]]; then
-  printf "\n${red}${i}.${no_color} Install ai profile\n\n"
-  i=$(($i + 1))
-
-  "$SCRIPT_PATH/profiles/osx/setup-ai.sh"
-fi
+# Install the selected profiles, in their order
+profiles_run
 
 
 # Copy dotfiles
@@ -297,76 +219,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Copy dotfiles\n\n"
   i=$(($i + 1))
 
-  DOTFILES_PATH="$(cd "$SCRIPT_PATH/.." && pwd -P)/dotfiles"
-
-  # Whatever a copy below would replace is saved under $DOTFILES_BACKUP_DIR first
-  install_file "$DOTFILES_PATH/.zshrc" "$HOME/.zshrc"
-  install_file "$DOTFILES_PATH/.oh-my-zsh/this-is-tobi.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/this-is-tobi.zsh-theme"
-  # Keep the identity and signing settings of the current ~/.gitconfig in
-  # ~/.gitconfig.local before it is replaced
-  "$SCRIPT_PATH/helpers/gitconfig.sh"
-  install_file "$DOTFILES_PATH/.gitconfig" "$HOME/.gitconfig"
-  install_tree "$DOTFILES_PATH/.continue" "$HOME/.continue"
-
-  # Create secrets.env before the copy below replaces env.sh, so that values a
-  # previous env.sh held are moved there instead of being lost.
-  "$SCRIPT_PATH/helpers/secrets.sh"
-  # Copies .config/mise/conf.d/00-settings.toml among the rest. It is kept in
-  # conf.d/ rather than config.toml precisely so that re-running this step does
-  # not clobber the tool versions the profiles pinned via `mise use --global`.
-  install_tree "$DOTFILES_PATH/.config" "$HOME/.config"
-
-
-  # Install the eslint fallback config, used where a project has none. npm ci
-  # installs the exact versions of the committed package-lock.json, without
-  # running the install scripts of the dependencies. It is skipped when
-  # node_modules was installed from that same lockfile.
-  install_file "$DOTFILES_PATH/eslint.config.mjs" "$HOME/eslint.config.mjs"
-  if [ -x "$(command -v npm)" ]; then
-    eslint_dir="$HOME/.config/eslint-fallback"
-    if ! cmp -s "$eslint_dir/package-lock.json" "$eslint_dir/node_modules/.dotfiles-package-lock.json"; then
-      (cd "$eslint_dir" && npm ci --ignore-scripts --no-audit --no-fund --loglevel=error \
-        && cp package-lock.json node_modules/.dotfiles-package-lock.json)
-    fi
-  fi
-
-
-  # Install .vscode configs
-  if [ -x "$(command -v code)" ]; then
-    VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
-    vscode_settings="$(mktemp)"
-    sed "s|__HOME__|$HOME|g" "$DOTFILES_PATH/.vscode/settings.json" > "$vscode_settings"
-    "$SCRIPT_PATH/helpers/vscode-settings.sh" "$vscode_settings" "$VSCODE_USER_DIR/settings.json" "$DOTFILES_PATH/.vscode/settings-retired.json"
-    rm -f "$vscode_settings"
-    install_file "$DOTFILES_PATH/.vscode/mcp.json" "$VSCODE_USER_DIR/mcp.json"
-    "$SCRIPT_PATH/helpers/vscode-extensions.sh" code "$DOTFILES_PATH/.vscode/extensions.json"
-  fi
-
-
-  # Install .claude config
-  mkdir -p "$HOME/.claude"
-  # rtk writes RTK.md and its CLAUDE.md reference. --no-patch leaves settings.json
-  # alone: the repository's settings carry the rtk hook (a no-op without rtk), and
-  # the bare hook --auto-patch adds would be dropped by the merge below on every
-  # run, with a backup each time. Its stdout only repeats that hook as a manual step.
-  if [ -x "$(command -v rtk)" ]; then
-    rtk init -g --no-patch > /dev/null
-  fi
-  # Merged, not copied: Claude Code and /plugin write into this file too. The repository
-  # owns hooks, attribution, plugins and the deny rules; the rest stays as it is.
-  "$SCRIPT_PATH/helpers/claude-settings.sh" "$DOTFILES_PATH/.claude/settings.json"
-
-
-  # Install AI agent instructions & skills (Copilot + Claude Code personal setup)
-  # -P installs Claude Code plugins at user scope (and registers them in the settings.json merged above).
-  run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t claude -g -P
-  run_remote bash "$TOOLS_RAW_BASE/shell/setup-ai-agent.sh" -t copilot -g -c
-
-
-  # Configure Claude Code MCP servers
-  if [ -x "$(command -v claude)" ]; then
-    "$SCRIPT_PATH/helpers/claude-mcp.sh"
-  fi
+  "$SCRIPT_PATH/helpers/dotfiles.sh" "code:$HOME/Library/Application Support/Code/User"
 fi
 
 
@@ -375,10 +228,10 @@ if [[ "$INSTALL_COMPLETIONS" = "true" ]]; then
   printf "\n${red}${i}.${no_color} Install cli completions\n\n"
   i=$(($i + 1))
 
-  "$SCRIPT_PATH/helpers/completions.sh"
+  run "$SCRIPT_PATH/helpers/completions.sh"
   # .zshrc adds this directory to fpath once it exists
   ZSH_COMPLETIONS_DIR="${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions"
   if [ ! -d "$ZSH_COMPLETIONS_DIR" ]; then
-    git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS_DIR"
+    run git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS_DIR"
   fi
 fi

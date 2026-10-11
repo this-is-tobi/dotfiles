@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: Go development environment
+# Order: 50
 set -euo pipefail
 
 # Colorize terminal
@@ -11,6 +13,8 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 
 # shellcheck source=../../helpers/mise.sh
 . "$SCRIPT_PATH/helpers/mise.sh"
+# shellcheck source=../../helpers/brew.sh
+. "$SCRIPT_PATH/helpers/brew.sh"
 
 install_lite_setup() {
   # Install mise packages
@@ -22,17 +26,14 @@ install_lite_setup() {
 }
 
 install_additional_setup() {
-  # Install homebrew cli packages
-  printf "\n\n${red}[go] =>${no_color} Install go\n\n"
-  brew install --formula \
-    kubebuilder \
-    kustomize \
-    operator-sdk
+  # Install homebrew packages (go.Brewfile, full mode only)
+  printf "\n\n${red}[go] =>${no_color} Install homebrew packages\n\n"
+  brew_bundle "$SCRIPT_PATH/profiles/osx/go.Brewfile"
 
 
   # Install go packages
   printf "\n\n${red}[go] =>${no_color} Install go packages\n\n"
-  go install \
+  run go install \
     github.com/spf13/cobra-cli@latest
 }
 

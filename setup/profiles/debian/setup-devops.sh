@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: DevOps tools (Kubernetes, Terraform, Ansible, cloud CLIs, etc.)
+# Order: 30
 set -euo pipefail
 
 # Colorize terminal
@@ -43,7 +45,7 @@ install_k8s_lite() {
     oc@latest
 
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
-  krew install \
+  run krew install \
     cert-manager \
     cnpg \
     df-pv \
@@ -75,7 +77,7 @@ install_iac_lite() {
 
   if [ ! -x "$(command -v ansible)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible\n\n"
-    uv tool install --python "$ANSIBLE_PYTHON" --with-executables-from ansible-core ansible
+    run uv tool install --python "$ANSIBLE_PYTHON" --with-executables-from ansible-core ansible
   fi
 }
 
@@ -117,7 +119,7 @@ install_iac_full() {
   if [ ! -x "$(command -v ansible-lint)" ]; then
     printf "\n\n${red}[devops/iac] =>${no_color} Install ansible-dev-tools\n\n"
     # Same interpreter as ansible above so both toolchains agree.
-    uv tool install --python "$ANSIBLE_PYTHON" --with-executables-from ansible-lint ansible-dev-tools
+    run uv tool install --python "$ANSIBLE_PYTHON" --with-executables-from ansible-lint ansible-dev-tools
   fi
 }
 
@@ -149,15 +151,20 @@ install_misc_full() {
     # Default to v18 if not set
     TELEPORT_VERSION=${TELEPORT_VERSION:-v18}
     TELEPORT_CHANNEL=stable/${TELEPORT_VERSION?}
-    sudo mkdir -p /etc/apt/keyrings
-    sudo curl -fsSL https://apt.releases.teleport.dev/gpg -o /etc/apt/keyrings/teleport-archive-keyring.asc
-    # Source os-release to get distribution ID and version codename
-    . /etc/os-release
-    echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/${ID?} ${VERSION_CODENAME?} ${TELEPORT_CHANNEL?}" \
-      | sudo tee /etc/apt/sources.list.d/teleport.list > /dev/null
+    run add_teleport_apt_repository "$TELEPORT_CHANNEL"
     apt_sources_changed
     apt_install teleport
   fi
+}
+
+add_teleport_apt_repository() {
+  local channel="$1"
+  sudo mkdir -p /etc/apt/keyrings
+  sudo curl -fsSL https://apt.releases.teleport.dev/gpg -o /etc/apt/keyrings/teleport-archive-keyring.asc
+  # Source os-release to get distribution ID and version codename
+  . /etc/os-release
+  echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/${ID?} ${VERSION_CODENAME?} ${channel}" \
+    | sudo tee /etc/apt/sources.list.d/teleport.list > /dev/null
 }
 
 install_additional_setup() {

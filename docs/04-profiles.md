@@ -300,6 +300,18 @@ A profile script can also be run directly, without the commons and oh-my-zsh ste
 FULL_MODE_SETUP=false DEVOPS_CATEGORIES=k8s ./setup/profiles/debian/setup-devops.sh
 ```
 
+### Adding a Profile
+
+The setup scripts find the profiles in `setup/profiles/<os>/`: every `setup-<name>.sh` there is a profile, listed by `-h`, accepted by `-p <name>` and run in its turn. Two header lines describe it:
+
+```sh
+#!/bin/bash
+# Profile: One-line description shown by -h
+# Order: 45
+```
+
+Profiles run by increasing `Order` (base is 10, ai 70). Nothing else needs to be edited. On macOS, the Homebrew packages of a profile live in `setup/profiles/osx/<name>.Brewfile`, installed by the profile script with `brew bundle --file` (only what is missing or outdated is installed). A Brewfile reads `HOMEBREW_DOTFILES_LITE` (`1` with `-l`) to leave its `unless lite` block out, the devops one also `HOMEBREW_DOTFILES_DEVOPS_CATEGORIES`, and formulae from third-party taps are written `tap/formula` with `trusted: true`. What is not a Homebrew package (mise tools, krew plugins, fonts, gh extensions) stays in the profile script, and goes through `run` so that `-n` prints it.
+
 ### Package Sources
 
 - **homebrew** - macOS package manager (CLI tools, via formulae)

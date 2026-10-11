@@ -1,35 +1,19 @@
 #!/bin/bash
+# Profile: Extra personal applications: media, chat, downloads (macOS only)
+# Order: 20
 set -euo pipefail
 
 # Colorize terminal
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Get current script path (this file lives in setup/profiles/osx/)
+SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
 
-install_lite_setup() {
-  # Install homebrew graphic app packages
-  printf "\n\n${red}[extras] =>${no_color} Install homebrew packages (graphic)\n\n"
-  brew install --cask \
-    vlc
-}
-
-install_additional_setup() {
-  # Install homebrew graphic app packages
-  printf "\n\n${red}[extras] =>${no_color} Install homebrew packages (graphic)\n\n"
-  brew install --cask \
-    audacity \
-    discord \
-    raspberry-pi-imager \
-    soulseek \
-    transmission \
-    vlc
-}
+# shellcheck source=../../helpers/brew.sh
+. "$SCRIPT_PATH/helpers/brew.sh"
 
 
-# Install lite setup
-install_lite_setup
-
-# Install full setup (the default, -l of the setup script turns it off)
-if [ "${FULL_MODE_SETUP:-true}" = "true" ]; then
-  install_additional_setup
-fi
+# Install homebrew packages (extras.Brewfile, lite and full mode)
+printf "\n\n${red}[extras] =>${no_color} Install homebrew packages\n\n"
+brew_bundle "$SCRIPT_PATH/profiles/osx/extras.Brewfile"

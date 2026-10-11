@@ -61,9 +61,9 @@ ensure_mise() {
   fi
   printf "\n\n${red}[mise] =>${no_color} Install mise\n\n"
   if [ -x "$(command -v brew)" ]; then
-    brew install mise
+    run brew install mise
   elif [ -x "$(command -v apt-get)" ]; then
-    install_mise_apt
+    run install_mise_apt
   else
     printf "Error: mise is not installed and there is neither Homebrew nor apt-get to install it, see https://mise.jdx.dev/installing-mise.html\n" >&2
     return 1
@@ -107,10 +107,10 @@ install_mise_apt() (
 mise_use() {
   local attempt
   for attempt in 1 2 3 4 5; do
-    if mise use --global "$@"; then
+    if run mise use --global "$@"; then
       # Regenerate shims so binaries added by this call are immediately
       # callable by the rest of the script (krew, go, npm, uv, ...).
-      mise reshim
+      run mise reshim
       return 0
     fi
     printf "\n${red}[mise] =>${no_color} mise use failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"

@@ -5,7 +5,11 @@
 # whose content differs from the source is first saved under
 # $DOTFILES_BACKUP_DIR (one private directory per run, created on first use),
 # mirroring its path relative to $HOME. Identical files are left untouched, so
-# re-running the setup creates no backups.
+# re-running the setup creates no backups. During a dry run (run.sh), nothing
+# is written: install_file prints what it would replace.
+
+# shellcheck source=run.sh
+. "$(dirname "${BASH_SOURCE[0]}")/run.sh"
 
 # Exported: the helpers that run as child processes (vscode-settings.sh,
 # claude-settings.sh) source this file too, and must back up into the same
@@ -43,7 +47,6 @@ lines_lost() {
 install_file() {
   local src="$1" dst="$2" dir tmp lost
   dir="$(dirname "$dst")"
-  mkdir -p "$dir"
   if [ "$src" -ef "$dst" ]; then
     return 0
   fi
@@ -51,8 +54,17 @@ install_file() {
     printf "Error: %s is a directory, not replacing it with %s\n" "$dst" "$src" >&2
     return 1
   fi
+  [ -e "$dst" ] && cmp -s "$src" "$dst" && return 0
+  if dry_run; then
+    if [ -e "$dst" ]; then
+      printf "[dry-run] replace %s (%s lines it has are not in the new file; it would be backed up first)\n" "$dst" "$(lines_lost "$dst" "$src")"
+    else
+      printf "[dry-run] create %s\n" "$dst"
+    fi
+    return 0
+  fi
+  mkdir -p "$dir"
   if [ -e "$dst" ]; then
-    cmp -s "$src" "$dst" && return 0
     lost="$(lines_lost "$dst" "$src")"
     backup_file "$dst"
     if [ "$lost" -gt 0 ]; then
@@ -82,7 +94,7 @@ install_file() {
 # The directory is created even when it is empty, and node_modules is skipped.
 install_tree() {
   local src_dir="$1" dst_dir="$2" file
-  mkdir -p "$dst_dir"
+  [ -d "$dst_dir" ] || run mkdir -p "$dst_dir"
   while IFS= read -r -d '' file; do
     file="${file#./}"
     install_file "$src_dir/$file" "$dst_dir/$file"

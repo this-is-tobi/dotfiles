@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: Base packages and utilities (including Docker)
+# Order: 10
 set -euo pipefail
 
 # Colorize terminal
@@ -24,6 +26,21 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 # their man pages to ~/.local/share/man, without root.
 BAT_EXTRAS_VERSION="2024.08.24"
 BAT_EXTRAS_SHA256="d79c085b9d0af7f56c3f69d766a83fe26405faac999c4ed7cdfc27417d2c736f"
+
+# Docker publishes one apt repository per distribution
+add_docker_apt_repository() {
+  local distro="$1" codename="$2"
+  sudo mkdir -m 0755 -p /etc/apt/keyrings
+  curl -fsSL "https://download.docker.com/linux/${distro}/gpg" | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${distro} ${codename} stable" \
+    | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+}
+
+install_fonts() {
+  install_nerd_fonts
+  fc-cache -fv
+}
 
 # Each step is checked: set -e does not apply to a function called from an `if`
 install_bat_extras() (
@@ -78,7 +95,7 @@ install_lite_setup() {
     printf "\n\n${red}[base] =>${no_color} Install bat-extras %s\n\n" "$BAT_EXTRAS_VERSION"
     # bat-extras is a convenience, so a failure (offline, a checksum mismatch)
     # only warns.
-    if ! install_bat_extras; then
+    if ! run install_bat_extras; then
       printf "Warning: bat-extras could not be installed, skipping it\n" >&2
     fi
   fi
@@ -87,7 +104,6 @@ install_lite_setup() {
   # Install docker
   if [ ! -x "$(command -v docker)" ]; then
     printf "\n\n${red}[base] =>${no_color} Install docker\n\n"
-    # Docker publishes one apt repository per distribution
     docker_distro="$(. /etc/os-release && echo "$ID")"
     docker_codename="$(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")"
     case "$docker_distro" in
@@ -96,24 +112,20 @@ install_lite_setup() {
         printf "Error: the docker apt repository is only configured for debian and ubuntu, found '%s'\n" "$docker_distro" >&2
         exit 1;;
     esac
-    sudo mkdir -m 0755 -p /etc/apt/keyrings
-    curl -fsSL "https://download.docker.com/linux/${docker_distro}/gpg" | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${docker_distro} ${docker_codename} stable" \
-      | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    run add_docker_apt_repository "$docker_distro" "$docker_codename"
     apt_sources_changed
     apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   fi
 
   if ! grep -q -E "^docker:" /etc/group; then
     printf "\n\n${red}[base] =>${no_color} Add docker group\n\n"
-    sudo groupadd docker
+    run sudo groupadd docker
   fi
 
   docker_user="${USER:-$(id -un)}"
   if ! id -nG "$docker_user" | grep -qw docker; then
     printf "\n\n${red}[base] =>${no_color} Add user to docker group\n\n"
-    sudo usermod -aG docker "$docker_user"
+    run sudo usermod -aG docker "$docker_user"
   fi
 
 
@@ -156,15 +168,14 @@ install_additional_setup() {
   # Install gh extensions
   printf "\n\n${red}[base] =>${no_color} Install gh extensions\n\n"
   for extension in dlvhdr/gh-dash meiji163/gh-notify; do
-    gh extension list | grep -q "$extension" || gh extension install "$extension"
+    gh extension list 2>/dev/null | grep -q "$extension" || run gh extension install "$extension"
   done
 
 
   # Install neovim fonts
   if [ ! -d "$HOME/.fonts" ]; then
     printf "\n\n${red}[base] =>${no_color} Install neovim fonts\n\n"
-    install_nerd_fonts
-    fc-cache -fv
+    run install_fonts
   fi
 }
 

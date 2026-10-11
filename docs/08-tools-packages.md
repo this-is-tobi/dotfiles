@@ -367,6 +367,10 @@ brew install <package>          # CLI tools
 brew install --cask <app>       # Applications (and claude-code, copilot-cli)
 ```
 
+The profiles list their Homebrew packages in `setup/profiles/osx/<profile>.Brewfile`
+and install them with `brew bundle --file`; to install one profile's packages by
+hand: `brew bundle --file setup/profiles/osx/devops.Brewfile`.
+
 **apt (Debian/Ubuntu):**
 ```sh
 sudo apt install <package>

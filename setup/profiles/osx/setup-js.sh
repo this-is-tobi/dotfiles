@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: JavaScript/Node.js development environment
+# Order: 60
 set -euo pipefail
 
 # Colorize terminal
@@ -36,9 +38,9 @@ install_additional_setup() {
   # Globals land in the active node install's bin directory; `mise reshim`
   # publishes them as shims so `ni` resolves on PATH.
   printf "\n\n${red}[js] =>${no_color} Install npm packages\n\n"
-  npm install --global \
+  run npm install --global \
     @antfu/ni
-  mise reshim
+  run mise reshim
 }
 
 

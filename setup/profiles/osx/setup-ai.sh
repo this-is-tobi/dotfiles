@@ -1,38 +1,19 @@
 #!/bin/bash
+# Profile: AI coding assistants and their tooling (Claude Code, Copilot CLI, Ollama, rtk, direnv)
+# Order: 70
 set -euo pipefail
 
 # Colorize terminal
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Get current script path (this file lives in setup/profiles/osx/)
+SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
 
-install_lite_setup() {
-  # Install homebrew cli packages
-  printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    direnv
-}
-
-install_additional_setup() {
-  # Install homebrew cli packages
-  printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    rtk-ai/tap/rtk
-
-  # Install homebrew cask packages
-  # claude-code and copilot-cli are CLIs, but Homebrew only ships them as casks
-  printf "\n\n${red}[ai] =>${no_color} Install homebrew packages (cask)\n\n"
-  brew install --cask \
-    claude-code \
-    copilot-cli \
-    ollama
-}
+# shellcheck source=../../helpers/brew.sh
+. "$SCRIPT_PATH/helpers/brew.sh"
 
 
-# Install lite setup
-install_lite_setup
-
-# Install full setup (the default, -l of the setup script turns it off)
-if [ "${FULL_MODE_SETUP:-true}" = "true" ]; then
-  install_additional_setup
-fi
+# Install homebrew packages (ai.Brewfile, lite and full mode)
+printf "\n\n${red}[ai] =>${no_color} Install homebrew packages\n\n"
+brew_bundle "$SCRIPT_PATH/profiles/osx/ai.Brewfile"

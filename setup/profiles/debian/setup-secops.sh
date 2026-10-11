@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: Security tools (scanners, secret management, etc.)
+# Order: 40
 set -euo pipefail
 
 # Colorize terminal

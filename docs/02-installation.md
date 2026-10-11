@@ -45,7 +45,7 @@ For Debian/Ubuntu:
 ./setup/setup-debian.sh -p base,devops -d -c
 ```
 
-Without `-p`, only the common packages and oh-my-zsh are installed; `-d` and `-c` add the dotfiles and the completions. Run with `-n` first to see the resolved settings, and with `-h` for the list of flags.
+Without `-p`, only the common packages and oh-my-zsh are installed; `-d` and `-c` add the dotfiles and the completions. Run with `-n` first to see what would be done, and with `-h` for the list of flags and profiles.
 
 ### Why Not `curl | bash`?
 
@@ -60,7 +60,7 @@ Piping a setup script into bash (`curl -fsSL .../setup/setup-osx.sh | bash`) doe
 | `-c`       | Install CLI completions (into `~/.oh-my-zsh/completions`) and clone zsh-completions                    |
 | `-d`       | Copy the dotfiles and configure the tools (see [Copying Dotfiles](#copying-dotfiles))                  |
 | `-l`       | Lite mode: only the major tools are installed                                                          |
-| `-n`       | Dry run: print the resolved settings and exit, without side effects                                    |
+| `-n`       | Dry run: print the resolved settings and every command that would change the machine, without running them |
 | `-p <csv>` | Profiles to install, comma-separated (`ai`, `base`, `devops`, `extras` on macOS, `go`, `js`, `secops`) |
 | `-r`       | Deprecated and ignored: the scripts now remove their own temporary files (it no longer cleans `/tmp`)  |
 | `-h`       | Print the help                                                                                         |
@@ -100,7 +100,7 @@ Install additional profiles based on your needs using the `-p` flag:
 ./setup/setup-osx.sh -p 'base,ai,devops,extras,go,js,secops'
 ```
 
-The profiles run in a fixed order whatever the order given to `-p`: `base`, `extras`, `devops`, `secops`, `go`, `js`, `ai`.
+The profiles run in a fixed order whatever the order given to `-p`: `base`, `extras`, `devops`, `secops`, `go`, `js`, `ai` (the `# Order:` line of each profile script, see [Adding a Profile](04-profiles.md#adding-a-profile)).
 
 Available profiles:
 - `base` - Base packages and utilities (including Docker)
@@ -133,7 +133,7 @@ To preview which profiles and options would be applied without installing anythi
 ./setup/setup-debian.sh -n -p 'devops,secops,js'
 ```
 
-This prints the resolved settings and exits before any package installation, dotfile copying, or interactive prompts.
+This prints the resolved settings, then goes through every step and profile and prints, prefixed with `[dry-run]`, each command that would change the machine (package installs, downloads, the files `-d` would create or replace) instead of running it. Checks that only read the machine (is a tool installed, is a file different) still run, so the list matches what a real run would do on this machine. It asks nothing and needs no sudo.
 
 ### Help
 

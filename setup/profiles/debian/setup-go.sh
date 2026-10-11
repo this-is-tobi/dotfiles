@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: Go development environment
+# Order: 50
 set -euo pipefail
 
 # Colorize terminal
@@ -30,7 +32,7 @@ install_additional_setup() {
   # Installs into $GOBIN (~/go/bin), which .zshrc already puts on PATH - go's
   # own package installs stay outside mise.
   printf "\n\n${red}[go] =>${no_color} Install go packages\n\n"
-  go install \
+  run go install \
     github.com/spf13/cobra-cli@latest
 }
 

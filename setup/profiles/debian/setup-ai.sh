@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: AI coding assistants and their tooling (Claude Code, Copilot CLI, Ollama, rtk, direnv)
+# Order: 70
 set -euo pipefail
 
 # Colorize terminal

@@ -5,6 +5,9 @@
 # DEBIAN_FRONTEND=noninteractive: a package asking a debconf question takes the
 # default answer instead of stopping an unattended run.
 
+# shellcheck source=run.sh
+. "$(dirname "${BASH_SOURCE[0]}")/run.sh"
+
 # Fallbacks so this file is safe to source under `set -u` before the caller has
 # defined its own palette.
 red="${red:-\e[0;31m}"
@@ -17,7 +20,7 @@ export DOTFILES_APT_UPDATED="${DOTFILES_APT_UPDATED:-}"
 # apt_update: refresh the package lists, unless this run already did.
 apt_update() {
   [ "$DOTFILES_APT_UPDATED" = "1" ] && return 0
-  sudo apt-get update || return 1
+  run sudo apt-get update || return 1
   DOTFILES_APT_UPDATED=1
 }
 
@@ -35,7 +38,7 @@ apt_sources_changed() {
 apt_install() {
   local attempt
   for attempt in 1 2 3 4 5; do
-    if apt_update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"; then
+    if apt_update && run sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"; then
       return 0
     fi
     apt_sources_changed

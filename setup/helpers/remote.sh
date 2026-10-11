@@ -2,6 +2,9 @@
 # Shared helpers for running remote scripts - sourced (not executed) by the
 # setup scripts.
 
+# shellcheck source=run.sh
+. "$(dirname "${BASH_SOURCE[0]}")/run.sh"
+
 # Base URL of the author's tools repository. Override TOOLS_REF with a tag or a
 # commit SHA to pin what the setup runs; it follows main by default because the
 # repository publishes no single release tag.
@@ -16,6 +19,12 @@ TOOLS_RAW_BASE="https://raw.githubusercontent.com/this-is-tobi/tools/${TOOLS_REF
 run_remote() {
   local interpreter="$1" url="$2" tmp status=0
   shift 2
+  if dry_run; then
+    printf "[dry-run] download %s, then run it: %s <script>" "$url" "$interpreter"
+    [ $# -eq 0 ] || printf " %q" "$@"
+    printf "\n"
+    return 0
+  fi
   tmp="$(mktemp)"
   if ! curl -fsSL "$url" -o "$tmp"; then
     rm -f "$tmp"

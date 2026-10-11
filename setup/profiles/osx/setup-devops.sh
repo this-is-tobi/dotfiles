@@ -1,4 +1,6 @@
 #!/bin/bash
+# Profile: DevOps tools (Kubernetes, Terraform, Ansible, cloud CLIs, etc.)
+# Order: 30
 set -euo pipefail
 
 # Colorize terminal
@@ -15,7 +17,7 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
 # container image that only needs Kubernetes tooling:
 #   DEVOPS_CATEGORIES=k8s ./setup-osx.sh -p devops -l
 # Categories: k8s, iac, cloud, misc. Default 'all' installs everything,
-# identical to the pre-existing behavior.
+# identical to the pre-existing behavior. devops.Brewfile reads the same list.
 DEVOPS_CATEGORIES="${DEVOPS_CATEGORIES:-all}"
 
 devops_wants() {
@@ -27,18 +29,18 @@ devops_wants() {
 }
 
 
-install_k8s_lite() {
-  printf "\n\n${red}[devops/k8s] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    helm \
-    norwoodj/tap/helm-docs \
-    krew \
-    kubectx \
-    kubernetes-cli \
-    openshift-cli
+# Install homebrew packages (devops.Brewfile, lite and full mode, per category).
+# terraform comes from HashiCorp's tap, which needs a core terraform out of the way.
+printf "\n\n${red}[devops] =>${no_color} Install homebrew packages\n\n"
+if devops_wants iac; then
+  brew_leave_core terraform
+fi
+brew_bundle "$SCRIPT_PATH/profiles/osx/devops.Brewfile" HOMEBREW_DOTFILES_DEVOPS_CATEGORIES="$DEVOPS_CATEGORIES"
 
+# Install krew plugins (lite and full mode)
+if devops_wants k8s; then
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
-  kubectl krew install \
+  run kubectl krew install \
     cert-manager \
     cnpg \
     df-pv \
@@ -46,82 +48,4 @@ install_k8s_lite() {
     neat \
     stern \
     view-secret
-}
-
-install_iac_lite() {
-  # homebrew/core stopped at terraform 1.5.7, the last release before the
-  # license change: HashiCorp's tap has the current ones. Naming the formula
-  # with its tap is what makes Homebrew add (and trust) the tap.
-  printf "\n\n${red}[devops/iac] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew_leave_core terraform
-  brew install --formula \
-    ansible \
-    hashicorp/tap/terraform
-}
-
-install_misc_lite() {
-  printf "\n\n${red}[devops/misc] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    sshpass
-}
-
-install_lite_setup() {
-  devops_wants k8s && install_k8s_lite
-  devops_wants iac && install_iac_lite
-  devops_wants misc && install_misc_lite
-  return 0
-}
-
-
-install_k8s_full() {
-  printf "\n\n${red}[devops/k8s] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    argo \
-    argocd \
-    chart-testing \
-    k9s \
-    kind \
-    velero
-}
-
-install_iac_full() {
-  printf "\n\n${red}[devops/iac] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    ansible-lint
-}
-
-install_cloud_full() {
-  printf "\n\n${red}[devops/cloud] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    scw
-}
-
-install_misc_full() {
-  printf "\n\n${red}[devops/misc] =>${no_color} Install homebrew packages (cli)\n\n"
-  brew install --formula \
-    act \
-    actionlint \
-    coder/coder/coder \
-    k6 \
-    mkcert \
-    oras \
-    teleport \
-    yamllint
-}
-
-install_additional_setup() {
-  devops_wants k8s && install_k8s_full
-  devops_wants iac && install_iac_full
-  devops_wants cloud && install_cloud_full
-  devops_wants misc && install_misc_full
-  return 0
-}
-
-
-# Install lite setup
-install_lite_setup
-
-# Install full setup (the default, -l of the setup script turns it off)
-if [ "${FULL_MODE_SETUP:-true}" = "true" ]; then
-  install_additional_setup
 fi
