@@ -73,7 +73,9 @@ ensure_mise() {
 # Add mise's apt repository, signed-by its key, then install mise from it. The
 # key is only trusted when it is the one key with the published fingerprint.
 install_mise_apt() (
-  local tmp fingerprints keyring=/etc/apt/keyrings/mise-archive-keyring.asc
+  local fingerprints keyring=/etc/apt/keyrings/mise-archive-keyring.asc
+  # Not local: bash 3.2 drops a function's locals before the EXIT trap of its
+  # subshell runs, and the subshell keeps these variables to itself anyway.
   tmp="$(mktemp -d)"
   trap 'rm -rf "$tmp"' EXIT
   # gpg is one of the commons, but a profile can run on its own

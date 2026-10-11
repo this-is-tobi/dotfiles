@@ -150,16 +150,25 @@ confirm_or_exit() {
   esac
 }
 
-install_clt() {
+# A subshell, so that its EXIT trap removes the flag file however the install
+# ends: left behind, it keeps softwareupdate offering the Command Line Tools.
+install_clt() (
+  local prod
+  # Not local: bash 3.2 drops a function's locals before the EXIT trap of its
+  # subshell runs, and the subshell keeps these variables to itself anyway.
+  flag_file="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
   printf "\n\n${red}Optional.${no_color} Installs Command Line Tools for Xcode from softwareupdate...\n\n"
   # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
-  local flag_file="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
   touch "$flag_file"
-  PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-  sudo softwareupdate -i "$PROD" --verbose
-  rm -f "$flag_file"
-  printf "\nCommand Line Tools version installed :\n%s\n\n" "$PROD"
-}
+  trap 'rm -f "$flag_file"' EXIT
+  prod="$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')" || true
+  if [ -z "$prod" ]; then
+    printf "Error: softwareupdate lists no Command Line Tools to install. Install them with 'xcode-select --install', then run this script again.\n" >&2
+    exit 1
+  fi
+  sudo softwareupdate -i "$prod" --verbose
+  printf "\nCommand Line Tools version installed :\n%s\n\n" "$prod"
+)
 
 install_homebrew() {
   printf "\n\n${red}Optional.${no_color} Installs homebrew...\n\n"
