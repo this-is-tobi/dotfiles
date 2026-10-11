@@ -14,6 +14,7 @@ lsfn() {
 		dks
 		kbp
 		randompass
+		secrets
 		timestampd
 		timestampe
 		tools
@@ -163,6 +164,32 @@ randompass() {
 			echo "$password"
 			break
 		done
+		;;
+	esac
+}
+
+secrets() {
+	case "$1" in
+	-h | --help)
+		printf "Description:\n"
+		printf "  Load secrets from the rta store (rta kv) into this shell.\n\n"
+		printf "Usage:\n"
+		printf "  secrets   export the rta keys named in DOTFILES_RTA_KEYS (set it in secrets.env),\n"
+		printf "            asking for the passphrase when the store is locked with one.\n"
+		;;
+	*)
+		if ! command -v rta >/dev/null 2>&1; then
+			echo "rta is not installed" >&2
+			return 1
+		fi
+		if [ -z "$DOTFILES_RTA_KEYS" ]; then
+			echo "DOTFILES_RTA_KEYS is empty: list the rta kv keys to export in ~/.config/dotfiles/secrets.env" >&2
+			return 1
+		fi
+		local rta_env
+		rta_env="$(rta kv env ${=DOTFILES_RTA_KEYS})" || return 1
+		eval "$rta_env"
+		echo "loaded: $DOTFILES_RTA_KEYS"
 		;;
 	esac
 }

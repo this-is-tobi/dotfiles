@@ -279,6 +279,20 @@ for src in "${DOT_FILES[@]}"; do
 done
 
 
+# Backup rta secrets store (only the encrypted store: kv.age and who can open it)
+RTA_DATA="${RTA_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/rta}"
+if [ -f "$RTA_DATA/kv.age" ]; then
+  printf "\n${red}${i}.${no_color} Backup rta secrets store\n\n"
+  ((i++))
+
+  make_dir "${BACKUP_DIR}/rta"
+  for name in kv.age kv.recipients; do
+    [ -e "$RTA_DATA/$name" ] || continue
+    safe_rclone copyto "$RTA_DATA/$name" "${BACKUP_DIR}/rta/$name" "${RCLONE_ARGS[@]}"
+  done
+fi
+
+
 # Backup home directory
 printf "\n${red}${i}.${no_color} Backup home directory\n\n"
 ((i++))
