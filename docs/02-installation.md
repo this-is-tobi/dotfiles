@@ -225,7 +225,7 @@ RUN ... && DEVOPS_CATEGORIES=k8s ./setup/setup-debian.sh -l -p devops
 - `~/.zshrc`, the oh-my-zsh theme, `~/.gitconfig`, `~/.continue/` and everything under `~/.config/` (cheat, dotfiles, eslint-fallback, gh-dash, lazygit, mise, nvim)
 - `~/.gitconfig.local`, created once and never overwritten: it carries `user.name`, `user.email` and the signing settings over from an existing `~/.gitconfig`, otherwise it asks for them (terminal only)
 - `~/.config/dotfiles/secrets.env`, created once from `secrets.env.example` (mode `600`) and never overwritten
-- `~/eslint.config.mjs`, the home-level ESLint fallback, then `npm install` in `~/.config/eslint-fallback`, which only runs when `npm` is on `PATH` (the `js` profile installs it)
+- `~/eslint.config.mjs`, the home-level ESLint fallback, then `npm ci --ignore-scripts` in `~/.config/eslint-fallback`, which only runs when `npm` is on `PATH` (the `js` profile installs it): it installs the exact versions of the committed `package-lock.json` without running the dependencies' install scripts, and is skipped when `node_modules` already comes from that lockfile. After a change to its `package.json`, regenerate the lockfile in `dotfiles/.config/eslint-fallback` with `npm install --package-lock-only --ignore-scripts`
 - The VS Code user `settings.json` (merged: what you added stays) and `mcp.json` plus the recommended extensions that are missing, when the `code` command is on `PATH` (Debian also handles `code-server`)
 - `~/.claude/settings.json`, merged rather than copied (after `rtk init -g --auto-patch` when rtk is installed), then the Claude Code and Copilot instructions and plugins from the tools repository (pinned with `TOOLS_REF`) and the Claude Code MCP servers when `claude` is on `PATH`
 
