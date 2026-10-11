@@ -10,21 +10,8 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 
 # shellcheck source=../../helpers/mise.sh
 . "$SCRIPT_PATH/helpers/mise.sh"
-
-# Debian mirrors occasionally fail a fetch mid-run (transient DNS, a mirror
-# rotating out behind a round-robin, or a proxy hiccup in CI); retrying picks a
-# fresh connection and usually clears it.
-apt_install() {
-  local attempt
-  for attempt in 1 2 3 4 5; do
-    if sudo apt update && sudo apt install -y "$@"; then
-      return 0
-    fi
-    printf "\n${red}[devops] =>${no_color} apt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
-    sleep 10
-  done
-  return 1
-}
+# shellcheck source=../../helpers/apt.sh
+. "$SCRIPT_PATH/helpers/apt.sh"
 
 # Optionally restrict which tool categories get installed, e.g. for a
 # container image that only needs Kubernetes tooling:
@@ -168,6 +155,7 @@ install_misc_full() {
     . /etc/os-release
     echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/${ID?} ${VERSION_CODENAME?} ${TELEPORT_CHANNEL?}" \
       | sudo tee /etc/apt/sources.list.d/teleport.list > /dev/null
+    apt_sources_changed
     apt_install teleport
   fi
 }

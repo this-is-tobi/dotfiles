@@ -169,7 +169,7 @@ Apart from the prompts below, the setup scripts run unattended, which makes them
 - **macOS**: a missing Command Line Tools or Homebrew install is confirmed with a `y`/`N` question. Without a terminal the script exits with status 1 and an error instead of asking.
 - **`-d`**: when `~/.gitconfig.local` does not exist yet and no identity can be carried over from an existing `~/.gitconfig`, the script asks for your Git name and email. Without a terminal it prints the `git config --file ~/.gitconfig.local ...` commands to run and carries on.
 
-oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt install -y`.
+oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt-get install -y` and `DEBIAN_FRONTEND=noninteractive` (a package that asks a configuration question takes the default answer). The package lists are refreshed once per run, and again after a profile adds an apt repository (Docker, Teleport).
 
 #### Teleport Version (DevOps Profile)
 

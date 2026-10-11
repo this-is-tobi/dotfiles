@@ -14,21 +14,8 @@ SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 ; pwd -P )"
 . "$SCRIPT_PATH/helpers/remote.sh"
 # shellcheck source=../../helpers/fonts.sh
 . "$SCRIPT_PATH/helpers/fonts.sh"
-
-# Debian mirrors occasionally fail a fetch mid-run (transient DNS, a mirror
-# rotating out behind a round-robin, or a proxy hiccup in CI); retrying picks a
-# fresh connection and usually clears it.
-apt_install() {
-  local attempt
-  for attempt in 1 2 3 4 5; do
-    if sudo apt update && sudo apt install -y "$@"; then
-      return 0
-    fi
-    printf "\n${red}[base] =>${no_color} apt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
-    sleep 10
-  done
-  return 1
-}
+# shellcheck source=../../helpers/apt.sh
+. "$SCRIPT_PATH/helpers/apt.sh"
 
 
 install_bat_extras() (
@@ -102,6 +89,7 @@ install_lite_setup() {
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${docker_distro} ${docker_codename} stable" \
       | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    apt_sources_changed
     apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   fi
 

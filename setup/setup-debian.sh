@@ -6,21 +6,6 @@ set -eo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
-# Retry apt install a few times; Debian mirrors occasionally fail a fetch
-# mid-run (transient DNS, a mirror rotating out behind a round-robin, or a
-# proxy hiccup in CI) and a retry picks a fresh connection.
-apt_install() {
-  local attempt
-  for attempt in 1 2 3 4 5; do
-    if sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y "$@"; then
-      return 0
-    fi
-    printf "\napt install failed (attempt %s/5), retrying in 10s...\n\n" "$attempt"
-    sleep 10
-  done
-  return 1
-}
-
 # Console step increment
 i=1
 
@@ -37,6 +22,8 @@ fi
 . "$SCRIPT_PATH/helpers/files.sh"
 # shellcheck source=helpers/remote.sh
 . "$SCRIPT_PATH/helpers/remote.sh"
+# shellcheck source=helpers/apt.sh
+. "$SCRIPT_PATH/helpers/apt.sh"
 
 # Default
 INSTALL_AI="false"
@@ -141,7 +128,7 @@ export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 # VM) may not have it yet; anyone else has to install it first.
 if ! command -v sudo >/dev/null 2>&1; then
   if [ "$(id -u)" -eq 0 ]; then
-    apt-get update && apt-get install -y sudo
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
   else
     printf "Error: sudo is required but not installed. Install it as root first (apt install sudo).\n" >&2
     exit 1
