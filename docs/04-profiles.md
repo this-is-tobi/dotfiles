@@ -291,6 +291,15 @@ Use lite mode (`-l`) to install only essential tools, then add specific tools ma
 brew install <additional-tool>
 ```
 
+### Running One Profile on Its Own
+
+A profile script can also be run directly, without the commons and oh-my-zsh steps of the setup script. It installs mise first when the profile needs it, and runs in full mode unless `FULL_MODE_SETUP=false` asks for lite mode:
+
+```sh
+./setup/profiles/osx/setup-devops.sh
+FULL_MODE_SETUP=false DEVOPS_CATEGORIES=k8s ./setup/profiles/debian/setup-devops.sh
+```
+
 ### Package Sources
 
 - **homebrew** - macOS package manager (CLI tools, via formulae)
