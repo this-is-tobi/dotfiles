@@ -26,3 +26,35 @@ run_remote() {
   rm -f "$tmp"
   return "$status"
 }
+
+# sha256_of <file>: print the sha256 of a file (sha256sum on Debian, shasum on macOS).
+sha256_of() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | cut -d ' ' -f 1
+  else
+    shasum -a 256 "$1" | cut -d ' ' -f 1
+  fi
+}
+
+# fetch_verified <url> <sha256> <file>: download url to file (mode 644), only
+# when the download has the expected sha256. Otherwise file is left as it was.
+#
+# For files fetched from a pinned version: a moved tag or a rewritten file is
+# refused instead of being installed.
+fetch_verified() {
+  local url="$1" expected="$2" file="$3" tmp actual
+  tmp="$(mktemp "$(dirname "$file")/.$(basename "$file").XXXXXX")"
+  if ! curl -fsSL "$url" -o "$tmp"; then
+    rm -f "$tmp"
+    printf "Error: could not download %s\n" "$url" >&2
+    return 1
+  fi
+  actual="$(sha256_of "$tmp")"
+  if [ "$actual" != "$expected" ]; then
+    rm -f "$tmp"
+    printf "Error: %s does not have the expected sha256 (expected %s, got %s)\n" "$url" "$expected" "$actual" >&2
+    return 1
+  fi
+  chmod 644 "$tmp"
+  mv -f "$tmp" "$file"
+}
