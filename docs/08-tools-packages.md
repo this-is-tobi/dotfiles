@@ -115,6 +115,10 @@ IaC and configuration management (DevOps profile):
 | ansible      | Configuration management | .yml playbooks | homebrew/uv   |
 | ansible-lint | Ansible linter           | -              | homebrew/uv   |
 
+On macOS terraform (and vault, in the SecOps profile) come from HashiCorp's
+Homebrew tap, `hashicorp/tap`: homebrew/core no longer updates them since their
+license change.
+
 ### Cloud Platform CLIs
 
 Cloud provider tools (DevOps profile):
