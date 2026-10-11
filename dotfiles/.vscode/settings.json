@@ -258,15 +258,17 @@
     "uptime": true,
     "timeout": false, // runs any command it is given
     // ── text processing ───────────────────────────────────────────────────
+    // Short options can be grouped (-nf is -n -f) and long ones written --opt=value: the
+    // guards below match every spelling, not only the separate one.
     "awk": true,
-    "/^awk\\b.*(system|getline|ENVIRON|\\s-f\\b|--file|@include|@load|\\||>>)/": false, // no shell, file reads, environment or pipes from inside awk
-    "/^sed\\b.*-i\\b/": false, // block in-place edits
+    "/^awk\\b.*(system|getline|ENVIRON|@include|@load|\\||>>|\\s-(?![Fv\\s]|$|-(\\s|$)))/": false, // no shell, file reads, environment or pipes from inside awk; no option but -F and -v (gawk's -f, -i inplace, -l, -o, -p and -d read, load or write files)
+    "/^sed\\b.*\\s(-[A-Za-z]*[iI]|--in-place)/": false, // block in-place edits
     "jq": true,
-    "/^jq\\b.*(\\$ENV|\\benv\\b|--rawfile|--slurpfile|--argfile|\\s-f\\b|--from-file|input_filename)/": false, // no environment or file reads
+    "/^jq\\b.*(\\$ENV|\\benv\\b|--rawfile|--slurpfile|--argfile|\\s-[A-Za-z]*[fL]|--from-file|--library-path|input_filename|\\b(import|include)\\s*\")/": false, // no environment, file or module reads
     "yq": true,
-    "/^yq\\b.*(\\benv\\(|strenv\\(|\\bload\\(|load_str\\(|\\s-i\\b|--inplace|--from-file)/": false, // no environment, file loads or in-place edits
+    "/^yq\\b.*(\\benv\\(|strenv\\(|\\bload\\(|load_str\\(|envsubst|\\s-[CMeijnNPrv0hV]*[is]|--inplace|--split-exp|--from-file)/": false, // no environment, file loads, in-place edits or files written per result
     "sort": true,
-    "/^sort\\b.*-(o|S)\\b/": false,
+    "/^sort\\b.*\\s(-[A-Za-z]*[oS]|--(o|bu))/": false, // no output file or buffer size
     // ── search / find ─────────────────────────────────────────────────────
     "/^find\\b.*-(delete|exec|execdir|fprint|fprintf|fls|ok|okdir)\\b/": false,
     "/^grep\\b.*-(f|P)\\b/": false,
@@ -282,23 +284,44 @@
     "git log": true,
     "git show": true,
     "git diff": true,
+    "/^git\\b.*\\s--output(=|\\s|$)/": false, // git log|show|diff --output writes a file
     // ── kubernetes: read-only verbs, secret values are never printed ─────
-    "/^kubectl\\s+(get|describe|logs|top|explain|api-resources|api-versions|version|cluster-info|events|diff|auth\\s+can-i|config\\s+(view|get-contexts|current-context)|rollout\\s+(status|history))\\b/": true,
-    "/^kubectl\\b(?=.*\\bsecrets?\\b)(?=.*(\\s-o\\s*(yaml|json|jsonpath|go-template|template)|--output[= ]\\s*(yaml|json|jsonpath|go-template|template)))/": false,
-    "/^kubectl\\b.*\\s--raw\\b/": false,
+    "/^kubectl\\s+(get|describe|logs|top|explain|api-resources|api-versions|version|cluster-info|events|diff|auth\\s+can-i|config\\s+(view|get-contexts|current-context)|rollout\\s+(status|history))(?=\\s|$)/": true,
+    // a quote, an escape, a variable or a glob can spell what the rules below look for
+    // (sec''ret, -"o", $KIND, secre?), so a kubectl command that has one asks
+    "/^kubectl\\b.*['\"\\\\$*?[]/": false,
+    // a Secret, named or read from files (-f, -k), printed in any output format but name
+    // and wide: -o yaml, -oyaml, -o=json, -Ao json, --output jsonpath=..., custom-columns,
+    // go-template-file, --template
+    "/^kubectl\\b(?=.*(\\bsecrets?\\b|\\s-[a-z]*[fk]|\\s--(filename|kustomize)\\b))(?=.*\\s(-[a-z]*o(=|\\s+)?|--output(=|\\s+))(?![\\s=]|(name|wide)(\\s|$))|.*\\s--template\\b)/i": false,
+    // the raw API, another kubeconfig (its exec plugin runs a command) or API server (it
+    // receives your credentials: --server, -s), a cluster dump written to disk
+    "/^kubectl\\b.*\\s(--(raw|kubeconfig|server)(=|\\s|$)|-[AfhpqRw]*s|cluster-info\\s+dump\\b)/": false,
     // ── helm: query and template only (helm get values can print secrets) ─
-    "/^helm\\s+(list|ls|status|history|search|show|template|lint|version|env|repo\\s+list|get\\s+(notes|metadata))\\b/": true,
+    // helm env is left out: it prints HELM_KUBETOKEN when that is set
+    "/^helm\\s+(list|ls|status|history|search|show|template|lint|version|repo\\s+list|get\\s+(notes|metadata))(?=\\s|$)/": true,
+    // helm status -o json|yaml prints the whole release, values and rendered Secrets included
+    "/^helm\\b(?=.*\\sstatus\\b)(?=.*\\s(-[a-z]*o(=|\\s+)?|--output(=|\\s+))(?![\\s=]|table(\\s|$)))/i": false,
+    // a post-renderer runs a program; another kubeconfig or API server, as for kubectl
+    "/^helm\\b.*\\s--(post-renderer|kubeconfig|kube-apiserver)/": false,
     // ── go: build, test and inspect (go run, get and install ask) ─────────
     "/^go\\s+(version|env|list|vet|fmt|build|test|doc|mod\\s+(graph|why|verify))\\b/": true,
+    // flags that run another program (-toolexec, -vettool, -exec, an external linker), and
+    // go env -w|-u, which changes what every later go command runs
+    "/^go\\b.*(\\s[^\\w\\s]*-[^\\w\\s]*(toolexec|vettool|exec)\\b|extld)|^go\\s+env\\b.*\\s[^\\w\\s]*-[^\\w\\s]*[wu]\\b/": false,
     // ── linters ───────────────────────────────────────────────────────────
     "yamllint": true,
     // ── shell injection guards ────────────────────────────────────────────
     "/\\(.+\\)/": { "approve": false, "matchCommandLine": true },
     "/\\{.+\\}/": { "approve": false, "matchCommandLine": true },
     "/`.+`/": { "approve": false, "matchCommandLine": true },
+    // a word split by quotes or escapes (--out''put, ENV""IRON) or an option written inside
+    // quotes ("--output=x") reads differently to the shell than to the rules above
+    "/^(git|helm|go|sort|sed|find|awk|jq|yq)\\b.*(\\w|\\s-+)['\"\\\\]+\\w/": false,
+    "/^(git|helm|sort|sed|find|awk|jq|yq)\\b.*\\s[$'\"\\\\]+-/": false,
     // ── secrets: a command that names a secret file or variable asks first ─
-    "/(^|[\\s/=\\'\"])\\.(env(\\.\\S+)?|netrc|npmrc|pypirc|git-credentials|vault-token)([\\s\\'\"]|$)/": { "approve": false, "matchCommandLine": true },
-    "/(^|[\\s/=\\'\"])(\\.ssh|\\.aws|\\.gnupg|\\.kube|\\.docker/config\\.json|\\.config/gh/hosts\\.yml|secrets\\.env|id_(rsa|dsa|ecdsa|ed25519)|[^\\s/\\'\"]+\\.(pem|key|p12|pfx))([/\\s\\'\"]|$)/": { "approve": false, "matchCommandLine": true },
+    "/(?<![\\w.-])\\.(env([._-][\\w.-]*)?|netrc|npmrc|pypirc|git-credentials|vault-token|claude\\.json)(?![\\w.-])/": { "approve": false, "matchCommandLine": true },
+    "/(?<![\\w.-])(\\.ssh|\\.aws|\\.gnupg|\\.kube|\\.docker\\/config\\.json|\\.config\\/(gh\\/hosts\\.yml|argocd)|kv\\.identity|secrets\\.env|secrets(?=\\/)|id_(rsa|dsa|ecdsa|ed25519)|[\\w.-]+\\.(pem|key|p12|pfx)|\\/proc\\/[^\\s\\/]+\\/environ)(?![\\w.-])/": { "approve": false, "matchCommandLine": true },
     "/\\$\\{?[A-Za-z0-9_]*(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|CREDENTIAL|PRIVATE_?KEY)/i": { "approve": false, "matchCommandLine": true },
     // ── always blocked: destructive / remote access / privilege ───────────
     "rm": false,
