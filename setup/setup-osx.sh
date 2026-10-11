@@ -345,8 +345,12 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
 
   # Install .claude config
   mkdir -p "$HOME/.claude"
+  # rtk writes RTK.md and its CLAUDE.md reference. --no-patch leaves settings.json
+  # alone: the repository's settings carry the rtk hook (a no-op without rtk), and
+  # the bare hook --auto-patch adds would be dropped by the merge below on every
+  # run, with a backup each time. Its stdout only repeats that hook as a manual step.
   if [ -x "$(command -v rtk)" ]; then
-    rtk init -g --auto-patch
+    rtk init -g --no-patch > /dev/null
   fi
   # Merged, not copied: Claude Code and /plugin write into this file too. The repository
   # owns hooks, attribution, plugins and the deny rules; the rest stays as it is.
