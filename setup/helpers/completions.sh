@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Install the zsh completion of every supported CLI found on PATH into
+# ~/.oh-my-zsh/completions.
+#
+# zsh runs every file of that directory, so a completion is only replaced once
+# its new content is complete: a command or download that fails keeps the
+# previous file instead of leaving an empty or truncated one. The few scripts
+# that are downloaded are pinned to a release or a revision and checked against
+# a sha256.
+
+set -euo pipefail
+
 # Colorize terminal
 red='\e[0;31m'
 no_color='\033[0m'
@@ -10,195 +21,126 @@ no_color='\033[0m'
 # --show-toplevel` would fail)
 REPO_ROOT="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
 
-# Set completion directory
-export COMPLETION_DIR=$HOME/.oh-my-zsh/completions
+# shellcheck source-path=SCRIPTDIR source=remote.sh
+. "$REPO_ROOT/setup/helpers/remote.sh"
+
+COMPLETION_DIR="$HOME/.oh-my-zsh/completions"
 
 # Most tools below are mise-managed, so their shims must be resolvable when
 # this runs standalone (e.g. `setup-debian.sh -c` without a profile).
 export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 
+# kubectx and kubens ship no completion command: their scripts live in the repository
+KUBECTX_REF="v0.11.0"
+# ollama turns cobra's completion command off (ollama/ollama#4690), so this
+# community script is used, at the revision that was reviewed
+OLLAMA_GIST_REVISION="5a6a44efc6a07b6f937dbc596d9d7385b297dda8"
 
-# Create completion directory if not exists
-[ ! -d "$COMPLETION_DIR" ] && mkdir -p "$COMPLETION_DIR"
+mkdir -p "$COMPLETION_DIR"
 
+failed=0
 
-# Install argo completion
-[ -x "$(command -v argo)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install argo completion\n" \
-  && argo completion zsh > $COMPLETION_DIR/_argo
+has() {
+  command -v "$1" >/dev/null 2>&1
+}
 
+announce() {
+  printf "\n${red}[completion] =>${no_color} Install %s completion\n" "$1"
+}
 
-# Install argocd completion
-[ -x "$(command -v argocd)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install argocd completion\n" \
-  && argocd completion zsh > $COMPLETION_DIR/_argocd
+warn() {
+  printf "Warning: %s\n" "$1" >&2
+  failed=$((failed + 1))
+}
 
+# from_command <file> <command...>: the completion a tool prints itself. The
+# temporary file starts with a dot, so compinit never loads a leftover one.
+from_command() {
+  local file="$1" tmp
+  shift
+  has "$1" || return 0
+  announce "$1"
+  tmp="$(mktemp "$COMPLETION_DIR/.$file.XXXXXX")"
+  if "$@" < /dev/null > "$tmp" && [ -s "$tmp" ]; then
+    chmod 644 "$tmp"
+    mv -f "$tmp" "$COMPLETION_DIR/$file"
+  else
+    rm -f "$tmp"
+    warn "'$*' failed, $file was not updated"
+  fi
+}
 
-# Install chart-testing completion
-[ -x "$(command -v ct)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install chart-testing completion\n" \
-  && ct completion zsh > $COMPLETION_DIR/_ct
+# from_url <tool> <file> <url> <sha256>: a pinned download, for a tool that has
+# no completion command.
+from_url() {
+  local tool="$1" file="$2" url="$3" sha256="$4"
+  has "$tool" || return 0
+  announce "$tool"
+  fetch_verified "$url" "$sha256" "$COMPLETION_DIR/$file" || warn "$file was not updated"
+}
 
-
-# Install cheat completion
-[ -x "$(command -v cheat)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install cheat completion\n" \
-  && cheat --completion zsh > $COMPLETION_DIR/_cheat
-
-
-# Install cobra completion
-[ -x "$(command -v cobra-cli)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install cobra completion\n" \
-  && cobra-cli completion zsh > $COMPLETION_DIR/_cobra-cli
-
-
-# Install docker completion
-[ -x "$(command -v docker)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install docker completion\n" \
-  && docker completion zsh > $COMPLETION_DIR/_docker
-
-
-# Install gitleaks completion
-[ -x "$(command -v gitleaks)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install gitleaks completion\n" \
-  && gitleaks completion zsh > $COMPLETION_DIR/_gitleaks
-
-
-# Install glow completion
-[ -x "$(command -v glow)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install glow completion\n" \
-  && glow completion zsh > $COMPLETION_DIR/_glow
-
-
-# Install helm completion
-[ -x "$(command -v helm)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install helm completion\n" \
-  && helm completion zsh > $COMPLETION_DIR/_helm
-
-
-# Install kind completion
-[ -x "$(command -v kind)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kind completion\n" \
-  && kind completion zsh > $COMPLETION_DIR/_kind
+# from_repository <tool> <file>: a completion kept in this repository.
+from_repository() {
+  local tool="$1" file="$2" tmp
+  has "$tool" || return 0
+  announce "$tool"
+  tmp="$(mktemp "$COMPLETION_DIR/.$file.XXXXXX")"
+  cp "$REPO_ROOT/dotfiles/.oh-my-zsh/completions/$file" "$tmp"
+  chmod 644 "$tmp"
+  mv -f "$tmp" "$COMPLETION_DIR/$file"
+}
 
 
-# Install kubebuilder completion
-[ -x "$(command -v kubebuilder)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubebuilder completion\n" \
-  && kubebuilder completion zsh > $COMPLETION_DIR/_kubebuilder
+# <completion file> <command that prints it>; skipped when the command is not on PATH
+while read -r -a words <&3; do
+  [ "${#words[@]}" -eq 0 ] && continue
+  from_command "${words[@]}"
+done 3<<'EOF'
+_argo              argo completion zsh
+_argocd            argocd completion zsh
+_ct                ct completion zsh
+_cheat             cheat --completion zsh
+_cobra-cli         cobra-cli completion zsh
+_docker            docker completion zsh
+_gitleaks          gitleaks completion zsh
+_glow              glow completion zsh
+_helm              helm completion zsh
+_kind              kind completion zsh
+_kubebuilder       kubebuilder completion zsh
+_kubectl           kubectl completion zsh
+_kubectl-cnpg      kubectl-cnpg completion zsh
+_kubectl-kubescape kubectl-kubescape completion zsh
+_kubectl-stern     kubectl-stern --completion zsh
+_kustomize         kustomize completion zsh
+_kyverno           kyverno completion zsh
+_operator-sdk      operator-sdk completion zsh
+_pnpm              pnpm completion zsh
+_mise              mise completion zsh
+_teleport          teleport --completion-script-zsh
+_tbot              tbot --completion-script-zsh
+_tctl              tctl --completion-script-zsh
+_tsh               tsh --completion-script-zsh
+_trivy             trivy completion zsh
+_velero            velero completion zsh
+_yq                yq completion zsh
+EOF
+
+from_repository kubectl-view_secret _kubectl-view_secret
+
+from_url kubectx _kubectx \
+  "https://raw.githubusercontent.com/ahmetb/kubectx/refs/tags/$KUBECTX_REF/completion/_kubectx.zsh" \
+  410b5315f7a91b1c210cbc86c9cc4dda065f2ac180b490f3ebbf7e764ab6b470
+from_url kubens _kubens \
+  "https://raw.githubusercontent.com/ahmetb/kubectx/refs/tags/$KUBECTX_REF/completion/_kubens.zsh" \
+  084c226035af951e582020b2bc055a6521929ee54d8942b4d19577e5d45fd8f7
+from_url ollama _ollama \
+  "https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/$OLLAMA_GIST_REVISION/_ollama.zsh" \
+  69feeb16c0481d741a679ab6335a9e994c85602a76d83c6449931fc7e33e9b90
 
 
-# Install kubectl completion
-[ -x "$(command -v kubectl)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubectl completion\n" \
-  && kubectl completion zsh > $COMPLETION_DIR/_kubectl
-
-
-# Install kubectl-cnpg completion
-[ -x "$(command -v kubectl-cnpg)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubectl-cnpg completion\n" \
-  && kubectl-cnpg completion zsh > $COMPLETION_DIR/_kubectl-cnpg
-
-
-# Install kubectl-kubescape completion
-[ -x "$(command -v kubectl-kubescape)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubectl-kubescape completion\n" \
-  && kubectl-kubescape completion zsh > $COMPLETION_DIR/_kubectl-kubescape
-
-
-# Install kubectl-stern completion
-[ -x "$(command -v kubectl-stern)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubectl-stern completion\n" \
-  && kubectl-stern --completion zsh > $COMPLETION_DIR/_kubectl-stern
-
-
-# Install kubectl-view_secret completion
-[ -x "$(command -v kubectl-view_secret)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubectl-view_secret completion\n" \
-  && cp $REPO_ROOT/dotfiles/.oh-my-zsh/completions/_kubectl-view_secret $COMPLETION_DIR/_kubectl-view_secret
-
-
-# Install kubens completion
-[ -x "$(command -v kubens)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubens completion\n" \
-  && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubens.zsh > $COMPLETION_DIR/_kubens
-
-
-# Install kubens completion
-[ -x "$(command -v kubectx)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kubectx completion\n" \
-  && curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/refs/heads/master/completion/_kubectx.zsh > $COMPLETION_DIR/_kubectx
-
-
-# Install kustomize completion
-[ -x "$(command -v kustomize)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kustomize completion\n" \
-  && kustomize completion zsh > $COMPLETION_DIR/_kustomize
-
-
-# Install kyverno completion
-[ -x "$(command -v kyverno)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install kyverno completion\n" \
-  && kyverno completion zsh > $COMPLETION_DIR/_kyverno
-
-
-# Install ollama completion
-[ -x "$(command -v ollama)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install ollama completion\n" \
-  && curl -fsSL -o $COMPLETION_DIR/_ollama https://gist.githubusercontent.com/obeone/9313811fd61a7cbb843e0001a4434c58/raw/_ollama.zsh
-
-
-# Install operator-sdk completion
-[ -x "$(command -v operator-sdk)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install operator-sdk completion\n" \
-  && operator-sdk completion zsh > $COMPLETION_DIR/_operator-sdk
-
-
-# Install pnpm completion
-[ -x "$(command -v pnpm)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install pnpm completion\n" \
-  && pnpm completion zsh > $COMPLETION_DIR/_pnpm
-
-
-# Install mise completion
-[ -x "$(command -v mise)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install mise completion\n" \
-  && mise completion zsh > $COMPLETION_DIR/_mise
-
-
-# Install teleport completion
-[ -x "$(command -v teleport)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install teleport completion\n" \
-  && teleport --completion-script-zsh > $COMPLETION_DIR/_teleport
-[ -x "$(command -v tbot)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install tbot completion\n" \
-  && tbot --completion-script-zsh > $COMPLETION_DIR/_tbot
-[ -x "$(command -v tctl)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install tctl completion\n" \
-  && tctl --completion-script-zsh > $COMPLETION_DIR/_tctl
-[ -x "$(command -v tsh)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install tsh completion\n" \
-  && tsh --completion-script-zsh > $COMPLETION_DIR/_tsh
-
-
-# Install trivy completion
-[ -x "$(command -v trivy)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install trivy completion\n" \
-  && trivy completion zsh > $COMPLETION_DIR/_trivy
-
-
-# Install velero completion
-[ -x "$(command -v velero)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install velero completion\n" \
-  && velero completion zsh > $COMPLETION_DIR/_velero
-
-
-# Install yq completion
-[ -x "$(command -v yq)" ] \
-  && printf "\n${red}[completion] =>${no_color} Install yq completion\n" \
-  && yq completion zsh > $COMPLETION_DIR/_yq
-
-
-# The checks above end with `[ -x ... ] && ...`: a missing tool is fine, so
-# do not let the last one decide the exit status the callers see
+# A completion that could not be refreshed is not worth failing the setup over:
+# the previous file (if any) is still there, and a re-run retries it
+if [ "$failed" -gt 0 ]; then
+  printf "\n%s completion(s) could not be installed, see the warnings above\n" "$failed" >&2
+fi
 exit 0
