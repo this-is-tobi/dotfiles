@@ -214,7 +214,7 @@ Provides up-to-date documentation access for libraries and frameworks.
   "kubernetes": {
     "type": "stdio",
     "command": "npx",
-    "args": ["-y", "kubernetes-mcp-server@latest"]
+    "args": ["-y", "kubernetes-mcp-server@<version>"]
   }
 }
 ```
@@ -226,7 +226,7 @@ Provides Kubernetes cluster management (pods, resources, logs, events). It runs 
   "argocd": {
     "type": "stdio",
     "command": "npx",
-    "args": ["-y", "argocd-mcp@latest", "stdio"],
+    "args": ["-y", "argocd-mcp@<version>", "stdio"],
     "env": {
       "ARGOCD_BASE_URL": "${input:argocd-base-url}",
       "ARGOCD_API_TOKEN": "${input:argocd-api-token}"
@@ -244,11 +244,13 @@ Lists, syncs and inspects Argo CD applications.
   "microsoft/playwright-mcp": {
     "type": "stdio",
     "command": "npx",
-    "args": ["-y", "@playwright/mcp@latest"]
+    "args": ["-y", "@playwright/mcp@<version>"]
   }
 }
 ```
 Provides browser automation (navigate, click, screenshot, fill forms). It runs through `npx`.
+
+**Pinned versions:** the three `npx` servers run with your kube credentials or an API token, so each is pinned to an exact version (`<version>` above; the file has the current one) instead of `@latest`, which would run whatever was published last. [Renovate](https://docs.renovatebot.com/) proposes the updates: `renovate.json` at the root of the repository reads the `npx -y <package>@<version>` pins of this file and of `setup/helpers/claude-mcp.sh`, waits until a release is three days old (`minimumReleaseAge`) and opens one pull request per package that updates both files, never merged automatically. `config:recommended` also keeps the ESLint fallback's `package.json` up to date. Renovate only runs once its GitHub app is enabled for the repository. A re-run of the setup copies the new `mcp.json`, and `chat.mcp.autostart` restarts the servers whose configuration changed.
 
 **Secrets (`inputs`):**
 The three values above are declared in the `inputs` array of `mcp.json` as `promptString` entries (`"password": true` hides the value). A server references them with `${input:<id>}`; VS Code prompts once and stores the answer securely, so nothing has to be exported in the environment for it. See [Managing Secrets](07-ai.md#managing-secrets) for how the other tools get the same values.
