@@ -1,16 +1,31 @@
 # path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# history
-export HISTSIZE=10000
-export SAVEHIST=10000
-export HISTFILE="$HOME/.zsh_history"
-export HIST_STAMPS="yyyy-mm-dd"
+# one copy of each entry: a nested shell (or the arm/intel aliases) runs this file
+# again on top of the PATH it inherited. The scalars are flagged too, so that
+# `export PATH="...:$PATH"` also drops the duplicates.
+typeset -U PATH path FPATH fpath
 
-# locales
-export LC_ALL=en_US.UTF-8
+# history (shell variables, not exported: bash would write its history to HISTFILE)
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE="$HOME/.zsh_history"
+HIST_STAMPS="yyyy-mm-dd"
+# a command typed with a leading space is not saved
+setopt hist_ignore_space
+# nor a line that assigns or passes a credential (TOKEN=..., --password ..., Bearer ...),
+# each name in upper, lower and capitalized case. HISTORY_IGNORE applies when the
+# history file is written: the line stays in this session's history only.
+secret_names=()
+for secret_name in token secret password passwd passphrase api_key api-key apikey access_key private_key; do
+  secret_names+=("${(U)secret_name}" "$secret_name" "${(C)secret_name}")
+done
+HISTORY_IGNORE="(*(${(j:|:)secret_names})[=:]*|*--(token|secret|password|passphrase|api-key)[= ]*|*[Aa]uthorization:*|*[Bb]earer *)"
+unset secret_name secret_names
+
+# locale: LANG is the default of every LC_* category. LC_ALL would override them all,
+# including the ones set on purpose, and ssh forwards it to remote hosts (SendEnv LC_*).
 export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
 
 # config directory
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -19,7 +34,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export EDITOR='nvim'
 
 # theme (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
-ZSH_THEME="this-is-tobi" # gnzh
+ZSH_THEME="this-is-tobi" # gnzh, with kube-ps1
 
 # plugins
 plugins=(
@@ -82,10 +97,14 @@ zsh_completions_dir="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
 [ -d "$zsh_completions_dir" ] && fpath+=("$zsh_completions_dir")
 unset zsh_completions_dir
 
+# go: `go install` puts binaries in ~/go/bin, which does not change with the go
+# version. Set before mise, which otherwise points GOBIN to the bin of the active go.
+export GOBIN="$HOME/go/bin"
+export PATH="$GOBIN:$PATH"
+
 # mise (before oh-my-zsh: it provides tools some plugins look for, such as direnv on Debian)
 # `activate` puts tool versions on PATH and re-resolves them on every directory
-# change. Globals installed via npm/go land in the active tool's bin and are
-# exposed after `mise reshim`.
+# change. npm globals land in the bin of the active node.
 export PATH="$HOME/.local/bin:$PATH"
 if type mise &>/dev/null; then
   eval "$(mise activate zsh)"
@@ -149,7 +168,7 @@ alias pubip="dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '\"'"
 # GNU sed where it is installed (macOS ships BSD sed)
 command -v gsed &>/dev/null && alias sed="gsed"
 
-if [ "$(uname)" = "Darwin" ]; then
+if [[ $OSTYPE == darwin* ]]; then
   # intel/arm switch aliases for osx
   alias arm="env /usr/bin/arch -arm64 /bin/zsh --login"
   alias intel="env /usr/bin/arch -x86_64 /bin/zsh --login"
@@ -164,14 +183,14 @@ fi
 [ -f "$HOME/.config/dotfiles/functions-dso.sh" ] && source "$HOME/.config/dotfiles/functions-dso.sh"
 
 # gpg
-export GPG_TTY=$(tty)
-
-# go
-export GOBIN="$HOME/go/bin"
-export PATH="$GOBIN:$PATH"
+export GPG_TTY="$TTY"
 
 # tldr++
-export TLDR_OS=$([ "$(uname)" = Darwin ] && echo osx || echo linux)
+if [[ $OSTYPE == darwin* ]]; then
+  export TLDR_OS=osx
+else
+  export TLDR_OS=linux
+fi
 
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -180,15 +199,12 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export CHEAT_USE_FZF=true
 
 # pnpm: where `pnpm add -g` links its binaries (`pnpm setup` would append this to ~/.zshrc)
-if [ "$(uname)" = Darwin ]; then
+if [[ $OSTYPE == darwin* ]]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 else
   export PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
 fi
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+export PATH="$PNPM_HOME:$PATH"
 
 # machine-specific shell config: not part of the repository, so a setup run keeps it
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"

@@ -369,6 +369,16 @@ MY_VAR=value
 CONTEXT7_API_KEY=your_key
 ```
 
+### Locale
+
+`.zshrc` sets `LANG=en_US.UTF-8` and nothing else: every `LC_*` category follows it unless you set one yourself (for example `export LC_TIME=fr_FR.UTF-8` in `~/.zshrc.local` for dates). It does not set `LC_ALL`, which would override them all and which ssh forwards to the hosts you connect to.
+
+### PATH
+
+`.zshrc` keeps one copy of each `PATH` and `fpath` entry (`typeset -U`), so a nested shell, or the `arm`/`intel` aliases, does not stack the same directories again. A directory added in `~/.zshrc.local` with `export PATH="<dir>:$PATH"` moves to the front if it was already there.
+
+Go programs installed with `go install` land in `~/go/bin` (`GOBIN`), which is on `PATH` and does not change with the go version that mise activates. npm global packages land in the bin directory of the node version mise activates.
+
 ## Troubleshooting
 
 ### Slow Shell Startup
