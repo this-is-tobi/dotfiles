@@ -66,7 +66,10 @@ Following flags are available:
         applied to every directory copy. Keeps personal junk out of this script.
         Default is the BACKUP_EXCLUDE_FILE environment variable ('${EXCLUDE_FILE:-unset}').
 
-  -h    Print script help.\n\n"
+  -h    Print script help.
+
+Exit status: 0 when everything was copied, 2 when the backup was written but some
+items failed (it is incomplete, they are listed at the end), 1 on a usage error.\n\n"
 
 print_help() {
   printf '%b' "$TEXT_HELPER"
@@ -122,6 +125,28 @@ safe_rclone() {
   if ! rclone "$@"; then
     FAILED_ITEMS+=("$*")
     printf "\n${red}Warning:${no_color} failed to back up (see above): %s\n\n" "$*" >&2
+  fi
+}
+
+# Write a gpg export to a temp file and rename it once gpg succeeded: gpg fails
+# when pinentry cannot ask for the passphrase (cron, launchd), and that must
+# neither leave an empty key file that looks like a backup nor stop the run.
+# The failure is collected like a failed copy.
+GPG_TMP=""
+trap '[ -z "$GPG_TMP" ] || rm -f -- "$GPG_TMP"' EXIT
+gpg_export() {
+  local label="$1" dest="$2"
+  shift 2
+  GPG_TMP=$(mktemp "${dest%/*}/.export.XXXXXX")
+  if gpg "$@" > "$GPG_TMP" && [ -s "$GPG_TMP" ]; then
+    mv -f -- "$GPG_TMP" "$dest"
+    GPG_TMP=""
+    echo "$label saved to $dest (mode 600)"
+  else
+    rm -f -- "$GPG_TMP"
+    GPG_TMP=""
+    FAILED_ITEMS+=("gpg $*")
+    printf "\n${red}Warning:${no_color} failed to export (see above): gpg %s\n\n" "$*" >&2
   fi
 }
 
@@ -196,29 +221,42 @@ done
 printf "\n${red}${i}.${no_color} Export gpg keys\n\n"
 ((i++))
 
-# BACKUP_GPG_EMAIL picks the key to export; it defaults to the git identity of this machine
+# BACKUP_GPG_EMAIL picks the keys to export; it defaults to the git identity of this machine
 EMAIL="${BACKUP_GPG_EMAIL:-$(git config --get user.email 2>/dev/null || true)}"
-GPG_BACKUP_DIR="$HOME/.gnupg/backup"
+# Straight into the backup rather than ~/.gnupg: no extra copy of the private
+# key stays on the machine, and each run writes its own files, so a failed
+# export never touches the one an earlier backup holds
+GPG_BACKUP_DIR="${BACKUP_DIR}/gpg"
 
-KEY_ID=""
-[ -n "$EMAIL" ] && KEY_ID=$(gpg --list-secret-keys --keyid-format=long "$EMAIL" 2>/dev/null | grep 'sec' | awk '{print $2}' | cut -d'/' -f2) || true
-
-if [ -z "$KEY_ID" ]; then
-  echo "No GPG key to export (looked for: ${EMAIL:-no email, set BACKUP_GPG_EMAIL})"
-elif [ "$DRY_RUN" = "true" ]; then
-  echo "Dry run: would export gpg key $KEY_ID to $GPG_BACKUP_DIR"
+if [ -z "$EMAIL" ]; then
+  echo "No GPG key to export (no email: set BACKUP_GPG_EMAIL or git user.email)"
+elif ! command -v gpg >/dev/null 2>&1; then
+  echo "No GPG key to export (gpg is not installed)"
 else
-  mkdir -p "$GPG_BACKUP_DIR"
-  chmod 700 "$GPG_BACKUP_DIR"
+  # Long key IDs of the primary secret keys (field 5 of "sec" records). Every
+  # match is exported: an older key kept to decrypt old data belongs in the
+  # backup as much as the current one.
+  KEY_IDS=()
+  while IFS= read -r key_id; do
+    if [ -n "$key_id" ]; then
+      KEY_IDS+=("$key_id")
+    fi
+  done < <(gpg --list-secret-keys --with-colons -- "$EMAIL" 2>/dev/null | awk -F: '$1 == "sec" { print $5 }')
 
-  gpg --export --armor "$KEY_ID" > "$GPG_BACKUP_DIR/public-key-$KEY_ID.asc"
-  echo "Public gpg key saved to $GPG_BACKUP_DIR/public-key-$KEY_ID.asc"
-
-  ( umask 077 && gpg --export-secret-keys --armor "$KEY_ID" > "$GPG_BACKUP_DIR/private-key-$KEY_ID.asc" )
-  chmod 600 "$GPG_BACKUP_DIR/private-key-$KEY_ID.asc"
-  echo "Private gpg key saved to $GPG_BACKUP_DIR/private-key-$KEY_ID.asc (mode 600)"
-
-  echo "Backup completed for GPG key: $KEY_ID"
+  if [ "${#KEY_IDS[@]}" -eq 0 ]; then
+    echo "No GPG key to export (no secret key for: $EMAIL)"
+  elif [ "$DRY_RUN" = "true" ]; then
+    echo "Dry run: would export gpg key(s) ${KEY_IDS[*]} to $GPG_BACKUP_DIR"
+  else
+    if [ "${#KEY_IDS[@]}" -gt 1 ]; then
+      echo "${#KEY_IDS[@]} secret keys match $EMAIL, exporting each of them"
+    fi
+    mkdir -p "$GPG_BACKUP_DIR"
+    for key_id in "${KEY_IDS[@]}"; do
+      gpg_export "Public gpg key" "$GPG_BACKUP_DIR/public-key-$key_id.asc" --export --armor "$key_id"
+      gpg_export "Private gpg key" "$GPG_BACKUP_DIR/private-key-$key_id.asc" --export-secret-keys --armor "$key_id"
+    done
+  fi
 fi
 
 
@@ -362,7 +400,11 @@ if [ "$DRY_RUN" = "true" ]; then
   printf "  -> would have targeted: %s\n" "${BACKUP_DIR}"
 else
   chmod 700 "${BACKUP_DIR}"
-  printf "\n${red}Backup complete.${no_color}\n"
+  if [ "${#FAILED_ITEMS[@]}" -gt 0 ]; then
+    printf "\n${red}Backup incomplete.${no_color}\n"
+  else
+    printf "\n${red}Backup complete.${no_color}\n"
+  fi
   printf "  -> not encrypted: it holds keys and tokens, keep it private\n"
   printf "  -> location: %s\n" "${BACKUP_DIR}"
   printf "  -> size:     %s\n" "$(du -sh "${BACKUP_DIR}" | cut -f1)"
@@ -373,4 +415,7 @@ if [ "${#FAILED_ITEMS[@]}" -gt 0 ]; then
   for item in "${FAILED_ITEMS[@]}"; do
     printf "  -> %s\n" "$item"
   done
+  # Not 0, so that "backup && sync" does not push an incomplete backup, and not
+  # 1, which is a usage error or a run that stopped
+  exit 2
 fi

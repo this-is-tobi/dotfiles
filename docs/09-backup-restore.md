@@ -43,7 +43,7 @@ Both scripts copy files with [rclone](https://rclone.org), which the base profil
 
 Any other flag prints the help and exits with status 1 (there is no `-d` option: the output directory is `-o`).
 
-**Environment:** `BACKUP_GPG_EMAIL` selects the GPG key to export (default: the `user.email` of your git configuration). `BACKUP_EXCLUDE_FILE` is the default for `-x`.
+**Environment:** `BACKUP_GPG_EMAIL` selects the GPG keys to export (default: the `user.email` of your git configuration). `BACKUP_EXCLUDE_FILE` is the default for `-x`.
 
 **Examples:**
 ```sh
@@ -107,17 +107,28 @@ Any other flag prints the help and exits with status 1. `BACKUP_GPG_EMAIL` and `
 ./backup/backup-debian.sh -o /mnt/backup/dotfiles
 ```
 
+### Exit status
+
+| Status | Meaning                                                                                                             |
+| ------ | ------------------------------------------------------------------------------------------------------------------- |
+| `0`    | Everything was copied (with `-n`: listed)                                                                           |
+| `1`    | Nothing was backed up: unknown flag, missing `-x` file or unsupported system                                        |
+| `2`    | The backup was written but is incomplete: at least one copy or GPG export failed. The end of the output lists them  |
+
+A run that stops on an unexpected error, such as an output directory it cannot create, exits with the status of the command that failed, never `0`. A command chained with `&&` (like the `rclone sync` of [Automated Backups](#automated-backups)) therefore only runs after a complete backup.
+
 ## What Gets Backed Up
 
-The scripts run six steps in this order. A source that does not exist is skipped silently, and a failing copy does not stop the run: failures are listed in a warning at the end (the exit status stays `0`, so check the output when automating).
+The scripts run six steps in this order. A source that does not exist is skipped silently. A copy or a GPG export that fails does not stop the run: the next steps still run, the failures are listed in a warning at the end, and the exit status is `2` (see [Exit status](#exit-status)).
 
 ### 1. System files
 - `/etc/hosts` and `/etc/resolv.conf` go to `etc/`
 
 ### 2. GPG key export
-- The key is chosen by `BACKUP_GPG_EMAIL` (default: the git `user.email`)
-- The public and private key are written as `public-key-<id>.asc` and `private-key-<id>.asc` to `~/.gnupg/backup/` (directory mode `700`, private key mode `600`). As `~/.gnupg` is copied in the next step, they also end up in the backup under `dotfiles/.gnupg/backup/`
-- If no matching secret key is found, the step is reported and skipped
+- The keys are chosen by `BACKUP_GPG_EMAIL` (default: the git `user.email`): every secret key with a user ID that matches it is exported, so an older key you keep to decrypt old data is saved along with the current one
+- Each key is written as `public-key-<id>.asc` and `private-key-<id>.asc` (`<id>` is the 16-character long key ID) to `gpg/` in the backup, mode `600`. Nothing is written to `~/.gnupg`, so no extra copy of the private key stays on the machine
+- Each file is written to a temporary name first and renamed once gpg succeeded. An export that fails, typically because gpg cannot ask for the key's passphrase in an unattended run, leaves no empty or partial file: it is listed as a failure, the run goes on and exits with `2`. The keyring itself is still copied with `~/.gnupg` in the next step, and earlier backups keep their own export
+- With no email, no matching secret key or no `gpg` command, the step says so and is skipped
 
 ### 3. Dotfiles
 Each entry goes to `dotfiles/<basename>`:
@@ -128,7 +139,7 @@ Each entry goes to `dotfiles/<basename>`:
 - `.copilot` - Copilot CLI configuration (`pkg`, `ide` and `session-state` excluded)
 - `.docker` - Docker client configuration (`scout`, `sbom`, `scan`, `desktop`, `buildx`, `mutagen` and `run` excluded)
 - `.gitconfig`
-- `.gnupg` - the GPG keyring, including the exported key from step 2
+- `.gnupg` - the GPG keyring
 - `.kube` - Kubernetes configuration (`cache` and `http-cache` excluded)
 - `.mc` - MinIO client configuration
 - `.npmrc`
@@ -190,6 +201,9 @@ backup_2026-10-10T13-26-17/
 ├── etc/
 │   ├── hosts
 │   └── resolv.conf
+├── gpg/                       (exported GPG keys)
+│   ├── private-key-<id>.asc
+│   └── public-key-<id>.asc
 ├── dotfiles/
 │   ├── .aws/
 │   ├── .claude/
@@ -204,7 +218,6 @@ backup_2026-10-10T13-26-17/
 │   ├── .docker/
 │   ├── .gitconfig
 │   ├── .gnupg/
-│   │   └── backup/            (exported GPG key)
 │   ├── .kube/
 │   ├── .mc/
 │   ├── .npmrc
@@ -220,7 +233,7 @@ backup_2026-10-10T13-26-17/
     └── Default/
 ```
 
-Entries only exist when their source exists on the machine. When the run ends, the script prints the location and size of the backup and reminds you that it is not encrypted.
+Entries only exist when their source exists on the machine. When the run ends, the script prints the location and size of the backup and reminds you that it is not encrypted. It says `Backup incomplete.` instead of `Backup complete.` when something failed, and lists what.
 
 ## Backup Best Practices
 
@@ -376,12 +389,14 @@ Projects were backed up without `node_modules`, `.venv`, `dist`, `build` and the
 
 ### GPG Key
 
-`~/.gnupg` is restored with the credentials above. To import the exported key on its own:
+`~/.gnupg` is restored with the credentials above. To import the exported keys on their own:
 
 ```sh
-gpg --import "$BACKUP"/dotfiles/.gnupg/backup/private-key-*.asc
+gpg --import "$BACKUP"/gpg/private-key-*.asc
 gpg --list-secret-keys
 ```
+
+In a backup made by an earlier version of the scripts, the export is under `dotfiles/.gnupg/backup/` instead of `gpg/`.
 
 ### Package Restore
 
@@ -458,7 +473,7 @@ Do not push a backup directory to a git remote (see [Version Control](#version-c
 
 ## Automated Backups
 
-The GPG export may ask for the key's passphrase. In an unattended run (cron, launchd, systemd) a failing `gpg` command stops the script, because it runs with `set -e`: make sure gpg-agent can answer, or run the backup by hand.
+The GPG export may ask for the key's passphrase. In an unattended run (cron, launchd, systemd) gpg usually cannot ask, so the export only works when the key has no passphrase or gpg-agent still has it cached. Otherwise the export fails, the rest of the backup is still written (the keyring itself is in `dotfiles/.gnupg`) and the run exits with status `2`: a chained `&& rclone sync` does not push that backup, and a systemd service is marked as failed. With a passphrase-protected key, an unattended backup is therefore usually reported incomplete: check the warning and push it by hand, or run the backup yourself when you want the export.
 
 ### cron (macOS/Linux)
 
@@ -470,6 +485,7 @@ crontab -e
 0 2 * * * /Users/you/dotfiles/backup/backup-osx.sh -o ~/backups/dotfiles
 
 # Weekly backup on Sunday at 3 AM, pushed through an encrypted rclone remote
+# (only when the backup is complete: the script exits with 2 otherwise)
 0 3 * * 0 /Users/you/dotfiles/backup/backup-osx.sh -o ~/backups/dotfiles && rclone sync ~/backups/dotfiles secret:dotfiles
 ```
 
@@ -570,7 +586,7 @@ find ~/backups/dotfiles -maxdepth 1 -name 'backup_*' -mtime +7 -exec rm -rf {} +
 ### Sensitive Data
 
 A backup contains:
-- SSH private keys (`.ssh`), the GPG keyring (`.gnupg`) and the exported GPG private key
+- SSH private keys (`.ssh`), the GPG keyring (`.gnupg`) and the exported GPG private keys (`gpg/`)
 - Cloud and cluster credentials (`.aws`, `.kube`, `.tsh`, `.docker`, `.mc`, `.npmrc`)
 - Everything in `~/.config`, including `~/.config/dotfiles/secrets.env`
 - Claude Code settings and conversation history, and Copilot CLI configuration
@@ -581,7 +597,7 @@ The scripts only keep other local users out (`umask 077`, backup directory mode 
 - Keep backups on storage only you can access, and encrypt them before they go to a cloud folder, a NAS or a server
 - Remove entries you do not want from the `DOT_FILES` list of `backup/backup.sh`
 - Delete backups you no longer need: they hold the keys and tokens of their day
-- The GPG export stays in `~/.gnupg/backup/` on the machine after each run: store the key safely, then remove it from there if you do not want a second copy
+- The GPG export is written only into the backup. A `~/.gnupg/backup/` directory left by earlier versions of the scripts is still copied with `~/.gnupg`: delete it once a backup holds `gpg/`
 - Use secret management tools (1Password, Vault) rather than long-lived tokens in files
 
 ### Permissions
@@ -635,7 +651,7 @@ df -h ~/backups
 df -h ~/backups
 ```
 
-**Check the final summary:** an item that could not be copied (for example a broken symlink or an unreadable file) does not stop the run. It is listed in a warning at the end of the output.
+**Check the final summary:** an item that could not be copied (for example a broken symlink or an unreadable file) or a GPG export that failed does not stop the run. It is listed in a warning at the end of the output, which then says `Backup incomplete.`, and the exit status is `2` (see [Exit status](#exit-status)).
 
 ### Restore Fails
 
