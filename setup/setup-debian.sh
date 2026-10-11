@@ -276,12 +276,11 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
   # Install the eslint fallback config, used where a project has none
   install_file "$DOTFILES_PATH/eslint.config.mjs" "$HOME/eslint.config.mjs"
   if [ -x "$(command -v npm)" ]; then
-    (cd "$HOME/.config/eslint-fallback" && npm install)
+    (cd "$HOME/.config/eslint-fallback" && npm install --no-audit --no-fund --loglevel=error)
   fi
 
 
   # Install .vscode configs (VS Code, and code-server when present)
-  # extensions.json is JSONC: drop its comment lines before handing it to jq
   install_vscode_config() {
     local user_dir="$1" cli="$2" settings
     settings="$(mktemp)"
@@ -289,13 +288,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
     install_file "$settings" "$user_dir/settings.json"
     rm -f "$settings"
     install_file "$DOTFILES_PATH/.vscode/mcp.json" "$user_dir/mcp.json"
-    grep -v '//' "$DOTFILES_PATH/.vscode/extensions.json" \
-      | grep -E '[^[:space:]]' \
-      | jq -r '.recommendations[]' \
-      | while IFS= read -r extension; do
-          "$cli" --install-extension "$extension" < /dev/null \
-            || printf "Warning: could not install the extension %s\n" "$extension" >&2
-        done
+    "$SCRIPT_PATH/helpers/vscode-extensions.sh" "$cli" "$DOTFILES_PATH/.vscode/extensions.json"
   }
   if [ -x "$(command -v code)" ]; then
     install_vscode_config "$HOME/.config/Code/User" code

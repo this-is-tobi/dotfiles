@@ -118,7 +118,7 @@ Model Context Protocol server configurations, installed next to `settings.json`:
 - **Playwright MCP** - Browser automation
 
 #### `.vscode/extensions.json`
-Recommended VS Code extensions for this environment, installed by `-d` with `code --install-extension`.
+Recommended VS Code extensions for this environment, installed by `-d` with `code --install-extension`, skipping the ones the editor already has.
 
 ### Claude Code Configuration
 
