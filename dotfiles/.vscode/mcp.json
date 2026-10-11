@@ -15,11 +15,13 @@
         "CONTEXT7_API_KEY": "${input:context7-api-key}"
       }
     },
+    // The npx servers below run with your kube credentials or an API token, so each one
+    // is pinned to a version (Renovate proposes the updates) instead of @latest
     // Kubernetes MCP — reads ~/.kube/config, gives Copilot cluster access
     "kubernetes": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "kubernetes-mcp-server@latest"]
+      "args": ["-y", "kubernetes-mcp-server@0.0.67"]
     },
     // Argo CD MCP — lets Copilot list/sync/inspect ArgoCD apps
     // VS Code asks for the server URL and an API token (Settings > Accounts >
@@ -27,7 +29,7 @@
     "argocd": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "argocd-mcp@latest", "stdio"],
+      "args": ["-y", "argocd-mcp@0.9.0", "stdio"],
       "env": {
         "ARGOCD_BASE_URL": "${input:argocd-base-url}",
         "ARGOCD_API_TOKEN": "${input:argocd-api-token}"
@@ -37,7 +39,7 @@
     "microsoft/playwright-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"]
+      "args": ["-y", "@playwright/mcp@0.0.83"]
     }
   },
   "inputs": [

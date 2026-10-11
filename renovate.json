@@ -1,0 +1,24 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "semanticCommits": "enabled",
+  "minimumReleaseAge": "3 days",
+  "automerge": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "MCP servers that npx starts at a pinned version, in the VS Code mcp.json and in the script that registers them with Claude Code. They run with your kube credentials or an API token, so they are never @latest: a release is proposed once it is a few days old, and both files move in the same pull request.",
+      "managerFilePatterns": [
+        "/^dotfiles/\\.vscode/mcp\\.json$/",
+        "/^setup/helpers/claude-mcp\\.sh$/"
+      ],
+      "matchStrings": [
+        "npx -y (?<depName>(?:@[a-z0-9][\\w.-]*/)?[a-z0-9][\\w.-]*)@(?<currentValue>\\d[^\\s\"']*)",
+        "\"-y\",\\s*\"(?<depName>(?:@[a-z0-9][\\w.-]*/)?[a-z0-9][\\w.-]*)@(?<currentValue>\\d[^\"]*)\""
+      ],
+      "datasourceTemplate": "npm"
+    }
+  ]
+}
