@@ -455,9 +455,9 @@ command -v npx
 mise doctor
 ```
 
-2. **Run the server by hand** to see its error (it should start and wait for input, stop it with `Ctrl+C`):
+2. **Run the server by hand** to see its error (it should start and wait for input, stop it with `Ctrl+C`). Use the version the configuration pins (`grep -n 'npx -y' setup/helpers/claude-mcp.sh`), not `@latest`:
 ```sh
-npx -y kubernetes-mcp-server@latest
+npx -y kubernetes-mcp-server@0.0.67
 ```
 
 3. **Kubernetes:** the server reads your kubeconfig:
@@ -468,7 +468,7 @@ kubectl config current-context
 
 4. **Argo CD:** it needs the server URL and an API token. VS Code asks for both the first time the server starts. For Claude Code, set `ARGOCD_BASE_URL` and `ARGOCD_API_TOKEN` in `~/.config/dotfiles/secrets.env`: the setup registers the server only when `ARGOCD_BASE_URL` is set, so re-run `setup/helpers/claude-mcp.sh` afterwards.
 
-5. **Claude Code:** `setup/helpers/claude-mcp.sh` (the setup runs it with `-d` when `claude` is installed) registers `context7`, `kubernetes`, `playwright` and, when configured, `argocd`, and is safe to re-run:
+5. **Claude Code:** `setup/helpers/claude-mcp.sh` (the setup runs it with `-d` when `claude` is installed) registers `context7`, `kubernetes`, `playwright` and, when configured, `argocd`. Each run removes and adds again the servers it defines, at the versions pinned in the script (Renovate proposes the updates), so re-run it after such an update; servers registered under other names are left alone:
 ```sh
 claude mcp list
 ```
@@ -862,7 +862,7 @@ ls -la ~/backups
 df -h
 ```
 
-5. **Check the warnings at the end:** a single item that fails (for example a broken symlink) does not stop the run, it is listed in a final warning. The script also needs `rclone` (installed by the base profile).
+5. **Check the warnings at the end:** a single item that fails (for example a broken symlink, an unreadable file, or a GPG export that could not get the key's passphrase) does not stop the run. It is listed in a final warning, the output ends with `Backup incomplete.` instead of `Backup complete.`, and the exit status is `2` (`1` means a usage error and nothing was backed up). A command chained with `&&`, such as `backup ... && rclone sync ...`, therefore does not sync a partial backup: fix the listed items and run it again. See [Exit status](09-backup-restore.md#exit-status). The script also needs `rclone` (installed by the base profile).
 
 6. **Run with verbose output:**
 ```sh
@@ -877,7 +877,7 @@ A backup is private (mode `700`) but not encrypted: see [Backup & Restore](09-ba
 
 **Solutions:**
 
-1. **Verify backup integrity:** each run creates `backup_<timestamp>/` in the output directory, with `etc/`, `dotfiles/`, `home/` (and `brave/` on macOS) inside:
+1. **Verify backup integrity:** each run creates `backup_<timestamp>/` in the output directory, with `etc/`, `dotfiles/`, `home/`, `gpg/` (the exported GPG keys), `rta/` (`kv.age` and `kv.recipients`, when an rta store exists) and, on macOS, `brave/` inside. Each entry only exists when its source does. In a backup made by an earlier version of the scripts, the GPG export is under `dotfiles/.gnupg/backup/` instead of `gpg/`:
 ```sh
 BACKUP=~/backups/backup_<timestamp>
 ls -la "$BACKUP" "$BACKUP/dotfiles"
