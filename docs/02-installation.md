@@ -15,7 +15,7 @@ The setup does not install the Command Line Tools and Homebrew silently. When on
 
 ### Debian/Ubuntu
 - Debian or Ubuntu: Docker's apt repository is chosen from `/etc/os-release` (`debian` or `ubuntu`), and the base profile stops with an error when it has to install Docker on any other distribution
-- `sudo` privileges: apt, locale generation, `chsh` and the Docker and Teleport repositories all go through `sudo`
+- `sudo` privileges: apt, locale generation, `chsh` and the Docker, Teleport and mise repositories all go through `sudo`
 - `git`, to clone the repository (the commons step also installs it)
 - Internet connection
 
@@ -49,7 +49,7 @@ Without `-p`, only the common packages and oh-my-zsh are installed; `-d` and `-c
 
 ### Why Not `curl | bash`?
 
-Piping a setup script into bash (`curl -fsSL .../setup/setup-osx.sh | bash`) does not work. The script is then running as `bash`, with no `setup/` or `dotfiles/` directory next to it: it stops right away with an error saying it needs the rest of the repository (and `-p` and `-d` could not work anyway). The scripts do download other scripts themselves (Homebrew, oh-my-zsh, mise, the AI CLI installers and the helpers of the [tools](https://github.com/this-is-tobi/tools) repository), but they save each one to a temporary file first and only run it once the download succeeded, never piped straight into a shell.
+Piping a setup script into bash (`curl -fsSL .../setup/setup-osx.sh | bash`) does not work. The script is then running as `bash`, with no `setup/` or `dotfiles/` directory next to it: it stops right away with an error saying it needs the rest of the repository (and `-p` and `-d` could not work anyway). The scripts do download other scripts themselves (Homebrew, oh-my-zsh, the AI CLI installers and the helpers of the [tools](https://github.com/this-is-tobi/tools) repository), but they save each one to a temporary file first and only run it once the download succeeded, never piped straight into a shell. mise comes from Homebrew on macOS and from its signed apt repository on Debian, and the other files fetched from a fixed version (bat-extras, a few completions) are checked against a sha256 before they are installed.
 
 ## Installation Options
 
@@ -169,7 +169,7 @@ Apart from the prompts below, the setup scripts run unattended, which makes them
 - **macOS**: a missing Command Line Tools or Homebrew install is confirmed with a `y`/`N` question. Without a terminal the script exits with status 1 and an error instead of asking.
 - **`-d`**: when `~/.gitconfig.local` does not exist yet and no identity can be carried over from an existing `~/.gitconfig`, the script asks for your Git name and email. Without a terminal it prints the `git config --file ~/.gitconfig.local ...` commands to run and carries on.
 
-oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt-get install -y` and `DEBIAN_FRONTEND=noninteractive` (a package that asks a configuration question takes the default answer). The package lists are refreshed once per run, and again after a profile adds an apt repository (Docker, Teleport).
+oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt-get install -y` and `DEBIAN_FRONTEND=noninteractive` (a package that asks a configuration question takes the default answer). The package lists are refreshed once per run, and again after a profile adds an apt repository (Docker, Teleport, mise).
 
 #### Teleport Version (DevOps Profile)
 

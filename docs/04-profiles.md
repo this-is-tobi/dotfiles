@@ -68,7 +68,7 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [man](https://www.nongnu.org/man-db)                               | Manual page viewer (Debian)                                                                                | ✓    | -        | apt    |
 | [man-db](https://www.nongnu.org/man-db)                            | Manual page database and tools (Debian)                                                                    | ✓    | -        | apt    |
 | [manpages-dev](https://packages.debian.org/en/sid/manpages-dev)    | Manual pages about using GNU/Linux for development                                                         | ✓    | -        | apt    |
-| [mise](https://mise.jdx.dev)                                       | Version manager: language runtimes on both platforms, plus CLI binaries on Debian                          | ✓    | homebrew | shell  |
+| [mise](https://mise.jdx.dev)                                       | Version manager: language runtimes on both platforms, plus CLI binaries on Debian                          | ✓    | homebrew | apt    |
 | [nerd-fonts](https://github.com/ryanoasis/nerd-fonts)              | Hack and Symbols Only fonts for neovim (copied to ~/.fonts, on macOS also ~/Library/Fonts)                 | -    | shell    | shell  |
 | [nmap](https://nmap.org)                                           | Network port scanning utility                                                                              | -    | homebrew | apt    |
 | [nvim](https://neovim.io)                                          | Hyperextensible Vim-based text editor                                                                      | -    | homebrew | mise   |
@@ -83,6 +83,8 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [vim](https://www.vim.org)                                         | Ubiquitous text editor                                                                                     | ✓    | homebrew | apt    |
 | [watch](https://en.wikipedia.org/wiki/Watch_(command))             | Execute a program periodically                                                                             | ✓    | homebrew | apt    |
 | [yq](https://github.com/mikefarah/yq)                              | YAML processor (like jq for YAML)                                                                          | ✓    | homebrew | mise   |
+
+On Debian, mise comes from its own apt repository (`https://mise.jdx.dev/deb`), added with `signed-by` and a key that is only trusted when its fingerprint is the one mise publishes (`24853EC9F655CE80B48E6C3A8B81C9D17413A06D`); `apt upgrade` then keeps it current. A mise installed earlier with the `mise.run` script (in `~/.local/bin`) is kept as it is.
 
 On Debian, bat-extras is installed from its release zip, pinned to one version and checked against its sha256, into `~/.local/bin` (man pages in `~/.local/share/man`), without root and without running its build script. A copy that an older version of the setup built into `/usr/local/bin` stays there unused, since `~/.local/bin` comes first in `PATH`; remove it with `sudo rm /usr/local/bin/{batdiff,batgrep,batman,batpipe,batwatch,bat-modules,prettybat}`.
 

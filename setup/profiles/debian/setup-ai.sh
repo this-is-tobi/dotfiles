@@ -30,10 +30,11 @@ install_additional_setup() {
     run_remote bash https://claude.ai/install.sh
   fi
 
-  # Install copilot cli
+  # Install copilot cli (the target of the documented https://gh.io/copilot-install
+  # short link, named directly so the script comes straight from the repository)
   if [ ! -x "$(command -v copilot)" ]; then
     printf "\n\n${red}[ai] =>${no_color} Install copilot CLI\n\n"
-    run_remote bash https://gh.io/copilot-install
+    run_remote bash https://raw.githubusercontent.com/github/copilot-cli/refs/heads/main/install.sh
   fi
 
   # Install rtk cli
