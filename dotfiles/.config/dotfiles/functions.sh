@@ -223,9 +223,9 @@ timestampd() {
 		printf "  timestampd <timestamp>   print a human readable date.\n"
 		;;
 	*)
-		if [ "$(uname)" = "Darwin" ]; then
+		if [[ $OSTYPE == darwin* ]]; then
 			date -r "$1"
-		elif [ "$(uname)" = "Linux" ]; then
+		elif [[ $OSTYPE == linux* ]]; then
 			date -d @"$1"
 		else
 			echo "Error: unsupported OS"
@@ -243,9 +243,9 @@ timestampe() {
 		printf "  timestampe <date>   print the timestamp of a date (date in format 'YYYY-mm-ddTHH:MM:ss').\n"
 		;;
 	*)
-		if [ "$(uname)" = "Darwin" ]; then
+		if [[ $OSTYPE == darwin* ]]; then
 			date -j -f "%Y-%m-%dT%H:%M:%S" "$1" "+%s" 2>/dev/null || date -j -f "%Y-%m-%d" "$1" "+%s"
-		elif [ "$(uname)" = "Linux" ]; then
+		elif [[ $OSTYPE == linux* ]]; then
 			date -d "$1" "+%s"
 		else
 			echo "Error: unsupported OS"
