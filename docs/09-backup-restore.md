@@ -107,7 +107,7 @@ Any other flag prints the help and exits with status 1. `BACKUP_GPG_EMAIL` and `
 
 ## What Gets Backed Up
 
-The scripts run five steps in this order. A source that does not exist is skipped silently, and a failing copy does not stop the run: failures are listed in a warning at the end (the exit status stays `0`, so check the output when automating).
+The scripts run six steps in this order. A source that does not exist is skipped silently, and a failing copy does not stop the run: failures are listed in a warning at the end (the exit status stays `0`, so check the output when automating).
 
 ### 1. System files
 - `/etc/hosts` and `/etc/resolv.conf` go to `etc/`
@@ -136,13 +136,17 @@ Each entry goes to `dotfiles/<basename>`:
 
 To keep one of them out of your backups, remove it from the `DOT_FILES` list in the script.
 
-### 4. Home directories
+### 4. rta secrets store
+- Only when an [rta](https://github.com/this-is-tobi/rta) store exists (`$RTA_DATA_DIR`, else `$XDG_DATA_HOME/rta`, else `~/.local/share/rta`): `kv.age`, the encrypted store, and `kv.recipients`, the public keys that can open it, go to `rta/`. Nothing else from rta's data directory is copied (grants, audit log and plugin cache can be rebuilt)
+- What opens the store is not in this step: the generated key `~/.config/rta/kv.identity` travels with `.config` in step 3, and an SSH key with `~/.ssh`. Whoever holds the backup has both the store and a way to open it, so keep the backup private (it is not encrypted)
+
+### 5. Home directories
 Each directory goes to `home/<name>`:
 
 - **macOS:** `~/dev` by default. With `-f`: `~/Desktop`, `~/dev`, `~/Documents`, `~/Downloads`, `~/Movies`, `~/Music` and `~/Pictures`
 - **Debian:** `~/dev` by default. With `-f`: `~/Desktop`, `~/dev`, `~/Documents`, `~/Downloads`, `~/Music`, `~/Pictures` and `~/Videos`
 
-### 5. Brave (macOS only)
+### 6. Brave (macOS only)
 - If `~/Library/Application Support/BraveSoftware` exists, the `Default` profile is copied to `brave/Default` (`Cache`, `Code Cache`, `GPUCache`, `DawnCache`, `Crashpad` and the service worker caches `Service Worker/CacheStorage` and `Service Worker/ScriptCache` excluded)
 
 ### Always excluded
@@ -204,6 +208,9 @@ backup_2026-10-10T13-26-17/
 │   ├── .ssh/
 │   ├── .tsh/
 │   └── .zshrc
+├── rta/                       (only when an rta store exists)
+│   ├── kv.age
+│   └── kv.recipients
 ├── home/
 │   └── dev/                   (with -f: also Desktop, Documents, ...)
 └── brave/                     (macOS only, when Brave is installed)
@@ -314,15 +321,23 @@ chmod 600 ~/.config/dotfiles/secrets.env
 ```
 The setup already installed the repository's `~/.config`. Copy back from `$BACKUP/dotfiles/.config/` only what you customized (for example `gh` or `lazygit`); copying the whole directory would replace the managed files, such as `env.sh`, with older versions.
 
-5. **Check permissions:** `~/.ssh`, `~/.gnupg`, the private keys and `~/.kube/config` must not be readable by others, see [Permissions](#permissions).
+5. **Restore the rta store** (only if you use one):
+```sh
+RTA_DATA="${RTA_DATA_DIR:-$HOME/.local/share/rta}"
+mkdir -p "$RTA_DATA" && chmod 700 "$RTA_DATA"
+cp -p "$BACKUP/rta/kv.age" "$BACKUP/rta/kv.recipients" "$RTA_DATA/"
+```
+Then make sure what opens it is back: `~/.config/rta/kv.identity` (copy it from `$BACKUP/dotfiles/.config/rta/`) or your SSH key from `$BACKUP/dotfiles/.ssh/`. `rta kv list` then shows the keys, names only.
 
-6. **Git identity:** `~/.gitconfig.local` is not part of the backup. The setup asks for your name and email when it creates it. To set them yourself:
+6. **Check permissions:** `~/.ssh`, `~/.gnupg`, the private keys and `~/.kube/config` must not be readable by others, see [Permissions](#permissions).
+
+7. **Git identity:** `~/.gitconfig.local` is not part of the backup. The setup asks for your name and email when it creates it. To set them yourself:
 ```sh
 git config --file ~/.gitconfig.local user.name "Your Name"
 git config --file ~/.gitconfig.local user.email "you@example.com"
 ```
 
-7. **Reload shell:**
+8. **Reload shell:**
 ```sh
 exec zsh
 ```
