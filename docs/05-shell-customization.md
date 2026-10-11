@@ -13,7 +13,7 @@ This setup uses **Zsh** as the default shell, configured with the [oh-my-zsh](ht
 A custom oh-my-zsh theme is included: [this-is-tobi.zsh-theme](../dotfiles/.oh-my-zsh/this-is-tobi.zsh-theme). `setup -d` copies it to `~/.oh-my-zsh/custom/themes/` and `.zshrc` selects it with `ZSH_THEME="this-is-tobi"`.
 
 This theme combines:
-- **bira theme** - Two-line prompt layout with git information
+- **gnzh theme** - Two-line prompt layout with git information
 - **kube-ps1** - Kubernetes context display, embedded in the theme file itself (it is not an oh-my-zsh plugin and has no entry in `plugins`)
 
 **Features:**
@@ -90,33 +90,42 @@ The `plugins=(...)` array of [.zshrc](../dotfiles/.zshrc) activates the followin
 | `bcu`                                   | Reinstall every outdated cask (only when Homebrew is found)                                                       |
 | `arm`, `intel`                          | macOS only: start a login zsh under arm64 or x86_64                                                               |
 
+### History
+
+`.zshrc` keeps 10000 commands in `~/.zsh_history` (oh-my-zsh raises the in-memory list to 50000), with their date (`history` shows it as `yyyy-mm-dd`). Two kinds of command lines are not written to that file:
+- **A command typed with a leading space** (`hist_ignore_space`). Prefix a command with a space to keep it out of the history, for example ` export GITHUB_TOKEN=...`.
+- **A line that assigns or passes a credential**, matched by `HISTORY_IGNORE`: a name among `TOKEN`, `SECRET`, `PASSWORD`, `PASSWD`, `PASSPHRASE`, `API_KEY`, `API-KEY`, `APIKEY`, `ACCESS_KEY` and `PRIVATE_KEY` (upper, lower or capitalized case, so `X-Auth-Token:` counts) followed by `=` or `:`, the options `--token`, `--secret`, `--password`, `--passphrase` and `--api-key` followed by `=` or a space, and any `Authorization:` or `Bearer ` header. `GITHUB_TOKEN=... gh ...`, `--from-literal=password=...` and `curl -H "Authorization: Bearer ..."` are therefore not saved.
+
+Both stay in the history of the current session (the up arrow brings them back until the shell exits): they are only kept out of the file, which other sessions and backups read. The patterns are a safety net, not a guarantee: a value passed as a plain argument (`vault login <token>`) is saved. Pass secrets through standard input or a prompt instead, as `b64e`, `urle` and `secrets` allow.
+
 ## Custom Functions
 
 Custom shell functions are defined in `.config/dotfiles/functions.sh` and provide powerful utilities.
 
 ### Available Functions
 
-| Function     | Description                                         | Usage                            |
-| ------------ | --------------------------------------------------- | -------------------------------- |
-| `lsfn`       | List all functions with descriptions                | `lsfn`                           |
-| `b64d`       | Decode base64 string                                | `b64d "encoded_string"`          |
-| `b64e`       | Encode string to base64                             | `b64e "plain_text"`              |
-| `browser`    | Start the Browsh terminal web browser (in Docker)   | `browser [-- <url>]`             |
-| `cheat_glow` | View cheat sheets with Glow                         | `cheat_glow <cheatsheet>`        |
-| `check_cert` | Print the certificate chain details of an HTTPS URL | `check_cert https://example.com` |
-| `dks`        | Decode Kubernetes secret                            | `dks <secret_name> [namespace]`  |
-| `kbp`        | Kill the process listening on a TCP port            | `kbp 8080`                       |
-| `randompass` | Generate random password (24 characters by default) | `randompass [length]`            |
-| `secrets`    | Load the keys in `DOTFILES_RTA_KEYS` from rta       | `secrets`                        |
-| `tools`      | Execute remote utility scripts                      | `tools [script_name.sh] [args]`  |
-| `timestampd` | Convert timestamp to date                           | `timestampd 1234567890`          |
-| `timestampe` | Convert date to timestamp                           | `timestampe "2023-01-01"`        |
-| `urld`       | URL decode string                                   | `urld "encoded%20url"`           |
-| `urle`       | URL encode string                                   | `urle "plain url"`               |
-| `vault-cp`   | Copy a Vault secret (`-f`: every version)           | `vault-cp [-f] <source> <dest>`  |
-| `weather`    | Check weather for location (wttr.in, over HTTPS)    | `weather [location]`             |
+| Function     | Description                                                | Usage                            |
+| ------------ | ---------------------------------------------------------- | -------------------------------- |
+| `lsfn`       | List all functions with descriptions                       | `lsfn`                           |
+| `b64d`       | Decode base64 string                                       | `b64d ["encoded_string"]`        |
+| `b64e`       | Encode string to base64                                    | `b64e ["plain_text"]`            |
+| `browser`    | Start the Browsh terminal web browser (in Docker)          | `browser [-- <url>]`             |
+| `cheat_glow` | View cheat sheets with Glow                                | `cheat_glow <cheatsheet>`        |
+| `check_cert` | Print the certificate chain details of an HTTPS URL        | `check_cert https://example.com` |
+| `dks`        | Decode Kubernetes secret                                   | `dks <secret_name> [namespace]`  |
+| `ffmerge`    | Merge a GitHub PR by fast-forwarding its base branch       | `ffmerge [-n] [-y] [-k] [pr]`    |
+| `kbp`        | Kill the process listening on a TCP port                   | `kbp 8080`                       |
+| `randompass` | Generate random password (24 characters by default)        | `randompass [length]`            |
+| `secrets`    | Load the keys in `DOTFILES_RTA_KEYS` from rta              | `secrets`                        |
+| `tools`      | Execute remote utility scripts                             | `tools [script_name.sh] [args]`  |
+| `timestampd` | Convert timestamp to date                                  | `timestampd 1234567890`          |
+| `timestampe` | Convert date to timestamp                                  | `timestampe "2023-01-01"`        |
+| `urld`       | URL decode string                                          | `urld ["encoded%20url"]`         |
+| `urle`       | URL encode string                                          | `urle ["plain url"]`             |
+| `vault-cp`   | Copy a Vault secret (`-f`: every version)                  | `vault-cp [-f] <source> <dest>`  |
+| `weather`    | Check weather for location (wttr.in, over HTTPS)           | `weather [location]`             |
 
-Every function prints its own help with `-h`.
+Every function prints its own help with `-h`. `b64e`, `b64d`, `urle` and `urld` read standard input when they get no argument, and ask for the value without echoing it when standard input is a terminal: a secret then appears neither in the shell history nor in the process list (`ps`).
 
 ### Function Examples
 
@@ -348,11 +357,13 @@ mycmd --other-flag
 
 ## Customization Tips
 
-`setup -d` replaces `~/.zshrc` and `~/.config/dotfiles/functions.sh` with the repository versions. When their content differs, the previous file is first saved under `~/.dotfiles-backup/<timestamp>/`, so a local edit does not survive the next run. Make lasting changes in the repository copy (`dotfiles/.zshrc`, `dotfiles/.config/dotfiles/functions.sh`) and re-run `-d`, or use the local file described under Custom Functions.
+`setup -d` replaces `~/.zshrc` and `~/.config/dotfiles/functions.sh` with the repository versions. When their content differs, the previous file is first saved under `~/.dotfiles-backup/<timestamp>/`, so a local edit does not survive the next run. Two places are yours:
+- **`~/.zshrc.local`**, sourced at the very end of `.zshrc` when it exists: aliases, functions, environment variables and settings for this machine. The setup never writes it
+- **the repository copy** (`dotfiles/.zshrc`, `dotfiles/.config/dotfiles/functions.sh`), for what every machine should get: edit it, commit, and re-run `-d`
 
 ### Adding Custom Aliases
 
-Add personal aliases to `.zshrc`, after the `source $ZSH/oh-my-zsh.sh` line:
+Add personal aliases to `~/.zshrc.local`. It is sourced last, so an alias there also replaces one of `.zshrc` or of a plugin:
 
 ```sh
 alias myalias="command --with-flags"
@@ -361,7 +372,7 @@ alias tfa="terraform apply"
 
 ### Adding More Plugins
 
-Add oh-my-zsh plugins to the `plugins=(...)` array of `.zshrc`, before `source $ZSH/oh-my-zsh.sh`:
+oh-my-zsh loads the plugins listed in the `plugins=(...)` array of `.zshrc`, before `~/.zshrc.local` is read. For every machine, add the plugin to the array in the repository copy and re-run `-d`:
 
 ```sh
 plugins=(
@@ -372,19 +383,24 @@ plugins=(
 )
 ```
 
-### Custom Functions
-
-Add your own functions to `~/.config/dotfiles/functions.sh` (the repository copy is `dotfiles/.config/dotfiles/functions.sh`):
+On one machine only, load it from `~/.zshrc.local`. Its aliases and functions work this way; a completion it ships is not picked up, since `compinit` has already run:
 
 ```sh
-# Add custom function
+source "$ZSH/plugins/your-new-plugin/your-new-plugin.plugin.zsh"
+```
+
+### Custom Functions
+
+Add your own functions to `~/.zshrc.local`:
+
+```sh
 myfunction() {
   echo "This is my custom function"
   # Your code here
 }
 ```
 
-`.zshrc` also sources `~/.config/dotfiles/functions-dso.sh` when that file exists. It is not part of the repository, so the setup never replaces it: use it for functions that only make sense on one machine.
+`.zshrc` also sources `~/.config/dotfiles/functions-dso.sh` when that file exists, before `~/.zshrc.local`. It is not part of the repository either, so the setup never replaces it; it is kept for the machines that already have one (functions for a work context), and `~/.zshrc.local` is the place for anything new. Functions meant for every machine go in the repository copy of `functions.sh`, with a `-h` help like the others and an entry in the `lsfn` list.
 
 ### Environment Variables
 

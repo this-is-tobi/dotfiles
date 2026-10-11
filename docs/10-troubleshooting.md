@@ -250,12 +250,12 @@ rm ~/.zcompdump*
 exec zsh
 ```
 
-4. **Check for slow commands in .zshrc:**
+4. **Check for slow commands in .zshrc** (a temporary edit: remove it afterwards, or re-run `-d`):
 ```sh
-# Add to .zshrc to profile
+# First line of ~/.zshrc
 zmodload zsh/zprof
 # ... existing config ...
-# At end:
+# Last line:
 zprof
 ```
 
@@ -275,11 +275,7 @@ source ~/.config/dotfiles/functions.sh
 grep "functions.sh" ~/.zshrc
 ```
 
-3. **Add to .zshrc if missing:**
-```sh
-# Add this line
-source ~/.config/dotfiles/functions.sh
-```
+3. **If it does not, or the file is missing,** `~/.zshrc` is not the one of this repository (or is an old one): re-run the setup with `-d`, which installs both (the previous `~/.zshrc` is backed up).
 
 4. **Verify file exists:**
 ```sh
@@ -306,6 +302,62 @@ exec zsh
 ```
 
 3. **Register them with Claude Code:** MCP servers that need a key only see it after `setup/helpers/claude-mcp.sh` has run again (see [MCP Server Connection Failed](#mcp-server-connection-failed)). VS Code prompts for its keys itself the first time a server starts.
+
+4. **Keys kept in rta:** see the next section.
+
+### Keys Kept in rta Are Missing
+
+**Problem:** You moved tokens to an [rta](https://github.com/this-is-tobi/rta) store and listed their names in `DOTFILES_RTA_KEYS`, and a shell or Claude Code does not see them
+
+**Solutions:**
+
+1. **Run `secrets`:** the keys are not loaded when a shell starts. `secrets` exports them into the shell it runs in, so run it before starting a program that needs them (Claude Code reads `${VAR}` at launch):
+```sh
+secrets
+claude
+```
+To load them in every new shell, add `secrets` to `~/.zshrc.local`. That only suits a store that opens without a prompt: a store locked to a key with a passphrase would ask at every shell start.
+
+2. **Read what `secrets` says:** `rta is not installed`, or `DOTFILES_RTA_KEYS is empty` (list the key names, without values, in `~/.config/dotfiles/secrets.env`, then `exec zsh`). `rta kv list` shows the names the store holds, never a value.
+
+### `secrets` Fails With `kv.identity.locked`
+
+**Problem:** `secrets`, or any `rta kv` command, asks for a passphrase and then fails with `kv.identity.locked`
+
+**Solution:** The passphrase asked for is the one of the key that opens the store, not a passphrase of the store: for a store locked to an SSH key, it is that SSH key's passphrase, and a wrong one reports `kv.identity.locked`. Check which key rta uses: `RTA_KV_IDENTITY` names it, and without it rta looks for the key it generated, `~/.config/rta/kv.identity`:
+```sh
+echo "$RTA_KV_IDENTITY"
+rta kv status                              # does a key available here open the store?
+RTA_KV_IDENTITY=~/.ssh/<key> rta kv list   # try another key
+```
+Set `RTA_KV_IDENTITY` in `~/.zshrc.local` (`export RTA_KV_IDENTITY="$HOME/.ssh/<key>"`), not in `secrets.env`. `ssh-agent` cannot decrypt for rta, so the passphrase is asked on each command. See [Keeping secrets in rta](07-ai.md#keeping-secrets-in-rta-optional).
+
+### A Command Is Missing From the History
+
+**Problem:** A command you ran is not in `history`, in `h`, or in another terminal
+
+**Solution:** Two kinds of lines are not written to `~/.zsh_history` (see [History](05-shell-customization.md#history)): a command typed with a leading space, and a line that assigns or passes a credential (`GITHUB_TOKEN=...`, `--password ...`, `Authorization: ...`). They stay in the history of the shell they were typed in until it exits. Check whether a line matches:
+```sh
+[[ 'export GITHUB_TOKEN=x' == ${~HISTORY_IGNORE} ]] && echo "not saved"
+```
+To save more, or less, set `HISTORY_IGNORE` in `~/.zshrc.local` (a zsh pattern; `unset HISTORY_IGNORE` saves everything except the lines with a leading space).
+
+### Locale Warnings
+
+**Problem:** `setlocale: LC_ALL: cannot change locale`, `perl: warning: Setting locale failed`, or `bash: warning: setlocale: LC_CTYPE: cannot change locale (en_US.UTF-8)`, often on a remote host
+
+**Solutions:**
+
+1. **Generate the locale** on a Debian/Ubuntu host that lacks it:
+```sh
+sudo sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sudo locale-gen
+```
+
+2. **Over ssh:** the client forwards `LANG` and `LC_*` (`SendEnv` in its ssh config), and the remote host uses them if it accepts them. `.zshrc` only sets `LANG`; an older version also exported `LC_ALL`, so open a new terminal after re-running `-d`. Check what a shell has:
+```sh
+locale
+```
 
 ### Completions Not Working
 
@@ -561,11 +613,11 @@ kubectl config use-context <context-name>
 echo $PATH | grep krew
 ```
 
-2. **Add to PATH if missing:**
+2. **Add to PATH if missing:** the dotfiles' `.zshrc` already does it; with another `.zshrc`:
 ```sh
 # Add to ~/.zshrc
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-source ~/.zshrc
+exec zsh
 ```
 
 3. **Verify plugin installation:**
@@ -757,7 +809,7 @@ git config --global oh-my-zsh.hide-status 1
 
 3. **Reduce history size:**
 ```sh
-# Add to ~/.zshrc
+# Add to ~/.zshrc.local (read after oh-my-zsh, which raises HISTSIZE to 50000)
 HISTSIZE=1000
 SAVEHIST=1000
 ```

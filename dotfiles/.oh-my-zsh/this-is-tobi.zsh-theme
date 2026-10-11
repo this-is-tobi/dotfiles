@@ -1,4 +1,4 @@
-# Based on bira theme
+# Based on the gnzh theme, with kube-ps1 embedded
 
 setopt prompt_subst
 
