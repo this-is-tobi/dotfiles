@@ -211,10 +211,16 @@ find / -name <command> 2>/dev/null
 
 4. **Add to PATH:**
 ```sh
-# Add to ~/.zshrc
+# Add to ~/.zshrc.local (~/.zshrc is replaced by the setup)
 export PATH="/path/to/bin:$PATH"
-source ~/.zshrc
+exec zsh
 ```
+
+### `command not found: complete` at Shell Start
+
+**Problem:** Every new shell prints `functions-completion.sh:8: command not found: complete`
+
+**Solution:** The completion of `tools` used to be a bash completion, which only works once `bashcompinit` has run, and `.zshrc` only runs it when terraform or vault is installed. It is a native zsh completion now: re-run the setup with `-d` to get the new `~/.config/dotfiles/functions-completion.sh`, then open a new shell.
 
 ### Slow Shell Startup
 
@@ -310,20 +316,21 @@ exec zsh
 1. **Rebuild completion cache:**
 ```sh
 rm -f ~/.zcompdump*
-compinit
-```
-
-2. **Check completion system:**
-```sh
-# Add to ~/.zshrc if missing
-autoload -Uz compinit
-compinit
-```
-
-3. **Restart shell:**
-```sh
 exec zsh
 ```
+
+2. **Check completion system:** oh-my-zsh runs `compinit` when `.zshrc` sources it, so there is nothing to add. A completion defined before that line, for instance in a file sourced earlier, is lost. `whence -v compdef` should say it is a shell function.
+
+3. **`tools` completes an old or empty list:** the script names are cached for a day, and for an hour after a failed download. Fetch them again on the next `<Tab>`:
+```sh
+rm -f ~/.cache/dotfiles/tools-scripts-*
+```
+
+### `tools` Refuses a Name
+
+**Problem:** `Error : '<name>' is not a script name ...`, or `Error : TOOLS_REF '<ref>' is not a branch, tag or commit.`
+
+**Solution:** `tools` takes the file name of a script in the `shell/` directory of the tools repository, with its `.sh` (`tools clone-subdir.sh`), never a path or a URL. `TOOLS_REF` takes a branch, a tag or a commit SHA: letters, digits, `.`, `_`, `-` and `/`, without `..`. Run `tools` alone to list the scripts.
 
 ## VS Code Issues
 

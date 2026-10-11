@@ -236,35 +236,49 @@ timestampe() {
 	esac
 }
 
+# Prints the raw URL of the tools repository at TOOLS_REF (main by default). The
+# ref ends up in a URL, so anything but a plain branch, tag or commit is refused.
+_tools_base_url() {
+	local ref="${TOOLS_REF:-main}"
+	if [[ ! $ref =~ '^[A-Za-z0-9._/-]+$' || $ref == *..* ]]; then
+		echo "Error : TOOLS_REF '$ref' is not a branch, tag or commit." >&2
+		return 1
+	fi
+	printf '%s\n' "https://raw.githubusercontent.com/this-is-tobi/tools/$ref"
+}
+
 tools() {
-	local base_url="https://raw.githubusercontent.com/this-is-tobi/tools/${TOOLS_REF:-main}"
+	local base_url
+	base_url="$(_tools_base_url)" || return 1
 	case "$1" in
-	-h | --help)
-		printf "Description:\n"
-		printf "  Use personal shell tool scripts.\n\n"
-		printf "Usage:\n"
-		printf "  tools <script_name> [script_arguments...]   execute the script with given arguments (<script_name> should include '.sh').\n"
-		printf "  tools                                       print available scripts.\n"
-		;;
-	"")
+	-h | --help | "")
 		printf "Description:\n"
 		printf "  Use personal shell tool scripts.\n\n"
 		printf "Usage:\n"
 		printf "  tools <script_name> [script_arguments...]   execute the script with given arguments (<script_name> should include '.sh').\n"
 		printf "  tools                                       print available scripts.\n\n"
-		printf "Scripts:"
-		curl -s "$base_url/docs/07-shell.md" |
+		printf "  Scripts come from the main branch of github.com/this-is-tobi/tools; TOOLS_REF=<commit|tag|branch> pins another ref.\n"
+		[ -n "$1" ] && return 0
+		printf "\nScripts (%s):" "${TOOLS_REF:-main}"
+		local -a pager=(glow --width=200)
+		command -v glow >/dev/null 2>&1 || pager=(cat)
+		curl -fsS --max-time 10 "$base_url/docs/07-shell.md" |
 			grep -B 3 '.sh]' |
-			sed "s|\\./|$base_url/|g" |
-			glow --width=200
+			sed "s|\.\./|$base_url/|g" |
+			"${pager[@]}"
 		;;
 	*)
+		# a name with a slash would reach any file of the repository (curl resolves ../)
+		if [[ ! $1 =~ '^[A-Za-z0-9._-]+\.sh$' ]]; then
+			echo "Error : '$1' is not a script name (letters, digits, '.', '_' or '-', ending in '.sh')." >&2
+			return 1
+		fi
 		local script_url="$base_url/shell/$1" script rc=0
 		script="$(mktemp)" || return 1
 		if curl -fsL "$script_url" -o "$script"; then
 			bash "$script" "${@:2}" || rc=$?
 		else
-			echo "Error : script '$1' does not exist."
+			echo "Error : script '$1' does not exist." >&2
 			rc=1
 		fi
 		rm -f "$script"
