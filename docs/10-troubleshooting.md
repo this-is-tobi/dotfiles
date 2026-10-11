@@ -51,7 +51,17 @@ ls -R ~/.dotfiles-backup
 cp ~/.dotfiles-backup/<timestamp>/.zshrc ~/.zshrc
 ```
 
-Edits you made to an installed dotfile (for example `~/.zshrc`) are replaced the same way by the repository version when you re-run the setup with `-d`; the previous content is in that directory. This is not the same thing as the `backup/` scripts, which copy your files to a directory of your choice.
+Edits you made to an installed dotfile (for example `~/.zshrc`) are replaced the same way by the repository version when you re-run the setup with `-d`; the previous content is in that directory. The setup never deletes those directories: every run that replaces a file adds a new one, holding the version that was on the machine at that moment. This is not the same thing as the `backup/` scripts, which copy your files to a directory of your choice.
+
+The `-d` output says how many lines the old file had that the new one does not, for example `(21 lines it had are not in the new file)`. When it is not 0, see what you would lose, and move it where the setup does not write:
+```sh
+# Lines that differ between the saved file and the new one (the timestamp is in the -d output)
+diff ~/.dotfiles-backup/<timestamp>/.zshrc ~/.zshrc
+```
+- shell: `~/.zshrc.local`, sourced at the end of `.zshrc`
+- git: `~/.gitconfig.local`
+- secrets: `~/.config/dotfiles/secrets.env`
+- VS Code `settings.json` and `~/.claude/settings.json` are merged, so what you added there stays
 
 ### The -r Flag Does Nothing
 

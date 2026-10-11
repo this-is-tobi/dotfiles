@@ -104,6 +104,11 @@ if (( $+commands[terraform] || $+commands[vault] )); then
   (( $+commands[vault] )) && complete -o nospace -C vault vault
 fi
 
+# make completion: only show targets, hide variables and files
+zstyle ':completion:*:make:*:targets' call-command true
+zstyle ':completion:*:make:*' tag-order targets
+zstyle ':completion:*:make:*:variables' command false
+
 # aliases
 alias cs="cheat_glow"
 alias dsp="docker system prune -a -f"
@@ -127,6 +132,7 @@ alias ke="kubectl exec"
 alias kexp="kubectl explain"
 alias kescape="kubectl-kubescape"
 alias kg="kubectl get"
+alias kga="kubectl get deploy,sts,ds,po,svc,ing,cm,vaultstaticsecrets,secret,cluster,scheduledbackups,pvc,hpa,job,cronjob,sa,networkpolicy"
 alias kgpw="watch 'kubectl get pod'"
 alias kgr="kubectl get pod -o custom-columns='NAME:.metadata.name,CPU_REQ:spec.containers[].resources.requests.cpu,CPU_LIM:spec.containers[].resources.limits.cpu,MEM_REQ:spec.containers[].resources.requests.memory,MEM_LIM:spec.containers[].resources.limits.memory'"
 alias kkrew="kubectl-krew"
@@ -172,3 +178,17 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # cheat
 export CHEAT_USE_FZF=true
+
+# pnpm: where `pnpm add -g` links its binaries (`pnpm setup` would append this to ~/.zshrc)
+if [ "$(uname)" = Darwin ]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+else
+  export PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
+fi
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# machine-specific shell config: not part of the repository, so a setup run keeps it
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"

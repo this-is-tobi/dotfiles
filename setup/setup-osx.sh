@@ -320,7 +320,7 @@ if [[ "$COPY_DOTFILES" = "true" ]]; then
     VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
     vscode_settings="$(mktemp)"
     sed "s|__HOME__|$HOME|g" "$DOTFILES_PATH/.vscode/settings.json" > "$vscode_settings"
-    install_file "$vscode_settings" "$VSCODE_USER_DIR/settings.json"
+    "$SCRIPT_PATH/helpers/vscode-settings.sh" "$vscode_settings" "$VSCODE_USER_DIR/settings.json"
     rm -f "$vscode_settings"
     install_file "$DOTFILES_PATH/.vscode/mcp.json" "$VSCODE_USER_DIR/mcp.json"
     "$SCRIPT_PATH/helpers/vscode-extensions.sh" code "$DOTFILES_PATH/.vscode/extensions.json"

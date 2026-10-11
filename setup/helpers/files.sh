@@ -19,6 +19,16 @@ backup_file() {
   cp -p "$file" "$DOTFILES_BACKUP_DIR/$rel"
 }
 
+# lines_lost <old> <new>: how many distinct lines of the text file <old> the file
+# <new> does not have. Binary files count as 0.
+lines_lost() {
+  local old="$1" new="$2"
+  grep -Iq . "$old" 2>/dev/null || { echo 0; return 0; }
+  LC_ALL=C comm -23 \
+    <(LC_ALL=C sort -u "$old" | grep -vE '^[[:space:]]*$' || true) \
+    <(LC_ALL=C sort -u "$new" | grep -vE '^[[:space:]]*$' || true) | wc -l | tr -d ' '
+}
+
 # install_file <src> <dst>: copy src over dst, backing dst up first if it differs.
 # A dst that already is src (a symlink into the repository) is left alone.
 install_file() {
@@ -28,8 +38,14 @@ install_file() {
     return 0
   fi
   if [ -e "$dst" ] && ! cmp -s "$src" "$dst"; then
+    local lost
+    lost="$(lines_lost "$dst" "$src")"
     backup_file "$dst"
-    printf "  backed up %s to %s\n" "$dst" "$DOTFILES_BACKUP_DIR"
+    if [ "$lost" -gt 0 ]; then
+      printf "  backed up %s to %s (%s lines it had are not in the new file)\n" "$dst" "$DOTFILES_BACKUP_DIR" "$lost"
+    else
+      printf "  backed up %s to %s\n" "$dst" "$DOTFILES_BACKUP_DIR"
+    fi
   fi
   cp "$src" "$dst"
 }
