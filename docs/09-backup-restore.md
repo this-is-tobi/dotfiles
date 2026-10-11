@@ -323,7 +323,7 @@ The setup already installed the repository's `~/.config`. Copy back from `$BACKU
 
 5. **Restore the rta store** (only if you use one):
 ```sh
-RTA_DATA="${RTA_DATA_DIR:-$HOME/.local/share/rta}"
+RTA_DATA="${RTA_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/rta}"
 mkdir -p "$RTA_DATA" && chmod 700 "$RTA_DATA"
 cp -p "$BACKUP/rta/kv.age" "$BACKUP/rta/kv.recipients" "$RTA_DATA/"
 ```

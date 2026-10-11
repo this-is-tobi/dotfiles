@@ -107,6 +107,7 @@ Custom shell functions are defined in `.config/dotfiles/functions.sh` and provid
 | `dks`        | Decode Kubernetes secret                            | `dks <secret_name> [namespace]`  |
 | `kbp`        | Kill the process listening on a TCP port            | `kbp 8080`                       |
 | `randompass` | Generate random password (24 characters by default) | `randompass [length]`            |
+| `secrets`    | Load the keys in `DOTFILES_RTA_KEYS` from rta       | `secrets`                        |
 | `tools`      | Execute remote utility scripts                      | `tools [script_name.sh] [args]`  |
 | `timestampd` | Convert timestamp to date                           | `timestampd 1234567890`          |
 | `timestampe` | Convert date to timestamp                           | `timestampe "2023-01-01"`        |

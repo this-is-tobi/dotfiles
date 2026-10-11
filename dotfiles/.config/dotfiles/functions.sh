@@ -175,7 +175,7 @@ secrets() {
 		printf "  Load secrets from the rta store (rta kv) into this shell.\n\n"
 		printf "Usage:\n"
 		printf "  secrets   export the rta keys named in DOTFILES_RTA_KEYS (set it in secrets.env),\n"
-		printf "            asking for the passphrase when the store is locked with one.\n"
+		printf "            asking for the passphrase of the store or of its key (RTA_KV_IDENTITY) when needed.\n"
 		;;
 	*)
 		if ! command -v rta >/dev/null 2>&1; then
@@ -187,7 +187,9 @@ secrets() {
 			return 1
 		fi
 		local rta_env
-		rta_env="$(rta kv env ${=DOTFILES_RTA_KEYS})" || return 1
+		# --format and --prefix are explicit so an rta config that changes them
+		# (dotenv output, a prefix) cannot make eval set the wrong variables
+		rta_env="$(rta kv env --format export --prefix '' -- ${=DOTFILES_RTA_KEYS})" || return 1
 		eval "$rta_env"
 		echo "loaded: $DOTFILES_RTA_KEYS"
 		;;
