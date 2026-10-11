@@ -19,7 +19,7 @@ The setup does not install the Command Line Tools and Homebrew silently. When on
 - `git`, to clone the repository (the commons step also installs it)
 - Internet connection
 
-Running as `root`, as on a minimal image or in a container, is supported: when `sudo` is missing the script installs it first, and an unset `$USER` falls back to `id -un`. As any other user, `sudo` must already be installed, otherwise the script exits with an error asking you to install it as root (`apt install sudo`). The script also makes zsh the login shell (`chsh`, run through `sudo`) unless `$SHELL` already is zsh; the change applies to your next login.
+Running as `root`, as on a minimal image or in a container, is supported: when `sudo` is missing the script installs it first, and an unset `$USER` falls back to `id -un`. As any other user, `sudo` must already be installed, otherwise the script exits with an error asking you to install it as root (`apt install sudo`). The script then asks for your sudo password once, at the start, and keeps the credentials fresh in the background until it ends, so a long run does not stop at a second prompt halfway. When sudo cannot ask (no terminal) and needs a password, the script stops right away with an error. The script also makes zsh the login shell (`chsh`, run through `sudo`) unless `$SHELL` already is zsh; the change applies to your next login.
 
 ## Installation Methods
 
@@ -167,6 +167,7 @@ Pin `TOOLS_REF`, `OMZ_REF` and `HOMEBREW_INSTALL_REF` to a tag or a commit SHA w
 Apart from the prompts below, the setup scripts run unattended, which makes them usable for automation and CI/CD pipelines. Without a terminal the script never waits for an answer:
 
 - **macOS**: a missing Command Line Tools or Homebrew install is confirmed with a `y`/`N` question. Without a terminal the script exits with status 1 and an error instead of asking.
+- **Debian**: the sudo password is asked once at the start (as `root`, sudo is not used). Without a terminal, sudo has to work without a password, as on most CI runners, otherwise the script exits with status 1 and an error before installing anything.
 - **`-d`**: when `~/.gitconfig.local` does not exist yet and no identity can be carried over from an existing `~/.gitconfig`, the script asks for your Git name and email. Without a terminal it prints the `git config --file ~/.gitconfig.local ...` commands to run and carries on.
 
 oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt-get install -y` and `DEBIAN_FRONTEND=noninteractive` (a package that asks a configuration question takes the default answer). The package lists are refreshed once per run, and again after a profile adds an apt repository (Docker, Teleport, mise).
