@@ -34,12 +34,14 @@ Both scripts copy files with [rclone](https://rclone.org), which the base profil
             is created).
 -o DIR      Output directory (default: current directory). The backup itself is
             written to DIR/backup_<timestamp>.
+-x FILE     Extra rclone exclude patterns, one per line, applied to every directory
+            copy (default: $BACKUP_EXCLUDE_FILE). See Extra excludes.
 -h          Display help message
 ```
 
 Any other flag prints the help and exits with status 1 (there is no `-d` option: the output directory is `-o`).
 
-**Environment:** `BACKUP_GPG_EMAIL` selects the GPG key to export (default: the `user.email` of your git configuration).
+**Environment:** `BACKUP_GPG_EMAIL` selects the GPG key to export (default: the `user.email` of your git configuration). `BACKUP_EXCLUDE_FILE` is the default for `-x`.
 
 **Examples:**
 ```sh
@@ -75,16 +77,18 @@ BACKUP_GPG_EMAIL=you@example.com ./backup/backup-osx.sh -o ~/backups/dotfiles
 
 **Options:**
 ```
--f          Full backup: copy the whole home directory instead of only ~/dev.
-            For personal use.
+-f          Full backup: copy Desktop, dev, Documents, Downloads, Music, Pictures and
+            Videos from the home directory, instead of only ~/dev. For personal use.
 -n          Dry run: show what would be copied without copying anything (no directory
             is created).
 -o DIR      Output directory (default: current directory). The backup itself is
             written to DIR/backup_<timestamp>.
+-x FILE     Extra rclone exclude patterns, one per line, applied to every directory
+            copy (default: $BACKUP_EXCLUDE_FILE). See Extra excludes.
 -h          Display help message
 ```
 
-Any other flag prints the help and exits with status 1. `BACKUP_GPG_EMAIL` works as on macOS.
+Any other flag prints the help and exits with status 1. `BACKUP_GPG_EMAIL` and `BACKUP_EXCLUDE_FILE` work as on macOS.
 
 **Examples:**
 ```sh
@@ -136,13 +140,31 @@ To keep one of them out of your backups, remove it from the `DOT_FILES` list in 
 Each directory goes to `home/<name>`:
 
 - **macOS:** `~/dev` by default. With `-f`: `~/Desktop`, `~/dev`, `~/Documents`, `~/Downloads`, `~/Movies`, `~/Music` and `~/Pictures`
-- **Debian:** `~/dev` by default. With `-f`: the whole home directory, as `home/<username>/` (it holds a second copy of the dotfiles above, without their per-directory exclusions)
+- **Debian:** `~/dev` by default. With `-f`: `~/Desktop`, `~/dev`, `~/Documents`, `~/Downloads`, `~/Music`, `~/Pictures` and `~/Videos`
 
 ### 5. Brave (macOS only)
-- If `~/Library/Application Support/BraveSoftware` exists, the `Default` profile is copied to `brave/Default` (`Cache`, `Code Cache`, `GPUCache`, `DawnCache` and `Crashpad` excluded)
+- If `~/Library/Application Support/BraveSoftware` exists, the `Default` profile is copied to `brave/Default` (`Cache`, `Code Cache`, `GPUCache`, `DawnCache`, `Crashpad` and the service worker caches `Service Worker/CacheStorage` and `Service Worker/ScriptCache` excluded)
 
 ### Always excluded
-Every directory copy skips OS metadata (`.DS_Store`, `Thumbs.db`), `*.tmp`, `*.log`, earlier backups (`backup_*`, so a backup written under a source directory never copies itself), `.cache`, `.local/share/mise` and regenerable project output: `node_modules`, `__pycache__`, `*.pyc`, `.venv`, `venv`, `.pytest_cache`, `target`, `dist`, `build`, `.next`, `.nuxt`, `.gradle`, `.parcel-cache` and `coverage`. These patterns have no leading `/`, so they match at any depth: a project folder named `build` or `dist` is skipped too. Symbolic links are followed (their target is copied).
+Every directory copy skips OS metadata (`.DS_Store`, `Thumbs.db`), `*.tmp`, `*.log`, earlier backups (`backup_*`, so a backup written under a source directory never copies itself), `.cache`, `.local/share/mise` and regenerable project output: `node_modules`, `__pycache__`, `*.pyc`, `.venv`, `venv`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `.tox`, `.turbo`, `.angular`, `.svelte-kit`, `.output`, `.terraform`, `.terragrunt-cache`, `target`, `dist`, `build`, `.next`, `.nuxt`, `.gradle`, `.parcel-cache` and `coverage`. These patterns have no leading `/`, so they match at any depth: a project folder named `build` or `dist` is skipped too. Symbolic links are followed (their target is copied).
+
+### Extra excludes
+Anything specific to your machine, such as local CI runner state or a scratch directory, belongs in a file of your own rather than in the script. Pass it with `-x` or set `BACKUP_EXCLUDE_FILE`. It holds one rclone pattern per line (`#` starts a comment) and applies to every directory copy:
+
+```
+# local act runner state: a registry cache and old artifacts
+ci/act/docker/**
+ci/act/artifacts/**
+```
+
+```sh
+./backup/backup-osx.sh -x ~/.config/dotfiles/backup-exclude.txt -o /Volumes/Backup/dotfiles
+```
+
+The script exits with status 1 when the file does not exist. A dry run (`-n`) shows what is left to copy.
+
+### Speed
+The copies already run 12 files at a time with 24 checkers. In a local-disk test, raising those numbers or skipping checksums changed nothing, and rclone was about twice as fast as `rsync` or `tar`. What shortens a backup is copying fewer files: a dry run (`-n`) lists them, and the patterns above and your exclude file are the lever. A slow destination, such as a USB drive or a network share, sets the limit from there.
 
 ### Not backed up
 - **Package lists.** The scripts do not record installed packages (see [Package Restore](#package-restore))
@@ -183,7 +205,7 @@ backup_2026-10-10T13-26-17/
 │   ├── .tsh/
 │   └── .zshrc
 ├── home/
-│   └── dev/                   (with -f: also Desktop, Documents, ... on macOS; <username>/ on Debian)
+│   └── dev/                   (with -f: also Desktop, Documents, ...)
 └── brave/                     (macOS only, when Brave is installed)
     └── Default/
 ```
