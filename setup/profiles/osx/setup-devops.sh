@@ -5,6 +5,12 @@ set -euo pipefail
 red='\e[0;31m'
 no_color='\033[0m'
 
+# Get current script path (this file lives in setup/profiles/osx/)
+SCRIPT_PATH="$( cd -- "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P )"
+
+# shellcheck source=../../helpers/brew.sh
+. "$SCRIPT_PATH/helpers/brew.sh"
+
 # Optionally restrict which tool categories get installed, e.g. for a
 # container image that only needs Kubernetes tooling:
 #   DEVOPS_CATEGORIES=k8s ./setup-osx.sh -p devops -l
@@ -43,10 +49,14 @@ install_k8s_lite() {
 }
 
 install_iac_lite() {
+  # homebrew/core stopped at terraform 1.5.7, the last release before the
+  # license change: HashiCorp's tap has the current ones. Naming the formula
+  # with its tap is what makes Homebrew add (and trust) the tap.
   printf "\n\n${red}[devops/iac] =>${no_color} Install homebrew packages (cli)\n\n"
+  brew_leave_core terraform
   brew install --formula \
     ansible \
-    terraform
+    hashicorp/tap/terraform
 }
 
 install_misc_lite() {

@@ -153,6 +153,8 @@ The **Category** column corresponds to the `DEVOPS_CATEGORIES` values described 
 | [velero](https://velero.io)                                   | Kubernetes backup and migration                                                                        | k8s      | -    | homebrew | mise   |
 | [yamllint](https://yamllint.readthedocs.io)                   | Linter for YAML files                                                                                  | misc     | -    | homebrew | mise   |
 
+On macOS, terraform comes from HashiCorp's tap (`hashicorp/tap/terraform`): homebrew/core stopped at 1.5.7, the last release before the license change. A terraform installed earlier from homebrew/core is uninstalled first, because Homebrew cannot install the tap formula next to it.
+
 ### kubectl Plugins (via Krew)
 
 | Plugin                                                        | Description                          | Lite | Installation |
@@ -184,6 +186,8 @@ The **SecOps** profile provides security scanning, secret management, and compli
 | [sops](https://github.com/getsops/sops)             | Encrypted file editor              | -    | homebrew | mise   |
 | [trivy](https://aquasecurity.github.io/trivy)       | Vulnerability scanner              | ✓    | homebrew | mise   |
 | [vault](https://vaultproject.io)                    | HashiCorp Vault CLI                | -    | homebrew | mise   |
+
+On macOS, vault comes from HashiCorp's tap (`hashicorp/tap/vault`) for the same reason as terraform: homebrew/core stopped at 1.14.4. A vault from homebrew/core is uninstalled first.
 
 ---
 
