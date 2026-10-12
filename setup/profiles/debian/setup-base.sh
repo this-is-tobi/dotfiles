@@ -147,6 +147,9 @@ install_additional_setup() {
 
 
   # Install mise packages
+  # tlrc goes through the github backend: its aqua registry entry lists no
+  # linux/arm64 asset, although the release publishes one (the toolbox images
+  # are built for arm64 too).
   # neovim is addressed through aqua explicitly: its registry entry lists a
   # vfox plugin first, and aqua verifies checksums on the upstream release
   # assets instead of running a third-party plugin script.
@@ -159,7 +162,7 @@ install_additional_setup() {
     aqua:neovim/neovim@latest \
     ttyd@latest \
     vhs@latest \
-    tlrc@latest
+    github:tldr-pages/tlrc@latest
 
 
   # Install gh extensions
