@@ -147,9 +147,6 @@ install_additional_setup() {
 
 
   # Install mise packages
-  # tldr goes through the github backend rather than the registry: isacikgoz's
-  # fork is not registered there, and it publishes linux assets only - which is
-  # why macOS installs it from the isacikgoz/taps Homebrew tap instead.
   # neovim is addressed through aqua explicitly: its registry entry lists a
   # vfox plugin first, and aqua verifies checksums on the upstream release
   # assets instead of running a third-party plugin script.
@@ -162,7 +159,7 @@ install_additional_setup() {
     aqua:neovim/neovim@latest \
     ttyd@latest \
     vhs@latest \
-    github:isacikgoz/tldr@latest
+    tlrc@latest
 
 
   # Install gh extensions

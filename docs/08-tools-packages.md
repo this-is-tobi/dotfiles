@@ -96,11 +96,10 @@ Kubernetes tools (DevOps profile):
 
 **kubectl Plugins (via Krew):**
 ```sh
-kubectl krew install cert-manager  # cert-manager CLI
 kubectl krew install cnpg          # CloudNativePG CLI
 kubectl krew install df-pv         # PV disk usage
 kubectl krew install ktop          # Kubernetes top
-kubectl krew install neat          # Clean YAML output
+kubectl krew install neat          # Clean YAML output (macOS only)
 kubectl krew install stern         # Multi-pod logs
 kubectl krew install view-secret   # Decode secrets
 ```
@@ -228,7 +227,7 @@ mise ls-remote node
 
 # Tools not in the registry are addressed by backend
 mise use --global aqua:helm/chart-testing@latest
-mise use --global github:isacikgoz/tldr@latest
+mise use --global tlrc@latest
 
 # Refresh shims after installing globals via npm/go
 mise reshim
@@ -282,7 +281,7 @@ Cheatsheets and help tools (Base profile):
 | Tool   | Purpose                 | Source        |
 | ------ | ----------------------- | ------------- |
 | cheat  | Interactive cheatsheets | homebrew/mise |
-| tldr++ | Simplified man pages    | homebrew/mise |
+| tlrc   | Simplified man pages    | homebrew/mise |
 
 ### Media & Graphics
 
@@ -319,7 +318,7 @@ Miscellaneous utilities:
 | man, man-db, manpages-dev | Manual pages and viewer (Debian only)               | apt            |
 | fontconfig                | Font configuration, provides fc-cache (Debian only) | apt            |
 | nerd-fonts                | Hack and Symbols Only fonts for neovim              | shell          |
-| mkcert                    | Local SSL certificates                              | homebrew/mise  |
+| mkcert                    | Local SSL certificates (macOS only)                 | homebrew       |
 | coder                     | Remote development                                  | homebrew/mise  |
 | oras                      | OCI registry client                                 | homebrew/mise  |
 | velero                    | Kubernetes backup                                   | homebrew/mise  |
