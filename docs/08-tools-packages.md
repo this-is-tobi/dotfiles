@@ -227,7 +227,7 @@ mise ls-remote node
 
 # Tools not in the registry are addressed by backend
 mise use --global aqua:helm/chart-testing@latest
-mise use --global tlrc@latest
+mise use --global github:tldr-pages/tlrc@latest
 
 # Refresh shims after installing globals via npm/go
 mise reshim
