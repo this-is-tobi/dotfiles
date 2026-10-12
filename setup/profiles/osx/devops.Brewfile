@@ -10,6 +10,7 @@ all = categories.include?("all")
 
 if all || categories.include?("k8s")
   brew "helm"
+  brew "cmctl"
   brew "norwoodj/tap/helm-docs", trusted: true
   brew "krew"
   brew "kubectx"

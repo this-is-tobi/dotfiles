@@ -37,6 +37,7 @@ install_k8s_lite() {
   printf "\n\n${red}[devops/k8s] =>${no_color} Install mise packages\n\n"
   mise_use \
     helm@latest \
+    cmctl@latest \
     helm-docs@latest \
     krew@latest \
     kubectl@latest \
@@ -46,11 +47,9 @@ install_k8s_lite() {
 
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
   run krew install \
-    cert-manager \
     cnpg \
     df-pv \
     ktop \
-    neat \
     stern \
     view-secret
 }
@@ -140,7 +139,6 @@ install_misc_full() {
     actionlint@latest \
     coder@latest \
     k6@latest \
-    mkcert@latest \
     oras@latest \
     yamllint@latest
 

@@ -41,7 +41,6 @@ brew_bundle "$SCRIPT_PATH/profiles/osx/devops.Brewfile" HOMEBREW_DOTFILES_DEVOPS
 if devops_wants k8s; then
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
   run kubectl krew install \
-    cert-manager \
     cnpg \
     df-pv \
     ktop \

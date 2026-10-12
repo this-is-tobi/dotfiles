@@ -185,13 +185,6 @@ fi
 # gpg
 export GPG_TTY="$TTY"
 
-# tldr++
-if [[ $OSTYPE == darwin* ]]; then
-  export TLDR_OS=osx
-else
-  export TLDR_OS=linux
-fi
-
 # krew plugin for kubectl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 

@@ -76,7 +76,7 @@ The **Base** profile provides enhanced CLI tools and common applications for dai
 | [rclone](https://rclone.org)                                       | Swiss army knife of cloud storage                                                                          | ✓    | homebrew | mise   |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)                   | Recursively search directories for regex patterns                                                          | ✓    | homebrew | mise   |
 | [sshs](https://github.com/quantumsheep/sshs)                       | Interactive SSH client                                                                                     | ✓    | homebrew | mise   |
-| [tldr++](https://github.com/isacikgoz/tldr)                        | Interactive cheatsheet tool                                                                                | -    | homebrew | mise   |
+| [tlrc](https://github.com/tldr-pages/tlrc)                         | tldr client (official), simplified man pages                                                               | -    | homebrew | mise   |
 | [tree](https://mama.indstate.edu/users/ice/tree)                   | Display filesystem as tree                                                                                 | ✓    | homebrew | apt    |
 | [ttyd](https://github.com/tsl0922/ttyd)                            | Share terminal over the web                                                                                | -    | homebrew | mise   |
 | [vhs](https://github.com/charmbracelet/vhs)                        | CLI home video recorder (terminal recordings)                                                              | -    | homebrew | mise   |
@@ -143,7 +143,7 @@ The **Category** column corresponds to the `DEVOPS_CATEGORIES` values described 
 | [kubectx](https://github.com/ahmetb/kubectx)                  | Kubernetes context switcher                                                                            | k8s      | ✓    | homebrew | mise   |
 | [kubens](https://github.com/ahmetb/kubectx)                   | Kubernetes namespace switcher (shipped with the kubectx formula on macOS; its own mise tool on Debian) | k8s      | ✓    | homebrew | mise   |
 | [libonig-dev](https://packages.debian.org/en/sid/libonig-dev) | Oniguruma regex library, development files (installed before ansible-dev-tools)                        | iac      | -    | -        | apt    |
-| [mkcert](https://github.com/FiloSottile/mkcert)               | Make locally trusted certificates                                                                      | misc     | -    | homebrew | mise   |
+| [mkcert](https://github.com/FiloSottile/mkcert)               | Make locally trusted certificates (macOS only, not installed on Debian)                                | misc     | -    | homebrew | -      |
 | [oc](https://www.openshift.com)                               | OpenShift CLI                                                                                          | k8s      | ✓    | homebrew | mise   |
 | [oras](https://github.com/oras-project/oras)                  | OCI Registry As Storage CLI                                                                            | misc     | -    | homebrew | mise   |
 | [python3-dev](https://packages.debian.org/en/sid/python3-dev) | Python development files (installed before ansible-dev-tools)                                          | iac      | -    | -        | apt    |
@@ -161,11 +161,11 @@ On macOS, terraform comes from HashiCorp's tap (`hashicorp/tap/terraform`): home
 
 | Plugin                                                        | Description                          | Lite | Installation |
 | ------------------------------------------------------------- | ------------------------------------ | ---- | ------------ |
-| [cert-manager](https://cert-manager.io)                       | cert-manager CLI (cmctl)             | ✓    | krew         |
+| [cmctl](https://cert-manager.io)                              | cert-manager CLI (homebrew/mise, the krew plugin is stuck on 2.1.0) | ✓    | homebrew/mise |
 | [cnpg](https://github.com/cloudnative-pg/cloudnative-pg)      | CloudNativePG operator CLI           | ✓    | krew         |
 | [df-pv](https://github.com/yashbhutwala/kubectl-df-pv)        | Show disk usage of PersistentVolumes | ✓    | krew         |
 | [ktop](https://github.com/vladimirvivien/ktop)                | Top-like tool for Kubernetes         | ✓    | krew         |
-| [neat](https://github.com/itaysk/kubectl-neat)                | Clean up Kubernetes YAML output      | ✓    | krew         |
+| [neat](https://github.com/itaysk/kubectl-neat)                | Clean up Kubernetes YAML output (macOS only) | ✓    | krew         |
 | [stern](https://github.com/stern/stern)                       | Multi-pod log tailing                | ✓    | krew         |
 | [view-secret](https://github.com/elsesiy/kubectl-view-secret) | Decode Kubernetes secrets easily     | ✓    | krew         |
 

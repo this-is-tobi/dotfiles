@@ -33,7 +33,7 @@ unless lite
   brew "nmap"
   brew "nvim"
   brew "pandoc"
-  brew "isacikgoz/taps/tldr", trusted: true
+  brew "tlrc"
   brew "ttyd"
   brew "vhs"
 
