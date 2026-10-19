@@ -533,8 +533,9 @@ tools with `@latest`.
 Upgrading mise itself follows whichever way it was installed: `brew upgrade
 mise` on macOS, `sudo apt-get install --only-upgrade mise` (or a full
 `apt upgrade`) on Debian, where it comes from mise's signed apt repository.
-A copy installed earlier with the `mise.run` script, in `~/.local/bin`, updates
-with `mise self-update`.
+A copy installed with the `mise.run` script, in `~/.local/bin` (earlier, or because
+`mise.jdx.dev` was blocked, see [Profiles](04-profiles.md)), updates with
+`mise self-update`.
 
 ## Further Resources
 
