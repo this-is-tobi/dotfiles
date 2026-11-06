@@ -167,8 +167,12 @@ install_additional_setup() {
 
   # Install gh extensions
   printf "\n\n${red}[base] =>${no_color} Install gh extensions\n\n"
+  # The list is read once instead of piped into `grep -q`: grep exits at its first
+  # match, gh then dies on SIGPIPE and pipefail turns that into a failure, so an
+  # extension listed near the top was read as missing and "installed" again.
+  installed_extensions=$(gh extension list 2>/dev/null || true)
   for extension in dlvhdr/gh-dash meiji163/gh-notify; do
-    gh extension list 2>/dev/null | grep -q "$extension" || run gh extension install "$extension"
+    grep -q "$extension" <<<"$installed_extensions" || run gh extension install "$extension"
   done
 
 
