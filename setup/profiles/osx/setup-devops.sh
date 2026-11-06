@@ -38,6 +38,10 @@ fi
 brew_bundle "$SCRIPT_PATH/profiles/osx/devops.Brewfile" HOMEBREW_DOTFILES_DEVOPS_CATEGORIES="$DEVOPS_CATEGORIES"
 
 # Install krew plugins (lite and full mode)
+# krew installs every plugin it can and only then exits non-zero for the ones it
+# could not (an archive that no longer matches the checksum krew-index lists for
+# it, say). One plugin is not worth failing the setup over: the rest are
+# installed and a re-run retries the missing one.
 if devops_wants k8s; then
   printf "\n\n${red}[devops/k8s] =>${no_color} Install krew plugins\n\n"
   run kubectl krew install \
@@ -46,5 +50,6 @@ if devops_wants k8s; then
     ktop \
     neat \
     stern \
-    view-secret
+    view-secret \
+    || printf "Warning: some krew plugins could not be installed, see the krew output above\n" >&2
 fi
