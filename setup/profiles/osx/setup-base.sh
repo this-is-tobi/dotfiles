@@ -38,7 +38,7 @@ install_additional_setup() {
   # match, gh then dies on SIGPIPE and pipefail turns that into a failure, so an
   # extension listed near the top was read as missing and "installed" again.
   installed_extensions=$(gh extension list 2>/dev/null || true)
-  for extension in dlvhdr/gh-dash meiji163/gh-notify; do
+  for extension in dlvhdr/gh-dash meiji163/gh-notify github/gh-actions-lock; do
     grep -q "$extension" <<<"$installed_extensions" || run gh extension install "$extension"
   done
 

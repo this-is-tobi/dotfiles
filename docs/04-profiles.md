@@ -90,10 +90,11 @@ On Debian, bat-extras is installed from its release zip, pinned to one version a
 
 ### GitHub CLI Extensions
 
-| Extension                                          | Description                      | Lite | macOS | Debian |
-| -------------------------------------------------- | -------------------------------- | ---- | ----- | ------ |
-| [gh-dash](https://github.com/dlvhdr/gh-dash)       | GitHub dashboard in terminal     | -    | gh    | gh     |
-| [gh-notify](https://github.com/meiji163/gh-notify) | GitHub notifications in terminal | -    | gh    | gh     |
+| Extension                                                    | Description                                  | Lite | macOS | Debian |
+| ------------------------------------------------------------ | -------------------------------------------- | ---- | ----- | ------ |
+| [gh-dash](https://github.com/dlvhdr/gh-dash)                 | GitHub dashboard in terminal                 | -    | gh    | gh     |
+| [gh-notify](https://github.com/meiji163/gh-notify)           | GitHub notifications in terminal             | -    | gh    | gh     |
+| [gh-actions-lock](https://github.com/github/gh-actions-lock) | Lock and verify workflow action dependencies | -    | gh    | gh     |
 
 ### Applications (macOS only)
 
