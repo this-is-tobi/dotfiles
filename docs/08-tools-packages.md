@@ -56,17 +56,18 @@ Modern replacements and enhancements (Base profile):
 
 Git and platform CLIs (Base profile):
 
-| Tool    | Description         | Extensions         | Source        |
-| ------- | ------------------- | ------------------ | ------------- |
-| lazygit | Terminal UI for git | -                  | homebrew/mise |
-| gh      | GitHub CLI          | gh-dash, gh-notify | homebrew/mise |
-| glab    | GitLab CLI          | -                  | homebrew/mise |
+| Tool    | Description         | Extensions                          | Source        |
+| ------- | ------------------- | ----------------------------------- | ------------- |
+| lazygit | Terminal UI for git | -                                   | homebrew/mise |
+| gh      | GitHub CLI          | gh-dash, gh-notify, gh-actions-lock | homebrew/mise |
+| glab    | GitLab CLI          | -                                   | homebrew/mise |
 
 **GitHub CLI Extensions:**
 ```sh
 # Install via gh
 gh extension install dlvhdr/gh-dash    # Dashboard TUI
 gh extension install meiji163/gh-notify  # Notifications TUI
+gh extension install github/gh-actions-lock  # Lock and verify workflow action dependencies (actions.lock)
 ```
 
 ### Container & Orchestration
