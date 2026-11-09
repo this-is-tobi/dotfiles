@@ -39,8 +39,6 @@ unless lite
 
   cask "brave-browser"
   cask "firefox"
-  cask "insomnia"
   cask "mattermost"
-  cask "openvpn-connect"
   cask "visual-studio-code"
 end

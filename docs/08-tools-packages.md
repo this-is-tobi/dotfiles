@@ -335,9 +335,7 @@ Miscellaneous utilities:
 | VS Code         | Code editor     | Free    |
 | Brave           | Privacy browser | Free    |
 | Firefox         | Privacy browser | Free    |
-| Insomnia        | API client      | Free    |
 | Mattermost      | Team chat       | Free    |
-| OpenVPN Connect | VPN client      | Free    |
 | Docker Desktop  | Container GUI   | Free    |
 
 ### AI Profile

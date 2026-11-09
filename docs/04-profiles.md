@@ -103,9 +103,7 @@ On Debian, bat-extras is installed from its release zip, pinned to one version a
 | [Brave](https://brave.com/fr)                                        | Privacy-focused web browser    | -    | homebrew cask |
 | [Docker Desktop](https://www.docker.com/products/docker-desktop)     | Container management GUI + CLI | ✓    | homebrew cask |
 | [Firefox](https://www.mozilla.org/firefox)                           | Privacy-focused web browser    | -    | homebrew cask |
-| [Insomnia](https://insomnia.rest)                                    | HTTP and GraphQL client        | -    | homebrew cask |
 | [Mattermost](https://mattermost.com)                                 | Team collaboration platform    | -    | homebrew cask |
-| [OpenVPN Connect](https://openvpn.net/client-connect-vpn-for-mac-os) | VPN client                     | -    | homebrew cask |
 | [VS Code](https://code.visualstudio.com)                             | Code editor and IDE            | -    | homebrew cask |
 
 ---
