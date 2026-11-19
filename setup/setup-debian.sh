@@ -127,6 +127,13 @@ if [ "$(id -u)" -ne 0 ] && ! dry_run; then
   trap 'kill "$sudo_keepalive_pid" 2>/dev/null' EXIT
 fi
 
+# `sudo ./setup-debian.sh` runs everything as root with a reset environment: the
+# proxy variables are dropped (downloads fail behind a corporate proxy), and
+# $HOME is root's, so the dotfiles would not land in the caller's home.
+if [ -n "${SUDO_USER:-}" ]; then
+  printf "${red}Warning:${no_color} started through sudo (as %s): proxy variables are lost and files go to root's home. Run it as your own user instead, the script calls sudo itself when needed.\n" "$SUDO_USER" >&2
+fi
+
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 i=$(($i + 1))
@@ -158,7 +165,8 @@ fi
 # Make zsh the default shell
 if [[ ! "${SHELL:-}" =~ "zsh" ]]; then
   printf "\n${red}${i}.${no_color} Make zsh the default shell\n\n"
-  run sudo chsh -s "$(command -v zsh || echo /usr/bin/zsh)" "${USER:-$(id -un)}"
+  i=$(($i + 1))
+  run sudo usermod -s "$(command -v zsh || echo /usr/bin/zsh)" "${USER:-$(id -un)}"
 fi
 
 # Install oh-my-zsh

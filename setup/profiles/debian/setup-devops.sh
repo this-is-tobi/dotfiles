@@ -163,7 +163,8 @@ install_misc_full() {
 add_teleport_apt_repository() {
   local channel="$1"
   sudo mkdir -p /etc/apt/keyrings
-  sudo curl -fsSL https://apt.releases.teleport.dev/gpg -o /etc/apt/keyrings/teleport-archive-keyring.asc
+  # curl runs as the caller, not under sudo: sudo drops the proxy variables
+  curl -fsSL https://apt.releases.teleport.dev/gpg | sudo tee /etc/apt/keyrings/teleport-archive-keyring.asc > /dev/null
   # Source os-release to get distribution ID and version codename
   . /etc/os-release
   echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/${ID?} ${VERSION_CODENAME?} ${channel}" \

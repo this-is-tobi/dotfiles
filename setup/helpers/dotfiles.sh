@@ -53,7 +53,11 @@ install_file "$DOTFILES_PATH/eslint.config.mjs" "$HOME/eslint.config.mjs"
 if [ -x "$(command -v npm)" ]; then
   eslint_dir="$HOME/.config/eslint-fallback"
   if ! cmp -s "$eslint_dir/package-lock.json" "$eslint_dir/node_modules/.dotfiles-package-lock.json"; then
-    run install_eslint_dependencies
+    # A convenience, so a failure (npm registry out of reach, behind a proxy for
+    # instance) only warns instead of stopping the steps that follow.
+    if ! run install_eslint_dependencies; then
+      printf "Warning: the eslint fallback dependencies could not be installed, skipping them\n" >&2
+    fi
   fi
 fi
 
