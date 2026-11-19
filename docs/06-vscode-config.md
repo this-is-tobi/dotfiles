@@ -24,6 +24,7 @@ The main configuration file: `dotfiles/.vscode/settings.json` (JSON with comment
 #### Editor Preferences
 
 - **Appearance** - GitHub Light/Dark Default themes following the OS color scheme, Material Icon Theme, Input Mono / Fira Code editor font with ligatures, Hack Nerd Font Mono in the terminal, minimap off, word wrap on, 2-space tabs
+- **Terminal** - zsh is the default profile on Linux (`terminal.integrated.defaultProfile.linux`), including remote and code-server machines, where VS Code would otherwise use the shell its server was started with; the setup also makes zsh the login shell. macOS already opens zsh
 - **Privacy** - `telemetry.telemetryLevel` and `redhat.telemetry.enabled` off
 - **ESLint** - `source.fixAll.eslint` runs on explicit save, ESLint is the default formatter for TypeScript, JavaScript and HTML, and `eslint.nodePath` points at the shared fallback in `~/.config/eslint-fallback` so projects without ESLint of their own still get linted (see the ESLint fallback in [Dotfiles Structure](03-dotfiles.md))
 - **Other formatters** - Markdown All in One for Markdown, HashiCorp Terraform for Terraform, Red Hat YAML for YAML (`yaml.validate` is off so Helm templates are not flagged, and schema detection is disabled for CI workflow files)

@@ -32,6 +32,9 @@
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
   },
+  // zsh on Linux and remote machines, where the shell is otherwise whatever the server
+  // process was started with (macOS already uses the login shell, zsh)
+  "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
   "terminal.integrated.gpuAcceleration": "off",
   "terminal.integrated.enableImages": true,
