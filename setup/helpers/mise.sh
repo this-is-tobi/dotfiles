@@ -125,40 +125,68 @@ install_mise_apt() (
   fi
 )
 
+# download_mise_release: put the mise binary of the latest GitHub release (or of
+# $MISE_VERSION) into ~/.local/bin, which is on PATH.
+#
+# Everything comes from github.com, nothing from mise.run or mise.jdx.dev, which
+# are the hosts a proxy refuses when this is needed. The latest version is read
+# from the redirect of /releases/latest (no API call, so no rate limit), and the
+# archive is only installed when it has the sha256 listed in the release's
+# SHASUMS256.txt.
+download_mise_release() (
+  local arch base asset expected version
+  # Not local: bash 3.2 drops a function's locals before the EXIT trap of its
+  # subshell runs, and the subshell keeps these variables to itself anyway.
+  tmp="$(mktemp -d)" || exit 1
+  trap 'rm -rf "$tmp"' EXIT
+  case "$(uname -m)" in
+    x86_64) arch=x64;;
+    aarch64 | arm64) arch=arm64;;
+    armv7l) arch=armv7;;
+    *)
+      printf "Error: there is no mise release for %s\n" "$(uname -m)" >&2
+      exit 1;;
+  esac
+  version="${MISE_VERSION:-}"
+  if [ -z "$version" ]; then
+    version="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/jdx/mise/releases/latest)" || exit 1
+    version="${version##*/}"
+  fi
+  case "$version" in
+    v[0-9]*) ;;
+    [0-9]*) version="v$version";;
+    *)
+      printf "Error: could not tell the latest mise version (got '%s')\n" "$version" >&2
+      exit 1;;
+  esac
+  base="https://github.com/jdx/mise/releases/download/$version"
+  asset="mise-$version-linux-$arch.tar.gz"
+  curl -fsSL "$base/SHASUMS256.txt" -o "$tmp/SHASUMS256.txt" || exit 1
+  expected="$(awk -v asset="./$asset" '$2 == asset { print $1 }' "$tmp/SHASUMS256.txt")"
+  if [ -z "$expected" ]; then
+    printf "Error: %s/SHASUMS256.txt does not list %s\n" "$base" "$asset" >&2
+    exit 1
+  fi
+  fetch_verified "$base/$asset" "$expected" "$tmp/mise.tar.gz" || exit 1
+  tar -xzf "$tmp/mise.tar.gz" -C "$tmp" || exit 1
+  mkdir -p "$HOME/.local/bin" || exit 1
+  install -m 755 "$tmp/mise/bin/mise" "$HOME/.local/bin/mise"
+)
+
 # Install mise from GitHub Releases, for when mise.jdx.dev cannot be reached.
 #
-# MISE_INSTALL_FROM_GITHUB makes the install script download the release archive
-# from GitHub only, and verify it against the release checksums. It lands in
-# ~/.local/bin, which is on PATH. mise-versions.jdx.dev sits behind the same
-# domain, so mise is told not to ask it either: it lists versions from GitHub.
+# The binary is downloaded from github.com alone (download_mise_release), not
+# through the https://mise.run script: that host is refused by the same proxies.
+# mise-versions.jdx.dev sits behind the same domain as well, so mise is told not
+# to ask it either: it lists versions from GitHub.
 install_mise_github() {
   printf "\n${red}[mise] =>${no_color} mise.jdx.dev is not usable (blocked by a proxy or down), installing mise from GitHub Releases instead\n\n" >&2
-  if ! MISE_INSTALL_FROM_GITHUB=1 run_remote bash https://mise.run; then
+  if ! run download_mise_release; then
     printf "Error: mise could not be installed either from GitHub. Download the archive for this machine and its SHASUMS256.txt from https://github.com/jdx/mise/releases, check the checksum, and put the mise binary in ~/.local/bin.\n" >&2
     return 1
   fi
   export MISE_USE_VERSIONS_HOST=0 MISE_USE_VERSIONS_HOST_TRACK=0
   printf "\nmise now lists versions from GitHub rather than from mise-versions.jdx.dev for this run. To keep it that way, add MISE_USE_VERSIONS_HOST=0 and MISE_USE_VERSIONS_HOST_TRACK=0 to ~/.config/dotfiles/secrets.env.\n" >&2
-  mise_rate_limit_hint
-}
-
-# mise_check_versions_host: stop mise from asking mise-versions.jdx.dev when the
-# network does not let it through.
-#
-# mise lists the versions of a tool through that host, which is not the one the
-# apt repository is on: a proxy can allow mise.jdx.dev and still refuse this one
-# (curl then fails on the CONNECT, e.g. "407 Proxy Authentication Required"), and
-# every `mise use` fails with it. Any answer, even an HTTP error, means the host
-# is reachable. A value the caller already set for MISE_USE_VERSIONS_HOST is kept.
-mise_check_versions_host() {
-  [ -z "${MISE_USE_VERSIONS_HOST:-}" ] || return 0
-  [ -z "${DOTFILES_MISE_VERSIONS_HOST_CHECKED:-}" ] || return 0
-  export DOTFILES_MISE_VERSIONS_HOST_CHECKED=1
-  if curl -sSI -o /dev/null -m 10 https://mise-versions.jdx.dev 2>/dev/null; then
-    return 0
-  fi
-  export MISE_USE_VERSIONS_HOST=0 MISE_USE_VERSIONS_HOST_TRACK=0
-  printf "\n${red}[mise] =>${no_color} mise-versions.jdx.dev cannot be reached (blocked by a proxy or down): mise lists versions from GitHub rather than from it for this run. To keep it that way, add MISE_USE_VERSIONS_HOST=0 and MISE_USE_VERSIONS_HOST_TRACK=0 to ~/.config/dotfiles/secrets.env.\n" >&2
   mise_rate_limit_hint
 }
 

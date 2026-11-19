@@ -51,7 +51,7 @@ Without `-p`, only the common packages and oh-my-zsh are installed; `-d` and `-c
 
 ### Why Not `curl | bash`?
 
-Piping a setup script into bash (`curl -fsSL .../setup/setup-osx.sh | bash`) does not work. The script is then running as `bash`, with no `setup/` or `dotfiles/` directory next to it: it stops right away with an error saying it needs the rest of the repository (and `-p` and `-d` could not work anyway). The scripts do download other scripts themselves (Homebrew, oh-my-zsh, the AI CLI installers and the helpers of the [tools](https://github.com/this-is-tobi/tools) repository), but they save each one to a temporary file first and only run it once the download succeeded, never piped straight into a shell. mise comes from Homebrew on macOS and from its signed apt repository on Debian (or, when that repository cannot be reached, from the `mise.run` script, saved to a temporary file like the others and set to download from GitHub Releases only), and the other files fetched from a fixed version (bat-extras, a few completions) are checked against a sha256 before they are installed.
+Piping a setup script into bash (`curl -fsSL .../setup/setup-osx.sh | bash`) does not work. The script is then running as `bash`, with no `setup/` or `dotfiles/` directory next to it: it stops right away with an error saying it needs the rest of the repository (and `-p` and `-d` could not work anyway). The scripts do download other scripts themselves (Homebrew, oh-my-zsh, the AI CLI installers and the helpers of the [tools](https://github.com/this-is-tobi/tools) repository), but they save each one to a temporary file first and only run it once the download succeeded, never piped straight into a shell. mise comes from Homebrew on macOS and from its signed apt repository on Debian (or, when that repository cannot be reached, from the archive of the latest GitHub release, checked against the release's `SHASUMS256.txt`), and the other files fetched from a fixed version (bat-extras, a few completions) are checked against a sha256 before they are installed.
 
 ## Installation Options
 
@@ -391,7 +391,7 @@ and no token is set.
 
 On Debian the setup installs mise from `mise.jdx.dev`. When that host is unreachable
 (or answers with a block page instead of mise's GPG key), it installs mise from
-GitHub Releases instead (`MISE_INSTALL_FROM_GITHUB=1`) and sets
+GitHub Releases instead (the archive and its `SHASUMS256.txt`, from `github.com` only) and sets
 `MISE_USE_VERSIONS_HOST=0` and `MISE_USE_VERSIONS_HOST_TRACK=0` for the run, so
 that mise lists versions from GitHub and no longer asks `mise-versions.jdx.dev`.
 Every tool install then goes through the GitHub API, hence the rate limit above.
@@ -400,7 +400,7 @@ works (a `407 Proxy Authentication Required` on every `mise use`): before the fi
 tool install the setup probes that host and, when it cannot be reached, sets the two
 variables for the run. A `MISE_USE_VERSIONS_HOST` you export yourself is kept as is.
 To keep mise off `mise-versions.jdx.dev` in your shells too, put both variables in
-`~/.config/dotfiles/secrets.env`. If `mise.run` is blocked as well, download the
+`~/.config/dotfiles/secrets.env`. If `github.com` is blocked as well, download the
 archive and its `SHASUMS256.txt` from
 [github.com/jdx/mise/releases](https://github.com/jdx/mise/releases), check the
 checksum, and put the `mise` binary in `~/.local/bin`.
