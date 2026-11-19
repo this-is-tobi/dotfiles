@@ -17,17 +17,28 @@ no_color="${no_color:-\033[0m}"
 # profiles (child processes of the setup script) know it was done already.
 export DOTFILES_APT_UPDATED="${DOTFILES_APT_UPDATED:-}"
 
+# The hosts of the third-party apt repositories the profiles add (mise, Docker,
+# Teleport). Add the host of a new repository here.
+APT_THIRD_PARTY_HOSTS="mise.jdx.dev download.docker.com apt.releases.teleport.dev"
+
 # apt_sudo <apt-get args...>: apt-get as root, non-interactive, with the proxy
 # of the caller. sudo resets the environment, and apt only reads the lowercase
 # http_proxy, https_proxy, ftp_proxy and no_proxy (an uppercase-only setting is
 # passed on in lowercase), so without this the repositories added by the
 # profiles (Docker, Teleport, mise) are unreachable behind a corporate proxy.
 #
+# apt's own proxy setting beats the environment: a machine with an enterprise
+# apt mirror usually sets Acquire::http(s)::Proxy to a proxy that only serves the
+# mirror, and answers 407 Proxy Authentication Required for any other host. When
+# the caller has an outbound proxy, the third-party hosts above are therefore
+# pinned to it (a per-host Acquire::https::Proxy::<host> wins over the general
+# one), and the mirror keeps going through the proxy apt is configured with.
+#
 # Nothing may wait on an answer either: debconf takes its defaults, a modified
 # configuration file is kept (dpkg would ask on stdin otherwise) and needrestart
 # restarts services on its own instead of showing a menu.
 apt_sudo() {
-  local name upper value env_args=()
+  local name upper value host outbound env_args=() apt_args=()
   for name in http_proxy https_proxy ftp_proxy no_proxy; do
     upper="$(printf "%s" "$name" | tr '[:lower:]' '[:upper:]')"
     value="${!name:-${!upper:-}}"
@@ -35,8 +46,14 @@ apt_sudo() {
       env_args+=("$name=$value")
     fi
   done
+  outbound="${https_proxy:-${HTTPS_PROXY:-${http_proxy:-${HTTP_PROXY:-}}}}"
+  if [ -n "$outbound" ]; then
+    for host in $APT_THIRD_PARTY_HOSTS; do
+      apt_args+=(-o "Acquire::https::Proxy::$host=$outbound")
+    done
+  fi
   sudo env ${env_args[@]+"${env_args[@]}"} DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
-    apt-get -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "$@"
+    apt-get ${apt_args[@]+"${apt_args[@]}"} -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "$@"
 }
 
 # apt_update: refresh the package lists, unless this run already did.
