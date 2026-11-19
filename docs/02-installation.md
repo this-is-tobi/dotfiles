@@ -15,11 +15,13 @@ The setup does not install the Command Line Tools and Homebrew silently. When on
 
 ### Debian/Ubuntu
 - Debian or Ubuntu: Docker's apt repository is chosen from `/etc/os-release` (`debian` or `ubuntu`), and the base profile stops with an error when it has to install Docker on any other distribution
-- `sudo` privileges: apt, locale generation, `chsh` and the Docker, Teleport and mise repositories all go through `sudo`
+- `sudo` privileges: apt, locale generation, `usermod -s` and the Docker, Teleport and mise repositories all go through `sudo`
 - `git`, to clone the repository (the commons step also installs it)
 - Internet connection
 
-Running as `root`, as on a minimal image or in a container, is supported: when `sudo` is missing the script installs it first, and an unset `$USER` falls back to `id -un`. As any other user, `sudo` must already be installed, otherwise the script exits with an error asking you to install it as root (`apt install sudo`). The script then asks for your sudo password once, at the start, and keeps the credentials fresh in the background until it ends, so a long run does not stop at a second prompt halfway. When sudo cannot ask (no terminal) and needs a password, the script stops right away with an error. The script also makes zsh the login shell (`chsh`, run through `sudo`) unless `$SHELL` already is zsh; the change applies to your next login.
+Run the script as your own user, not with `sudo ./setup-debian.sh`: `sudo` resets the environment, so the proxy variables (`http_proxy`, `https_proxy`, ...) are lost and downloads fail behind a corporate proxy, and `$HOME` becomes root's. The script warns when it detects this.
+
+Running as `root`, as on a minimal image or in a container, is supported: when `sudo` is missing the script installs it first, and an unset `$USER` falls back to `id -un`. As any other user, `sudo` must already be installed, otherwise the script exits with an error asking you to install it as root (`apt install sudo`). The script then asks for your sudo password once, at the start, and keeps the credentials fresh in the background until it ends, so a long run does not stop at a second prompt halfway. When sudo cannot ask (no terminal) and needs a password, the script stops right away with an error. The script also makes zsh the login shell (`usermod -s`, run through `sudo`, so no password prompt) unless `$SHELL` already is zsh; the change applies to your next login.
 
 ## Installation Methods
 
@@ -398,6 +400,17 @@ To keep mise off `mise-versions.jdx.dev` in your shells too, put both variables 
 archive and its `SHASUMS256.txt` from
 [github.com/jdx/mise/releases](https://github.com/jdx/mise/releases), check the
 checksum, and put the `mise` binary in `~/.local/bin`.
+
+### Behind a Corporate Proxy
+
+Export the proxy variables (`http_proxy`, `https_proxy`, `no_proxy`; upper case works too) in the shell that starts the script, and run it as your own user: `sudo ./setup-debian.sh` drops them (see [Debian/Ubuntu](#debianubuntu)). The downloads of the script, mise, `uv`, `npm`, `go` and `git` read them from the environment, and the script passes them on to the `sudo apt-get` calls itself, which is what reaches the Docker, Teleport and mise apt repositories.
+
+If the proxy inspects TLS (a certificate error rather than a connection error), install its CA certificate first: copy it as a `.crt` file into `/usr/local/share/ca-certificates/` and run `sudo update-ca-certificates`. `curl`, `git`, `go` and apt then trust it. `uv` and Node use their own certificate lists unless told otherwise:
+
+```sh
+export UV_NATIVE_TLS=1
+export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+```
 
 ### oh-my-zsh Already Installed
 

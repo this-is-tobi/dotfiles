@@ -17,10 +17,27 @@ no_color="${no_color:-\033[0m}"
 # profiles (child processes of the setup script) know it was done already.
 export DOTFILES_APT_UPDATED="${DOTFILES_APT_UPDATED:-}"
 
+# apt_sudo <apt-get args...>: apt-get as root, non-interactive, with the proxy
+# of the caller. sudo resets the environment, and apt only reads the lowercase
+# http_proxy, https_proxy, ftp_proxy and no_proxy (an uppercase-only setting is
+# passed on in lowercase), so without this the repositories added by the
+# profiles (Docker, Teleport, mise) are unreachable behind a corporate proxy.
+apt_sudo() {
+  local name upper value env_args=()
+  for name in http_proxy https_proxy ftp_proxy no_proxy; do
+    upper="$(printf "%s" "$name" | tr '[:lower:]' '[:upper:]')"
+    value="${!name:-${!upper:-}}"
+    if [ -n "$value" ]; then
+      env_args+=("$name=$value")
+    fi
+  done
+  sudo env ${env_args[@]+"${env_args[@]}"} DEBIAN_FRONTEND=noninteractive apt-get "$@"
+}
+
 # apt_update: refresh the package lists, unless this run already did.
 apt_update() {
   [ "$DOTFILES_APT_UPDATED" = "1" ] && return 0
-  run sudo apt-get update || return 1
+  run apt_sudo update || return 1
   DOTFILES_APT_UPDATED=1
 }
 
@@ -38,7 +55,7 @@ apt_sources_changed() {
 apt_install() {
   local attempt
   for attempt in 1 2 3 4 5; do
-    if apt_update && run sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"; then
+    if apt_update && run apt_sudo install -y "$@"; then
       return 0
     fi
     apt_sources_changed
