@@ -395,6 +395,10 @@ GitHub Releases instead (`MISE_INSTALL_FROM_GITHUB=1`) and sets
 `MISE_USE_VERSIONS_HOST=0` and `MISE_USE_VERSIONS_HOST_TRACK=0` for the run, so
 that mise lists versions from GitHub and no longer asks `mise-versions.jdx.dev`.
 Every tool install then goes through the GitHub API, hence the rate limit above.
+The same applies when only `mise-versions.jdx.dev` is refused while `mise.jdx.dev`
+works (a `407 Proxy Authentication Required` on every `mise use`): before the first
+tool install the setup probes that host and, when it cannot be reached, sets the two
+variables for the run. A `MISE_USE_VERSIONS_HOST` you export yourself is kept as is.
 To keep mise off `mise-versions.jdx.dev` in your shells too, put both variables in
 `~/.config/dotfiles/secrets.env`. If `mise.run` is blocked as well, download the
 archive and its `SHASUMS256.txt` from
