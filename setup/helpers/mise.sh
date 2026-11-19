@@ -190,6 +190,26 @@ install_mise_github() {
   mise_rate_limit_hint
 }
 
+# mise_check_versions_host: stop mise from asking mise-versions.jdx.dev when the
+# network does not let it through.
+#
+# mise lists the versions of a tool through that host, which is not the one the
+# apt repository is on: a proxy can allow mise.jdx.dev and still refuse this one
+# (curl then fails on the CONNECT, e.g. "407 Proxy Authentication Required"), and
+# every `mise use` fails with it. Any answer, even an HTTP error, means the host
+# is reachable. A value the caller already set for MISE_USE_VERSIONS_HOST is kept.
+mise_check_versions_host() {
+  [ -z "${MISE_USE_VERSIONS_HOST:-}" ] || return 0
+  [ -z "${DOTFILES_MISE_VERSIONS_HOST_CHECKED:-}" ] || return 0
+  export DOTFILES_MISE_VERSIONS_HOST_CHECKED=1
+  if curl -sSI -o /dev/null -m 10 https://mise-versions.jdx.dev 2>/dev/null; then
+    return 0
+  fi
+  export MISE_USE_VERSIONS_HOST=0 MISE_USE_VERSIONS_HOST_TRACK=0
+  printf "\n${red}[mise] =>${no_color} mise-versions.jdx.dev cannot be reached (blocked by a proxy or down): mise lists versions from GitHub rather than from it for this run. To keep it that way, add MISE_USE_VERSIONS_HOST=0 and MISE_USE_VERSIONS_HOST_TRACK=0 to ~/.config/dotfiles/secrets.env.\n" >&2
+  mise_rate_limit_hint
+}
+
 # mise_rate_limit_hint: say what to do about the GitHub API rate limit, unless a
 # token is exported already. Called where mise now depends on the GitHub API.
 mise_rate_limit_hint() {
