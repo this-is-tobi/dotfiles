@@ -36,7 +36,9 @@ APT_THIRD_PARTY_HOSTS="mise.jdx.dev download.docker.com apt.releases.teleport.de
 #
 # Nothing may wait on an answer either: debconf takes its defaults, a modified
 # configuration file is kept (dpkg would ask on stdin otherwise) and needrestart
-# restarts services on its own instead of showing a menu.
+# (when installed) only lists the services to restart instead of showing a menu.
+# It must not restart them: on a remote machine that can take down the very
+# session the setup runs in (sshd, logind, a remote editor's server).
 apt_sudo() {
   local name upper value host outbound env_args=() apt_args=()
   for name in http_proxy https_proxy ftp_proxy no_proxy; do
@@ -52,7 +54,7 @@ apt_sudo() {
       apt_args+=(-o "Acquire::https::Proxy::$host=$outbound")
     done
   fi
-  sudo env ${env_args[@]+"${env_args[@]}"} DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+  sudo env ${env_args[@]+"${env_args[@]}"} DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l \
     apt-get ${apt_args[@]+"${apt_args[@]}"} -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "$@"
 }
 
