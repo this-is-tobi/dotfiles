@@ -139,6 +139,9 @@ if [ -n "${SUDO_USER:-}" ]; then
   printf "${red}Warning:${no_color} started through sudo (as %s): proxy variables are lost and files go to root's home. Run it as your own user instead, the script calls sudo itself when needed.\n" "$SUDO_USER" >&2
 fi
 
+# Directories left to root by an earlier run through sudo would make the tools fail later
+check_home_ownership || exit 1
+
 # Install common
 printf "\n${red}${i}.${no_color} Install commons\n\n"
 i=$(($i + 1))
