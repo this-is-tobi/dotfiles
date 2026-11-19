@@ -116,13 +116,18 @@ fi
 # the background until the script exits: a long run (mise downloads, Docker)
 # outlasts sudo's timestamp (15 minutes by default), and would otherwise stop at
 # a password prompt halfway, or fail where nobody can answer it.
+#
+# `sudo -n true` goes first: when the account may run commands without a
+# password, nothing is asked. `sudo -v` alone would still prompt there whenever
+# another sudoers entry (the sudo group, typically) requires a password, because
+# it only skips the prompt if every matching entry is NOPASSWD (sudoers verifypw).
 if [ "$(id -u)" -ne 0 ] && ! dry_run; then
-  if ! sudo -v; then
+  if ! sudo -n true 2>/dev/null && ! sudo -v; then
     printf "Error: sudo could not validate your credentials. Run this script from an interactive terminal, or allow %s to use sudo without a password.\n" "${USER:-$(id -un)}" >&2
     exit 1
   fi
   # -n: the refresh never prompts, it stops when sudo would need the password again
-  ( while sleep 60 && kill -0 "$$" 2>/dev/null; do sudo -n -v || exit 0; done ) > /dev/null 2>&1 &
+  ( while sleep 60 && kill -0 "$$" 2>/dev/null; do sudo -n true || exit 0; done ) > /dev/null 2>&1 &
   sudo_keepalive_pid=$!
   trap 'kill "$sudo_keepalive_pid" 2>/dev/null' EXIT
 fi
