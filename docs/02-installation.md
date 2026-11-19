@@ -409,6 +409,8 @@ checksum, and put the `mise` binary in `~/.local/bin`.
 
 Export the proxy variables (`http_proxy`, `https_proxy`, `no_proxy`; upper case works too) in the shell that starts the script, and run it as your own user: `sudo ./setup-debian.sh` drops them (see [Debian/Ubuntu](#debianubuntu)). The downloads of the script, mise, `uv`, `npm`, `go` and `git` read them from the environment, and the script passes them on to the `sudo apt-get` calls itself, which is what reaches the Docker, Teleport and mise apt repositories.
 
+A proxy can also treat clients differently: `curl` and `git` get through while `apt` is answered `407 Proxy Authentication Required` (the proxy wants credentials from it, and from mise). apt reads credentials from the proxy URL like the other tools, `http://user:password@host:port` (`@`, `:` and `/` in the password written as `%40`, `%3A` and `%2F`), and the two apt repositories the setup adds, Docker's and Teleport's, are optional: when they cannot be reached the setup removes the repository, prints a warning and carries on without that package. mise has its own fallback, see above.
+
 If the proxy inspects TLS (a certificate error rather than a connection error), install its CA certificate first: copy it as a `.crt` file into `/usr/local/share/ca-certificates/` and run `sudo update-ca-certificates`. `curl`, `git`, `go` and apt then trust it. `uv` and Node use their own certificate lists unless told otherwise:
 
 ```sh

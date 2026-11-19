@@ -154,17 +154,27 @@ install_misc_full() {
     # Default to v18 if not set
     TELEPORT_VERSION=${TELEPORT_VERSION:-v18}
     TELEPORT_CHANNEL=stable/${TELEPORT_VERSION?}
-    run add_teleport_apt_repository "$TELEPORT_CHANNEL"
-    apt_sources_changed
-    apt_install teleport
+    # Optional like Docker: an unreachable repository only warns.
+    if ! run install_teleport "$TELEPORT_CHANNEL"; then
+      sudo rm -f /etc/apt/sources.list.d/teleport.list /etc/apt/keyrings/teleport-archive-keyring.asc
+      apt_sources_changed
+      printf "Warning: teleport could not be installed from apt.releases.teleport.dev, skipping it\n" >&2
+    fi
   fi
+}
+
+# Each step is checked: set -e does not apply to a function called from an `if`.
+install_teleport() {
+  add_teleport_apt_repository "$1" || return 1
+  apt_sources_changed
+  apt_install teleport
 }
 
 add_teleport_apt_repository() {
   local channel="$1"
   sudo mkdir -p /etc/apt/keyrings
   # curl runs as the caller, not under sudo: sudo drops the proxy variables
-  curl -fsSL https://apt.releases.teleport.dev/gpg | sudo tee /etc/apt/keyrings/teleport-archive-keyring.asc > /dev/null
+  curl -fsSL https://apt.releases.teleport.dev/gpg | sudo tee /etc/apt/keyrings/teleport-archive-keyring.asc > /dev/null || return 1
   # Source os-release to get distribution ID and version codename
   . /etc/os-release
   echo "deb [signed-by=/etc/apt/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/${ID?} ${VERSION_CODENAME?} ${channel}" \
