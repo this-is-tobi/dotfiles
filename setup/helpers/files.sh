@@ -100,3 +100,21 @@ install_tree() {
     install_file "$src_dir/$file" "$dst_dir/$file"
   done < <(cd "$src_dir" && find . -type f -not -path '*/node_modules/*' -print0)
 }
+
+# check_home_ownership: stop when directories the setup writes into belong to
+# someone else, which is what an earlier run through `sudo` (or anything else
+# running as root) leaves behind: the next run as the normal user then fails deep
+# inside a tool with "Permission denied" (mise cannot create its state
+# directory, for instance), after several useless retries. Nothing to check, and
+# nothing to fix, when running as root itself.
+check_home_ownership() {
+  local uid not_mine
+  uid="$(id -u)"
+  [ "$uid" -ne 0 ] || return 0
+  not_mine="$(find "$HOME/.local" "$HOME/.config" "$HOME/.cache" "$HOME/.oh-my-zsh" \
+    -type d ! -user "$uid" 2>/dev/null | head -n 5)" || true
+  [ -n "$not_mine" ] || return 0
+  printf "Error: directories under %s belong to another user (an earlier run with sudo, most likely), so the tools could not write into them:\n%s\n" "$HOME" "$not_mine" >&2
+  printf "Give them back and run the setup again:\n  sudo chown -R \"%s:\" ~/.local ~/.config ~/.cache ~/.oh-my-zsh\n" "$(id -un)" >&2
+  return 1
+}
