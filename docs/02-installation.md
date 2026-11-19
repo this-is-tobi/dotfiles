@@ -172,7 +172,7 @@ Apart from the prompts below, the setup scripts run unattended, which makes them
 - **Debian**: the sudo password is asked once at the start (as `root`, sudo is not used). Without a terminal, sudo has to work without a password, as on most CI runners, otherwise the script exits with status 1 and an error before installing anything.
 - **`-d`**: when `~/.gitconfig.local` does not exist yet and no identity can be carried over from an existing `~/.gitconfig`, the script asks for your Git name and email. Without a terminal it prints the `git config --file ~/.gitconfig.local ...` commands to run and carries on.
 
-oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt-get install -y` and `DEBIAN_FRONTEND=noninteractive` (a package that asks a configuration question takes the default answer). The package lists are refreshed once per run, and again after a profile adds an apt repository (Docker, Teleport, mise).
+oh-my-zsh is installed with `--unattended` and, on Debian, the packages with `apt-get install -y` and `DEBIAN_FRONTEND=noninteractive` (a package that asks a configuration question takes the default answer, and a configuration file you modified is kept). The package lists are refreshed once per run, and again after a profile adds an apt repository (Docker, Teleport, mise).
 
 #### Teleport Version (DevOps Profile)
 

@@ -22,6 +22,10 @@ export DOTFILES_APT_UPDATED="${DOTFILES_APT_UPDATED:-}"
 # http_proxy, https_proxy, ftp_proxy and no_proxy (an uppercase-only setting is
 # passed on in lowercase), so without this the repositories added by the
 # profiles (Docker, Teleport, mise) are unreachable behind a corporate proxy.
+#
+# Nothing may wait on an answer either: debconf takes its defaults, a modified
+# configuration file is kept (dpkg would ask on stdin otherwise) and needrestart
+# restarts services on its own instead of showing a menu.
 apt_sudo() {
   local name upper value env_args=()
   for name in http_proxy https_proxy ftp_proxy no_proxy; do
@@ -31,7 +35,8 @@ apt_sudo() {
       env_args+=("$name=$value")
     fi
   done
-  sudo env ${env_args[@]+"${env_args[@]}"} DEBIAN_FRONTEND=noninteractive apt-get "$@"
+  sudo env ${env_args[@]+"${env_args[@]}"} DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "$@"
 }
 
 # apt_update: refresh the package lists, unless this run already did.
