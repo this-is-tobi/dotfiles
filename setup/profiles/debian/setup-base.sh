@@ -31,10 +31,18 @@ BAT_EXTRAS_SHA256="d79c085b9d0af7f56c3f69d766a83fe26405faac999c4ed7cdfc27417d2c7
 add_docker_apt_repository() {
   local distro="$1" codename="$2"
   sudo mkdir -m 0755 -p /etc/apt/keyrings
-  curl -fsSL "https://download.docker.com/linux/${distro}/gpg" | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+  curl -fsSL "https://download.docker.com/linux/${distro}/gpg" | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg || return 1
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${distro} ${codename} stable" \
     | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   sudo chmod a+r /etc/apt/keyrings/docker.gpg
+}
+
+# Add Docker's apt repository and install Docker from it. Each step is checked:
+# set -e does not apply to a function called from an `if`.
+install_docker() {
+  add_docker_apt_repository "$1" "$2" || return 1
+  apt_sources_changed
+  apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
 
 install_fonts() {
@@ -112,9 +120,14 @@ install_lite_setup() {
         printf "Error: the docker apt repository is only configured for debian and ubuntu, found '%s'\n" "$docker_distro" >&2
         exit 1;;
     esac
-    run add_docker_apt_repository "$docker_distro" "$docker_codename"
-    apt_sources_changed
-    apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # Docker is not needed by the other profiles, so a repository that cannot be
+    # reached (a proxy that refuses apt, answering 407 for instance) only warns
+    # and leaves the rest of the setup running.
+    if ! run install_docker "$docker_distro" "$docker_codename"; then
+      sudo rm -f /etc/apt/sources.list.d/docker.list /etc/apt/keyrings/docker.gpg
+      apt_sources_changed
+      printf "Warning: docker could not be installed from download.docker.com, skipping it\n" >&2
+    fi
   fi
 
   if ! grep -q -E "^docker:" /etc/group; then
