@@ -407,7 +407,7 @@ checksum, and put the `mise` binary in `~/.local/bin`.
 
 ### Behind a Corporate Proxy
 
-Export the proxy variables (`http_proxy`, `https_proxy`, `no_proxy`; upper case works too) in the shell that starts the script, and run it as your own user: `sudo ./setup-debian.sh` drops them (see [Debian/Ubuntu](#debianubuntu)). The downloads of the script, mise, `uv`, `npm`, `go` and `git` read them from the environment, and the script passes them on to the `sudo apt-get` calls itself, which is what reaches the Docker, Teleport and mise apt repositories.
+Export the proxy variables (`http_proxy`, `https_proxy`, `no_proxy`; upper case works too) in the shell that starts the script, and run it as your own user: `sudo ./setup-debian.sh` drops them (see [Debian/Ubuntu](#debianubuntu)). The downloads of the script, mise, `uv`, `npm`, `go` and `git` read them from the environment, and the script passes them on to the `sudo apt-get` calls itself, which is what reaches the Docker, Teleport and mise apt repositories. Those three repositories are reached through that proxy even when apt is configured with another one (`apt-config dump | grep -i proxy`), as it is on a machine with an enterprise apt mirror: such a proxy often serves the mirror only and answers `407 Proxy Authentication Required` for anything else, and apt's own setting would otherwise win over the environment. The mirror itself keeps using apt's proxy.
 
 If the proxy inspects TLS (a certificate error rather than a connection error), install its CA certificate first: copy it as a `.crt` file into `/usr/local/share/ca-certificates/` and run `sudo update-ca-certificates`. `curl`, `git`, `go` and apt then trust it. `uv` and Node use their own certificate lists unless told otherwise:
 
